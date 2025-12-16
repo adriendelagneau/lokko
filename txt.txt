@@ -153,3 +153,9 @@ export default function StepImages() {
     </div>
   );
 }
+
+useEffect(() => {
+  update({
+    images: imagesState.filter((i) => i.url).map((i) => i.url!),
+  });
+}, [imagesState, update]);
