@@ -106,7 +106,7 @@ export default function StepImages() {
 
             return (
               <div key={key} className="relative aspect-square">
-                {/* Show uploaded image */}
+                {/* Uploaded image */}
                 {img.url && (
                   <Image
                     src={img.url}
@@ -116,7 +116,7 @@ export default function StepImages() {
                   />
                 )}
 
-                {/* Show local file preview */}
+                {/* Local file preview */}
                 {!img.url && img.file && (
                   <img
                     src={URL.createObjectURL(img.file)}
