@@ -12,7 +12,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import { Category } from "@/generated/prisma";
+import { Category } from "@/lib/prisma/generated/prisma/client";
 import { cn } from "@/lib/utils";
 
 export const CategoryCarousel = ({
@@ -93,7 +93,7 @@ export const CategoryCarousel = ({
                 <Button
                   variant={isActive ? "default" : "ghost"}
                   onClick={() => onSelect(category.slug)}
-                  className="px-3 py-1 text-sm capitalize"
+                  className="px-3 py-1  capitalize"
                 >
                   {category.name}
                 </Button>

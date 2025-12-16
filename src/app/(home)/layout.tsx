@@ -1,12 +1,12 @@
 import { cookies } from "next/headers";
 
-import { getCategories } from "@/actions/category-actions";
+
 import { SidebarProvider } from "@/components/ui/sidebar";
 
-import { Footer } from "./components/footer/footer";
-import { HomeNavbar } from "./components/navbar/home-navbar";
-import { HomeSidebar } from "./components/sidebar/hoeme-sidebar";
-import Title from "./components/title";
+import { Footer } from "../../components/layout/footer/footer";
+import { HomeNavbar } from "../../components/layout/navbar/home-navbar";
+import { HomeSidebar } from "../../components/layout/sidebar/hoeme-sidebar";
+
 
 export default async function HomeLayout({
   children,
@@ -15,18 +15,18 @@ export default async function HomeLayout({
 }>) {
   // Make sidebar open state persist through reload
   const cookieStore = await cookies();
-  const defaultOpen = cookieStore.get("sidebar_state")?.value === "true";
+  const defaultOpen = cookieStore.get("sidebar_state")?.value === "false";
 
-  const categories = await getCategories();
+
 
   return (
     <SidebarProvider defaultOpen={defaultOpen}>
       <div className="w-full">
         <HomeNavbar />
         <div className="flex">
-          <HomeSidebar categories={categories} />
-          <main className="mx-auto w-full max-w-screen-xl flex-1 pt-[4rem] min-h-screen">
-            <Title />
+          <HomeSidebar />
+          <main className="mx-auto w-full max-w-screen-xl flex-1 pt-20 min-h-screen">
+       
             {children}
           </main>
         </div>

@@ -1,10 +1,10 @@
 "use server";
 
-import { PrismaClient } from "@/generated/prisma"; // Adjust import if needed
+
 import { getUser } from "@/lib/auth/auth-session";
+import prisma from "@/lib/prisma/prisma";
 
 
-const prisma = new PrismaClient();
 
 export async function getUserRole() {
     const user = await getUser();

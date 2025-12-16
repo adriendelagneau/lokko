@@ -1,70 +1,56 @@
 generator client {
-  provider      = "prisma-client-js"
-  output        = "../src/generated/prisma"
-  binaryTargets = ["native", "rhel-openssl-3.0.x"]
+  provider = "prisma-client"
+  output   = "../src/lib/prisma/generated/prisma"
 }
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
 //
-// Enums
+// ENUMS
 //
+
 enum Role {
   USER
   ADMIN
 }
 
-enum AssetType {
-  IMAGE
-  VIDEO
-  AUDIO
+enum NotificationType {
+  NEW_MESSAGE
+  NEW_LISTING
+  SAVED_SEARCH_MATCH
 }
 
 //
-// User & Authentication
+// AUTH & USERS
 //
+
 model User {
-  id                   String   @id @default(uuid())
-  email                String   @unique
-  name                 String?
-  role                 Role     @default(USER)
-  emailVerified        Boolean
-  image                String?
-  stripeCustomerId     String? // 👈 add this line
-  bookmarkedArticleIds String[] @default([])
-  createdAt            DateTime @default(now())
-  updatedAt            DateTime @updatedAt
+  id            String   @id @default(uuid())
+  email         String   @unique
+  name          String?
+  password      String?
+  role          Role     @default(USER)
+  emailVerified Boolean  @default(false)
+  image         String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
   sessions Session[]
   accounts Account[]
 
-  subscriptions Subscription[]
+  listings Listing[]
+  messages Message[] @relation("UserMessages")
 
-  articleViews ArticleView[]
+  conversations        ConversationParticipant[]
+  contactConversations Conversation[]            @relation("contactUser")
 
-  author Author?
-
-  notificationPreferences NotificationPreference[]
-  notifications           Notification[]
+  bookmarks     Bookmark[]
+  notifications Notification[]
+  savedSearches SavedSearch[]
 
   @@map("user")
-}
-
-model Author {
-  id          String       @id @default(uuid())
-  slug        String       @unique
-  name        String
-  bio         String?
-  image       String?
-  userId      String       @unique
-  user        User         @relation(fields: [userId], references: [id]) // FK on Author side
-  articles    Article[]    @relation("AuthorArticles")
-  videoShorts VideoShort[]
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
 }
 
 model Session {
@@ -114,173 +100,208 @@ model Verification {
 }
 
 //
-// Content Models
+// MARKETPLACE
 //
-model Article {
-  id                   String   @id @default(uuid())
-  title                String
-  slug                 String   @unique
-  excerpt              String?
-  published            Boolean  @default(true)
-  publishedAt          DateTime @default(now())
-  bookmarkedArticleIds String[] @default([])
-  views                Int      @default(0)
-  isBreaking           Boolean  @default(false) // ✅ Add this
-  createdAt            DateTime @default(now())
-  updatedAt            DateTime @updatedAt
 
-  authorId String
-  author   Author @relation("AuthorArticles", fields: [authorId], references: [id], onDelete: Cascade)
-
-  categoryId String?
-  category   Category? @relation(fields: [categoryId], references: [id])
-
-  assetId String? @unique
-  asset   Asset?  @relation("ArticleAssetRelation", fields: [assetId], references: [id])
-
-  parts        ArticlePart[]
-  ArticleTag   ArticleTag[]
-  articleViews ArticleView[]
-
-  @@map("article")
-}
-
-model ArticleView {
-  id        String  @id @default(uuid())
-  articleId String
-  article   Article @relation(fields: [articleId], references: [id], onDelete: Cascade)
-
-  // Either user or visitor
-  userId String?
-  user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  visitorId String? // For anonymous users (hashed fingerprint)
-  viewedAt  DateTime @default(now())
-
-  @@index([visitorId])
-  @@index([userId])
-  @@index([articleId, viewedAt])
-}
-
-model ArticlePart {
-  id         String      @id @default(uuid())
-  title      String?
-  order      Int
-  articleId  String
-  article    Article     @relation(fields: [articleId], references: [id], onDelete: Cascade)
-  paragraphs Paragraph[]
-}
-
-model Paragraph {
-  id            String      @id @default(uuid())
-  content       String
-  order         Int
-  articlePartId String
-  articlePart   ArticlePart @relation(fields: [articlePartId], references: [id], onDelete: Cascade)
-}
-
-model Asset {
-  id      String    @id @default(uuid())
-  type    AssetType
-  url     String
-  legend  String?
-  altText String?
-
-  article    Article?    @relation("ArticleAssetRelation")
-  videoShort VideoShort? @relation("VideoShortAssetRelation")
-}
-
-//
-// Taxonomy
-//
 model Category {
-  id       String    @id @default(uuid())
-  name     String
-  slug     String    @unique
-  articles Article[]
+  id        String   @id @default(uuid())
+  name      String
+  slug      String   @unique
+  createdAt DateTime @default(now())
+
+  parentId String?
+  parent   Category?  @relation("CategoryTree", fields: [parentId], references: [id])
+  children Category[] @relation("CategoryTree")
+
+  listingsAsCategory    Listing[] @relation("ListingCategory")
+  listingsAsSubCategory Listing[] @relation("ListingSubCategory")
+
+  notifications Notification[]
+
+  @@index([parentId])
+  @@map("category")
 }
 
-model Tag {
-  id       String       @id @default(uuid())
-  name     String       @unique
-  slug     String       @unique
-  articles ArticleTag[]
+
+model Location {
+  id String @id @default(uuid())
+
+  region     String
+  department String
+  city       String
+  postalCode String
+  lat        Float
+  lng        Float
+
+  createdAt DateTime @default(now())
+
+  listings      Listing[]
+  notifications Notification[]
+
+  @@index([region])
+  @@index([department])
+  @@index([city])
+  @@map("location")
 }
 
-model ArticleTag {
-  articleId String
-  tagId     String
+model Listing {
+  id String @id @default(uuid())
 
-  article Article @relation(fields: [articleId], references: [id], onDelete: Cascade)
-  tag     Tag     @relation(fields: [tagId], references: [id], onDelete: Cascade)
-
-  @@id([articleId, tagId])
-}
-
-//
-// Payments
-//
-model Subscription {
-  id                   String   @id @default(uuid())
-  stripeCustomerId     String
-  stripeSubscriptionId String
-  status               String
-  currentPeriodEnd     DateTime
-  createdAt            DateTime @default(now())
-  updatedAt            DateTime @updatedAt
-
-  userId String
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
-
-model VideoShort {
-  id          String   @id @default(uuid())
   title       String
-  description String?
-  duration    Int? // in seconds
-  views       Int      @default(0)
-  published   Boolean  @default(true)
-  publishedAt DateTime @default(now())
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  description String
+  quantity    Int?
+  unit        String?
+  priceInfo   String?
+  contactInfo String
 
-  authorId String
-  author   Author @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  isActive   Boolean   @default(true)
+  archivedAt DateTime?
+  deletedAt  DateTime?
 
-  assetId String @unique
-  asset   Asset  @relation("VideoShortAssetRelation", fields: [assetId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  ownerId        String
+  categoryId     String   // catégorie principale
+  subCategoryId  String   // sous-catégorie
+
+  owner       User     @relation(fields: [ownerId], references: [id], onDelete: Restrict)
+  category    Category @relation("ListingCategory", fields: [categoryId], references: [id])
+  subCategory Category @relation("ListingSubCategory", fields: [subCategoryId], references: [id])
+  location    Location @relation(fields: [locationId], references: [id])
+
+  locationId String
+
+  images        ListingImage[]
+  conversations Conversation[]
+  bookmarks     Bookmark[]
+  notifications Notification[]
+
+  @@index([categoryId])
+  @@index([subCategoryId])
+  @@index([isActive, deletedAt])
+  @@map("listing")
 }
 
-// Notifications
 
-enum NotificationChannel {
-  EMAIL
-  SMS
-  IN_APP
+model ListingImage {
+  id        String   @id @default(uuid())
+  listingId String
+  url       String
+  altText   String?
+  createdAt DateTime @default(now())
+
+  listing Listing @relation(fields: [listingId], references: [id], onDelete: Cascade)
+
+  @@index([listingId])
+  @@map("listing_image")
 }
 
-// Notification model to store user notifications
-model Notification {
-  id        String              @id @default(uuid())
+//
+// MESSAGING
+//
+
+model Conversation {
+  id            String   @id @default(uuid())
+  listingId     String
+  contactUserId String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  listing     Listing @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  contactUser User    @relation("contactUser", fields: [contactUserId], references: [id])
+
+  participants ConversationParticipant[]
+  messages     Message[]
+
+  @@unique([listingId, contactUserId])
+  @@index([listingId])
+  @@map("conversation")
+}
+
+model ConversationParticipant {
+  conversationId String
+  userId         String
+
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([conversationId, userId])
+  @@map("conversation_participant")
+}
+
+model Message {
+  id        String   @id @default(uuid())
+  content   String
+  createdAt DateTime @default(now())
+  readBy    String[] @default([])
+
+  conversationId String
+  senderId       String
+
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  sender       User         @relation("UserMessages", fields: [senderId], references: [id], onDelete: Cascade)
+
+  notifications Notification[]
+
+  @@index([conversationId, createdAt])
+  @@index([senderId])
+  @@map("message")
+}
+
+//
+// SOCIAL / UTILS
+//
+
+model Bookmark {
   userId    String
-  user      User                @relation(fields: [userId], references: [id], onDelete: Cascade)
-  title     String // short title or headline
-  message   String // detailed message
-  isRead    Boolean             @default(false)
-  channel   NotificationChannel @default(IN_APP) // how user should receive it
-  createdAt DateTime            @default(now())
-  sentAt    DateTime? // when notification was sent, optional
-  metadata  Json? // optional extra info (like articleId, link, etc)
+  listingId String
+  createdAt DateTime @default(now())
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  listing Listing @relation(fields: [listingId], references: [id], onDelete: Cascade)
+
+  @@id([userId, listingId])
+  @@map("bookmark")
+}
+
+model Notification {
+  id        String           @id @default(uuid())
+  userId    String
+  type      NotificationType
+  content   String
+  isRead    Boolean          @default(false)
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+
+  listingId  String?
+  messageId  String?
+  categoryId String?
+  locationId String?
+
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  listing  Listing?  @relation(fields: [listingId], references: [id])
+  message  Message?  @relation(fields: [messageId], references: [id])
+  category Category? @relation(fields: [categoryId], references: [id])
+  location Location? @relation(fields: [locationId], references: [id])
 
   @@index([userId, isRead])
+  @@map("notification")
 }
 
-model NotificationPreference {
-  id      String              @id @default(uuid())
-  userId  String
-  user    User                @relation(fields: [userId], references: [id], onDelete: Cascade)
-  channel NotificationChannel
-  enabled Boolean             @default(true)
+model SavedSearch {
+  id          String    @id @default(uuid())
+  userId      String
+  title       String?
+  query       Json
+  isActive    Boolean   @default(true)
+  lastChecked DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 
-  @@unique([userId, channel])
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, isActive])
+  @@index([lastChecked])
+  @@map("saved_search")
 }

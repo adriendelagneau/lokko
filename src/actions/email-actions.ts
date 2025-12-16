@@ -1,7 +1,7 @@
 "use server";
 
 import { EmailTemplate } from "@/components/email-template";
-import { resend } from "@/lib/resend"; 
+import { resend } from "@/lib/resend";
 
 export async function sendEmail({
   to,

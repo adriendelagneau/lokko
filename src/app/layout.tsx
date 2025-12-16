@@ -1,14 +1,8 @@
 import type { Metadata } from "next";
-import {
-  Noticia_Text,
-  Poppins,
-} from "next/font/google";
+import { Noticia_Text, Poppins } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "sonner";
 
-import { SignInModal } from "@/components/auth/log-in/sign-in-modal";
-import { RecaptchaProvider } from "@/components/providers/google-captcha-provider";
-import { TanstackProvider } from "@/components/providers/tanstackprovider";
 import { ThemeProvider } from "@/components/providers/themes-provider";
 
 const noticaText = Noticia_Text({
@@ -42,19 +36,15 @@ export default function RootLayout({
       >
         <ThemeProvider
           attribute="class"
-          defaultTheme="system"
+          defaultTheme="light"
           enableSystem
           disableTransitionOnChange
         >
-          <RecaptchaProvider>
-            <SignInModal />
-            <Toaster />
-            <TanstackProvider>
-              <div className="font-notica">
-                <div className="min-h-screen font-notica">{children}</div>
-              </div>
-            </TanstackProvider>
-          </RecaptchaProvider>
+          <Toaster />
+
+          <div className="font-notica">
+            <div className="font-notica min-h-screen">{children}</div>
+          </div>
         </ThemeProvider>
       </body>
     </html>
