@@ -1,14 +1,11 @@
 "use client";
 
-import { Category as PrismaCategory } from "@prisma/client";
 import React, { useMemo, useRef, useState } from "react";
 
-type CategoryWithChildren = PrismaCategory & {
-  children: PrismaCategory[];
-};
+import { Category } from "@/actions/category-actions";
 
 interface CategoriesProps {
-  categories: CategoryWithChildren[];
+  categories: Category[];
 }
 
 const Categories = ({ categories }: CategoriesProps) => {
@@ -69,14 +66,14 @@ const Categories = ({ categories }: CategoriesProps) => {
 
           {/* Subcategories */}
           <div className="bg-background flex-1 p-6">
-            {activeCategory.children.length ? (
+            {activeCategory.subcategories?.length ? (
               <ul className="grid grid-cols-3 gap-4">
-                {activeCategory.children.map((child) => (
+                {activeCategory.subcategories.map((sub) => (
                   <li
-                    key={child.id}
+                    key={sub.id}
                     className="hover:text-primary cursor-pointer text-sm transition"
                   >
-                    {child.name}
+                    {sub.name}
                   </li>
                 ))}
               </ul>

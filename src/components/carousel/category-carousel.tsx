@@ -3,6 +3,7 @@
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
+import { Category } from "@/actions/category-actions";
 import { Button } from "@/components/ui/button";
 import {
   Carousel,
@@ -12,7 +13,6 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import { Category } from "@/lib/prisma/generated/prisma/client";
 import { cn } from "@/lib/utils";
 
 export const CategoryCarousel = ({
@@ -93,7 +93,7 @@ export const CategoryCarousel = ({
                 <Button
                   variant={isActive ? "default" : "ghost"}
                   onClick={() => onSelect(category.slug)}
-                  className="px-3 py-1  capitalize"
+                  className="px-3 py-1 capitalize"
                 >
                   {category.name}
                 </Button>
