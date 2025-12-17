@@ -6,12 +6,29 @@ import { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { useListingWizard } from "@/lib/store/listingWizard.store";
 
+/**
+ * Type retourné par geo.api.gouv.fr
+ */
 type Commune = {
   nom: string;
   codesPostaux: string[];
   departement: { nom: string; code: string };
   region: { nom: string; code: string };
+  centre?: {
+    type: "Point";
+    coordinates: [number, number]; // [lng, lat]
+  };
 };
+
+/**
+ * Extraction safe des coordonnées
+ */
+function getCoordinates(commune: Commune): { lat: number; lng: number } | null {
+  if (!commune.centre?.coordinates) return null;
+
+  const [lng, lat] = commune.centre.coordinates;
+  return { lat, lng };
+}
 
 export default function StepLocation() {
   const { data, update, next, prev, errors } = useListingWizard();
@@ -21,6 +38,8 @@ export default function StepLocation() {
     department: "",
     city: "",
     postalCode: "",
+    lat: 0,
+    lng: 0,
   };
 
   const [query, setQuery] = useState(location.city);
@@ -28,7 +47,7 @@ export default function StepLocation() {
   const [loading, setLoading] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
 
-  // ---- Fetch autocomplete
+  // -------- Fetch autocomplete
   const fetchCities = async (q: string) => {
     if (q.length < 2) {
       setSuggestions([]);
@@ -39,9 +58,9 @@ export default function StepLocation() {
     try {
       const res = await fetch(`/api/city?q=${encodeURIComponent(q)}`);
       const data: Commune[] = await res.json();
-      setSuggestions(data.slice(0, 5));
+      setSuggestions(data);
     } catch (err) {
-      console.error(err);
+      console.error("City search failed:", err);
       setSuggestions([]);
     } finally {
       setLoading(false);
@@ -51,16 +70,13 @@ export default function StepLocation() {
   const debouncedFetch = useCallback(debounce(fetchCities, 250), []);
 
   useEffect(() => {
-    if (isFocused) {
-      debouncedFetch(query);
-    }
+    if (isFocused) debouncedFetch(query);
   }, [query, isFocused, debouncedFetch]);
 
-  // ---- Selection
+  // -------- Selection
   const handleSelect = (commune: Commune) => {
-    setQuery(`${commune.nom} (${commune.codesPostaux[0]})`);
-    setSuggestions([]);
-    setIsFocused(false);
+    const coords = getCoordinates(commune);
+    if (!coords) return;
 
     update({
       location: {
@@ -68,22 +84,14 @@ export default function StepLocation() {
         department: commune.departement.nom,
         city: commune.nom,
         postalCode: commune.codesPostaux[0],
+        lat: coords.lat,
+        lng: coords.lng,
       },
     });
-  };
 
-  const handleOther = () => {
+    setQuery(`${commune.nom} (${commune.codesPostaux[0]})`);
     setSuggestions([]);
     setIsFocused(false);
-
-    update({
-      location: {
-        region: "",
-        department: "",
-        city: query,
-        postalCode: "",
-      },
-    });
   };
 
   return (
@@ -107,23 +115,25 @@ export default function StepLocation() {
 
         {isFocused && suggestions.length > 0 && (
           <ul className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md border bg-white shadow-md">
-            {suggestions.map((commune) => (
-              <li
-                key={commune.nom + commune.codesPostaux[0]}
-                className="cursor-pointer px-3 py-2 hover:bg-gray-100"
-                onMouseDown={() => handleSelect(commune)}
-              >
-                {commune.nom} ({commune.codesPostaux[0]}) –{" "}
-                {commune.departement.nom}
-              </li>
-            ))}
+            {suggestions.map((commune) => {
+              const hasCoords = !!commune.centre?.coordinates;
 
-            <li
-              className="text-muted-foreground cursor-pointer px-3 py-2 text-sm hover:bg-gray-100"
-              onMouseDown={handleOther}
-            >
-              Autre ville : &quot;{query}&quot;
-            </li>
+              return (
+                <li
+                  key={`${commune.nom}-${commune.codesPostaux[0]}`}
+                  className={`px-3 py-2 ${
+                    hasCoords
+                      ? "cursor-pointer hover:bg-gray-100"
+                      : "text-muted-foreground cursor-not-allowed"
+                  }`}
+                  onMouseDown={() => hasCoords && handleSelect(commune)}
+                >
+                  {commune.nom} ({commune.codesPostaux[0]}) –{" "}
+                  {commune.departement.nom}
+                  {!hasCoords && " (coordonnées indisponibles)"}
+                </li>
+              );
+            })}
           </ul>
         )}
       </div>
@@ -136,7 +146,10 @@ export default function StepLocation() {
         <Button variant="ghost" onClick={prev}>
           Retour
         </Button>
-        <Button onClick={next} disabled={!query || loading}>
+        <Button
+          onClick={next}
+          disabled={!location.lat || !location.lng || loading}
+        >
           Continuer
         </Button>
       </div>

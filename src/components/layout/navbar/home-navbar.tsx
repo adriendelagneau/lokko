@@ -13,6 +13,7 @@ import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import { SidebarTrigger } from "@/components/ui/sidebar";
+import { AuthButton } from "./auth-button";
 
 // import { ThemeToggleCircle } from "@/components/providers/ThemeToggleWrapper";
 
@@ -60,10 +61,11 @@ export const HomeNavbar = () => {
             <p>Messages</p>
             <div className="bg-primary absolute -top-1 right-5 h-3 w-3 rounded-full"></div>
           </div>
-          <div className="hover:text-primary flex cursor-pointer flex-col items-center justify-center transition-colors">
+          {/* <div className="hover:text-primary flex cursor-pointer flex-col items-center justify-center transition-colors">
             <UserIcon size={20} />
             <p>User</p>
-          </div>
+          </div> */}
+          <AuthButton />
         </div>
       </div>
     </div>

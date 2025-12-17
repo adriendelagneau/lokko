@@ -14,12 +14,12 @@ import StepTitle from "./steps/StepTitle";
 
 const steps = [
   StepTitle,
-  StepCategory, // ← ajouté ici
+  StepCategory, 
   StepImages,
   StepLocation,
   StepPrice,
-  StepDescription,
   StepContact,
+  StepDescription,
 ];
 
 type WizardProps = {

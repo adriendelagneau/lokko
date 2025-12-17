@@ -8,19 +8,20 @@ export const listingSchema = z.object({
 
   images: z.array(z.string().url()).min(1, "Ajoutez au moins une image"),
 
-  location: z.object({
-    region: z.string().min(1),
-    department: z.string().min(1),
-    city: z.string().min(1),
-    postalCode: z.string().min(1),
-  }),
+location: z.object({
+  region: z.string().min(1),
+  department: z.string().min(1),
+  city: z.string().min(1),
+  postalCode: z.string().min(1),
+  lat: z.number(),
+  lng: z.number(),
+}),
+
 
   price: z.object({
     value: z.coerce.number().positive("Prix invalide"),
     unit: z.enum(["UNIT", "KG", "L"]),
   }),
-
-  description: z.string().min(10, "Description trop courte"),
 
   contact: z
     .object({
@@ -34,6 +35,9 @@ export const listingSchema = z.object({
       }
     )
     .optional(),
+  
+  description: z.string().min(10, "Description trop courte"),
+
 });
 
 export type ListingDraft = z.infer<typeof listingSchema>;
@@ -55,10 +59,10 @@ export const stepSchemas = [
   // 4 - Price
   listingSchema.pick({ price: true }),
 
-  // 5 - Description
-  listingSchema.pick({ description: true }),
-
   // 6 - Contact (optionnel mais cohérent)
   listingSchema.pick({ contact: true }),
+
+  // 5 - Description
+  listingSchema.pick({ description: true }),
 ];
 

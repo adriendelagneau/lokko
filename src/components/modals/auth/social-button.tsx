@@ -26,7 +26,7 @@ const SocialButton: React.FC<SocialButtonProps> = ({
       disabled={disabled}
       className="my-3 flex w-full items-center justify-center space-x-2 text-lg cursor-pointer"
       size={"lg"}
-      variant={"ghost"}
+      variant={"outline"}
     >
       {icon}
       {label && <span>{label}</span>}

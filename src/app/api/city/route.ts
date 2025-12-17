@@ -1,16 +1,17 @@
-// app/api/communes/route.ts
 import { NextResponse } from "next/server";
 
 export async function GET(req: Request) {
-  const url = new URL(req.url);
-  const query = url.searchParams.get("q");
+  const { searchParams } = new URL(req.url);
+  const q = searchParams.get("q");
 
-  if (!query || query.length < 2) return NextResponse.json([], { status: 200 });
+  if (!q || q.length < 2) {
+    return NextResponse.json([]);
+  }
 
   const res = await fetch(
     `https://geo.api.gouv.fr/communes?nom=${encodeURIComponent(
-      query
-    )}&fields=departement,region,codesPostaux&limit=5`
+      q
+    )}&limit=5&fields=nom,codesPostaux,departement,region,centre`
   );
 
   const data = await res.json();

@@ -1,17 +1,18 @@
 "use client";
 
+import { useEffect, useState } from "react";
+
+import FormError from "@/components/modals/auth/form-error";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { authClient } from "@/lib/auth/auth-client";
 import { useListingWizard } from "@/lib/store/listingWizard.store";
-import { useSession } from "@/lib/auth/auth-client";
-import { useEffect, useState } from "react";
-import { FormError } from "@/components/auth/form-error";
 
 export default function StepContact() {
   const { data, update, next, prev, errors } = useListingWizard();
-  const { session } = useSession();
+  const { data: session } = authClient.useSession();
 
   const [useEmail, setUseEmail] = useState(false);
   const [usePhone, setUsePhone] = useState(false);
@@ -63,9 +64,12 @@ export default function StepContact() {
 
   return (
     <div className="space-y-6">
-      <h2 className="text-xl font-semibold">Comment souhaitez-vous être contacté ?</h2>
-      <p className="text-sm text-muted-foreground">
-        Choisissez au moins un moyen de contact. Votre email de compte est utilisé par défaut.
+      <h2 className="text-xl font-semibold">
+        Comment souhaitez-vous être contacté ?
+      </h2>
+      <p className="text-muted-foreground text-sm">
+        Choisissez au moins un moyen de contact. Votre email de compte est
+        utilisé par défaut.
       </p>
 
       <div className="space-y-4">
@@ -113,9 +117,7 @@ export default function StepContact() {
         <Button variant="ghost" onClick={prev}>
           Retour
         </Button>
-        <Button onClick={next}>
-          Continuer
-        </Button>
+        <Button onClick={next}>Continuer</Button>
       </div>
     </div>
   );

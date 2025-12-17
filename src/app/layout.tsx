@@ -3,6 +3,7 @@ import { Noticia_Text, Poppins } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "sonner";
 
+import { AuthModal } from "@/components/modals/auth/AuthModal";
 import { ThemeProvider } from "@/components/providers/themes-provider";
 
 const noticaText = Noticia_Text({
@@ -41,7 +42,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <Toaster />
-
+          <AuthModal />
           <div className="font-notica">
             <div className="font-notica min-h-screen">{children}</div>
           </div>
