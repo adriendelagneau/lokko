@@ -1,41 +1,44 @@
 import { z } from "zod";
 
 export const listingSchema = z.object({
-  // Step 1
   title: z.string().min(5, "Titre trop court"),
 
-  // Step 2
-  categoryId: z.string().uuid("Catégorie invalide"),
-  subCategoryId: z.string().uuid("Sous-catégorie invalide"),
+  categoryId: z.string().uuid(),
+  subCategoryId: z.string().uuid(),
 
-  // Step 3
-  images: z.array(z.string().url()).min(1, "Au moins une image est requise"),
+  images: z.array(z.string().url()).min(1, "Ajoutez au moins une image"),
 
-  // Step 4
   location: z.object({
-    region: z.string().min(1, "Région requise"),
-    department: z.string().min(1, "Département requis"),
-    city: z.string().min(1, "Ville requise"),
-    postalCode: z.string().min(4, "Code postal invalide"),
+    region: z.string().min(1),
+    department: z.string().min(1),
+    city: z.string().min(1),
+    postalCode: z.string().min(1),
   }),
 
-  // Step 5
   price: z.object({
-    value: z.number().positive("Prix invalide"),
-    unit: z.enum(["kg", "l", "unit"]),
+    value: z.coerce.number().positive("Prix invalide"),
+    unit: z.enum(["UNIT", "KG", "L"]),
   }),
 
-  // Step 6
-  description: z.string().min(20, "Annonce trop courte"),
+  description: z.string().min(10, "Description trop courte"),
 
-  // Step 7 (optionnel)
-  contact: z.object({
-    email: z.string().email().optional(),
-    phone: z.string().optional(),
-  }).optional(),
+  contact: z
+    .object({
+      email: z.email().optional(),
+      phone: z.string().optional(),
+    })
+    .refine(
+      (v) => !v || v.email || v.phone,
+      {
+        message: "Email ou téléphone requis",
+      }
+    )
+    .optional(),
 });
 
 export type ListingDraft = z.infer<typeof listingSchema>;
+
+
 export const stepSchemas = [
   // 0 - Title
   listingSchema.pick({ title: true }),
@@ -55,6 +58,7 @@ export const stepSchemas = [
   // 5 - Description
   listingSchema.pick({ description: true }),
 
-  // 6 - Contact (toujours valide)
+  // 6 - Contact (optionnel mais cohérent)
   listingSchema.pick({ contact: true }),
 ];
+

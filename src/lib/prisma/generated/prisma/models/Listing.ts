@@ -27,10 +27,12 @@ export type AggregateListing = {
 }
 
 export type ListingAvgAggregateOutputType = {
+  price: number | null
   quantity: number | null
 }
 
 export type ListingSumAggregateOutputType = {
+  price: number | null
   quantity: number | null
 }
 
@@ -38,10 +40,12 @@ export type ListingMinAggregateOutputType = {
   id: string | null
   title: string | null
   description: string | null
+  price: number | null
+  priceUnit: $Enums.PriceUnit | null
   quantity: number | null
-  unit: string | null
-  priceInfo: string | null
-  contactInfo: string | null
+  contactMethod: $Enums.ContactMethod | null
+  contactEmail: string | null
+  contactPhone: string | null
   isActive: boolean | null
   archivedAt: Date | null
   deletedAt: Date | null
@@ -57,10 +61,12 @@ export type ListingMaxAggregateOutputType = {
   id: string | null
   title: string | null
   description: string | null
+  price: number | null
+  priceUnit: $Enums.PriceUnit | null
   quantity: number | null
-  unit: string | null
-  priceInfo: string | null
-  contactInfo: string | null
+  contactMethod: $Enums.ContactMethod | null
+  contactEmail: string | null
+  contactPhone: string | null
   isActive: boolean | null
   archivedAt: Date | null
   deletedAt: Date | null
@@ -76,10 +82,12 @@ export type ListingCountAggregateOutputType = {
   id: number
   title: number
   description: number
+  price: number
+  priceUnit: number
   quantity: number
-  unit: number
-  priceInfo: number
-  contactInfo: number
+  contactMethod: number
+  contactEmail: number
+  contactPhone: number
   isActive: number
   archivedAt: number
   deletedAt: number
@@ -94,10 +102,12 @@ export type ListingCountAggregateOutputType = {
 
 
 export type ListingAvgAggregateInputType = {
+  price?: true
   quantity?: true
 }
 
 export type ListingSumAggregateInputType = {
+  price?: true
   quantity?: true
 }
 
@@ -105,10 +115,12 @@ export type ListingMinAggregateInputType = {
   id?: true
   title?: true
   description?: true
+  price?: true
+  priceUnit?: true
   quantity?: true
-  unit?: true
-  priceInfo?: true
-  contactInfo?: true
+  contactMethod?: true
+  contactEmail?: true
+  contactPhone?: true
   isActive?: true
   archivedAt?: true
   deletedAt?: true
@@ -124,10 +136,12 @@ export type ListingMaxAggregateInputType = {
   id?: true
   title?: true
   description?: true
+  price?: true
+  priceUnit?: true
   quantity?: true
-  unit?: true
-  priceInfo?: true
-  contactInfo?: true
+  contactMethod?: true
+  contactEmail?: true
+  contactPhone?: true
   isActive?: true
   archivedAt?: true
   deletedAt?: true
@@ -143,10 +157,12 @@ export type ListingCountAggregateInputType = {
   id?: true
   title?: true
   description?: true
+  price?: true
+  priceUnit?: true
   quantity?: true
-  unit?: true
-  priceInfo?: true
-  contactInfo?: true
+  contactMethod?: true
+  contactEmail?: true
+  contactPhone?: true
   isActive?: true
   archivedAt?: true
   deletedAt?: true
@@ -249,10 +265,12 @@ export type ListingGroupByOutputType = {
   id: string
   title: string
   description: string
+  price: number
+  priceUnit: $Enums.PriceUnit
   quantity: number | null
-  unit: string | null
-  priceInfo: string | null
-  contactInfo: string
+  contactMethod: $Enums.ContactMethod
+  contactEmail: string | null
+  contactPhone: string | null
   isActive: boolean
   archivedAt: Date | null
   deletedAt: Date | null
@@ -291,10 +309,12 @@ export type ListingWhereInput = {
   id?: Prisma.StringFilter<"Listing"> | string
   title?: Prisma.StringFilter<"Listing"> | string
   description?: Prisma.StringFilter<"Listing"> | string
+  price?: Prisma.FloatFilter<"Listing"> | number
+  priceUnit?: Prisma.EnumPriceUnitFilter<"Listing"> | $Enums.PriceUnit
   quantity?: Prisma.IntNullableFilter<"Listing"> | number | null
-  unit?: Prisma.StringNullableFilter<"Listing"> | string | null
-  priceInfo?: Prisma.StringNullableFilter<"Listing"> | string | null
-  contactInfo?: Prisma.StringFilter<"Listing"> | string
+  contactMethod?: Prisma.EnumContactMethodFilter<"Listing"> | $Enums.ContactMethod
+  contactEmail?: Prisma.StringNullableFilter<"Listing"> | string | null
+  contactPhone?: Prisma.StringNullableFilter<"Listing"> | string | null
   isActive?: Prisma.BoolFilter<"Listing"> | boolean
   archivedAt?: Prisma.DateTimeNullableFilter<"Listing"> | Date | string | null
   deletedAt?: Prisma.DateTimeNullableFilter<"Listing"> | Date | string | null
@@ -318,10 +338,12 @@ export type ListingOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  price?: Prisma.SortOrder
+  priceUnit?: Prisma.SortOrder
   quantity?: Prisma.SortOrderInput | Prisma.SortOrder
-  unit?: Prisma.SortOrderInput | Prisma.SortOrder
-  priceInfo?: Prisma.SortOrderInput | Prisma.SortOrder
-  contactInfo?: Prisma.SortOrder
+  contactMethod?: Prisma.SortOrder
+  contactEmail?: Prisma.SortOrderInput | Prisma.SortOrder
+  contactPhone?: Prisma.SortOrderInput | Prisma.SortOrder
   isActive?: Prisma.SortOrder
   archivedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -348,10 +370,12 @@ export type ListingWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.ListingWhereInput | Prisma.ListingWhereInput[]
   title?: Prisma.StringFilter<"Listing"> | string
   description?: Prisma.StringFilter<"Listing"> | string
+  price?: Prisma.FloatFilter<"Listing"> | number
+  priceUnit?: Prisma.EnumPriceUnitFilter<"Listing"> | $Enums.PriceUnit
   quantity?: Prisma.IntNullableFilter<"Listing"> | number | null
-  unit?: Prisma.StringNullableFilter<"Listing"> | string | null
-  priceInfo?: Prisma.StringNullableFilter<"Listing"> | string | null
-  contactInfo?: Prisma.StringFilter<"Listing"> | string
+  contactMethod?: Prisma.EnumContactMethodFilter<"Listing"> | $Enums.ContactMethod
+  contactEmail?: Prisma.StringNullableFilter<"Listing"> | string | null
+  contactPhone?: Prisma.StringNullableFilter<"Listing"> | string | null
   isActive?: Prisma.BoolFilter<"Listing"> | boolean
   archivedAt?: Prisma.DateTimeNullableFilter<"Listing"> | Date | string | null
   deletedAt?: Prisma.DateTimeNullableFilter<"Listing"> | Date | string | null
@@ -375,10 +399,12 @@ export type ListingOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  price?: Prisma.SortOrder
+  priceUnit?: Prisma.SortOrder
   quantity?: Prisma.SortOrderInput | Prisma.SortOrder
-  unit?: Prisma.SortOrderInput | Prisma.SortOrder
-  priceInfo?: Prisma.SortOrderInput | Prisma.SortOrder
-  contactInfo?: Prisma.SortOrder
+  contactMethod?: Prisma.SortOrder
+  contactEmail?: Prisma.SortOrderInput | Prisma.SortOrder
+  contactPhone?: Prisma.SortOrderInput | Prisma.SortOrder
   isActive?: Prisma.SortOrder
   archivedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -402,10 +428,12 @@ export type ListingScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"Listing"> | string
   title?: Prisma.StringWithAggregatesFilter<"Listing"> | string
   description?: Prisma.StringWithAggregatesFilter<"Listing"> | string
+  price?: Prisma.FloatWithAggregatesFilter<"Listing"> | number
+  priceUnit?: Prisma.EnumPriceUnitWithAggregatesFilter<"Listing"> | $Enums.PriceUnit
   quantity?: Prisma.IntNullableWithAggregatesFilter<"Listing"> | number | null
-  unit?: Prisma.StringNullableWithAggregatesFilter<"Listing"> | string | null
-  priceInfo?: Prisma.StringNullableWithAggregatesFilter<"Listing"> | string | null
-  contactInfo?: Prisma.StringWithAggregatesFilter<"Listing"> | string
+  contactMethod?: Prisma.EnumContactMethodWithAggregatesFilter<"Listing"> | $Enums.ContactMethod
+  contactEmail?: Prisma.StringNullableWithAggregatesFilter<"Listing"> | string | null
+  contactPhone?: Prisma.StringNullableWithAggregatesFilter<"Listing"> | string | null
   isActive?: Prisma.BoolWithAggregatesFilter<"Listing"> | boolean
   archivedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Listing"> | Date | string | null
   deletedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Listing"> | Date | string | null
@@ -421,10 +449,12 @@ export type ListingCreateInput = {
   id?: string
   title: string
   description: string
+  price: number
+  priceUnit: $Enums.PriceUnit
   quantity?: number | null
-  unit?: string | null
-  priceInfo?: string | null
-  contactInfo: string
+  contactMethod?: $Enums.ContactMethod
+  contactEmail?: string | null
+  contactPhone?: string | null
   isActive?: boolean
   archivedAt?: Date | string | null
   deletedAt?: Date | string | null
@@ -444,10 +474,12 @@ export type ListingUncheckedCreateInput = {
   id?: string
   title: string
   description: string
+  price: number
+  priceUnit: $Enums.PriceUnit
   quantity?: number | null
-  unit?: string | null
-  priceInfo?: string | null
-  contactInfo: string
+  contactMethod?: $Enums.ContactMethod
+  contactEmail?: string | null
+  contactPhone?: string | null
   isActive?: boolean
   archivedAt?: Date | string | null
   deletedAt?: Date | string | null
@@ -467,10 +499,12 @@ export type ListingUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  price?: Prisma.FloatFieldUpdateOperationsInput | number
+  priceUnit?: Prisma.EnumPriceUnitFieldUpdateOperationsInput | $Enums.PriceUnit
   quantity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  unit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  priceInfo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  contactInfo?: Prisma.StringFieldUpdateOperationsInput | string
+  contactMethod?: Prisma.EnumContactMethodFieldUpdateOperationsInput | $Enums.ContactMethod
+  contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -490,10 +524,12 @@ export type ListingUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  price?: Prisma.FloatFieldUpdateOperationsInput | number
+  priceUnit?: Prisma.EnumPriceUnitFieldUpdateOperationsInput | $Enums.PriceUnit
   quantity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  unit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  priceInfo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  contactInfo?: Prisma.StringFieldUpdateOperationsInput | string
+  contactMethod?: Prisma.EnumContactMethodFieldUpdateOperationsInput | $Enums.ContactMethod
+  contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -513,10 +549,12 @@ export type ListingCreateManyInput = {
   id?: string
   title: string
   description: string
+  price: number
+  priceUnit: $Enums.PriceUnit
   quantity?: number | null
-  unit?: string | null
-  priceInfo?: string | null
-  contactInfo: string
+  contactMethod?: $Enums.ContactMethod
+  contactEmail?: string | null
+  contactPhone?: string | null
   isActive?: boolean
   archivedAt?: Date | string | null
   deletedAt?: Date | string | null
@@ -532,10 +570,12 @@ export type ListingUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  price?: Prisma.FloatFieldUpdateOperationsInput | number
+  priceUnit?: Prisma.EnumPriceUnitFieldUpdateOperationsInput | $Enums.PriceUnit
   quantity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  unit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  priceInfo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  contactInfo?: Prisma.StringFieldUpdateOperationsInput | string
+  contactMethod?: Prisma.EnumContactMethodFieldUpdateOperationsInput | $Enums.ContactMethod
+  contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -547,10 +587,12 @@ export type ListingUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  price?: Prisma.FloatFieldUpdateOperationsInput | number
+  priceUnit?: Prisma.EnumPriceUnitFieldUpdateOperationsInput | $Enums.PriceUnit
   quantity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  unit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  priceInfo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  contactInfo?: Prisma.StringFieldUpdateOperationsInput | string
+  contactMethod?: Prisma.EnumContactMethodFieldUpdateOperationsInput | $Enums.ContactMethod
+  contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -576,10 +618,12 @@ export type ListingCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  price?: Prisma.SortOrder
+  priceUnit?: Prisma.SortOrder
   quantity?: Prisma.SortOrder
-  unit?: Prisma.SortOrder
-  priceInfo?: Prisma.SortOrder
-  contactInfo?: Prisma.SortOrder
+  contactMethod?: Prisma.SortOrder
+  contactEmail?: Prisma.SortOrder
+  contactPhone?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   archivedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
@@ -592,6 +636,7 @@ export type ListingCountOrderByAggregateInput = {
 }
 
 export type ListingAvgOrderByAggregateInput = {
+  price?: Prisma.SortOrder
   quantity?: Prisma.SortOrder
 }
 
@@ -599,10 +644,12 @@ export type ListingMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  price?: Prisma.SortOrder
+  priceUnit?: Prisma.SortOrder
   quantity?: Prisma.SortOrder
-  unit?: Prisma.SortOrder
-  priceInfo?: Prisma.SortOrder
-  contactInfo?: Prisma.SortOrder
+  contactMethod?: Prisma.SortOrder
+  contactEmail?: Prisma.SortOrder
+  contactPhone?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   archivedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
@@ -618,10 +665,12 @@ export type ListingMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  price?: Prisma.SortOrder
+  priceUnit?: Prisma.SortOrder
   quantity?: Prisma.SortOrder
-  unit?: Prisma.SortOrder
-  priceInfo?: Prisma.SortOrder
-  contactInfo?: Prisma.SortOrder
+  contactMethod?: Prisma.SortOrder
+  contactEmail?: Prisma.SortOrder
+  contactPhone?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   archivedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
@@ -634,6 +683,7 @@ export type ListingMinOrderByAggregateInput = {
 }
 
 export type ListingSumOrderByAggregateInput = {
+  price?: Prisma.SortOrder
   quantity?: Prisma.SortOrder
 }
 
@@ -815,12 +865,20 @@ export type ListingUncheckedUpdateManyWithoutLocationNestedInput = {
   deleteMany?: Prisma.ListingScalarWhereInput | Prisma.ListingScalarWhereInput[]
 }
 
+export type EnumPriceUnitFieldUpdateOperationsInput = {
+  set?: $Enums.PriceUnit
+}
+
 export type NullableIntFieldUpdateOperationsInput = {
   set?: number | null
   increment?: number
   decrement?: number
   multiply?: number
   divide?: number
+}
+
+export type EnumContactMethodFieldUpdateOperationsInput = {
+  set?: $Enums.ContactMethod
 }
 
 export type ListingCreateNestedOneWithoutImagesInput = {
@@ -885,10 +943,12 @@ export type ListingCreateWithoutOwnerInput = {
   id?: string
   title: string
   description: string
+  price: number
+  priceUnit: $Enums.PriceUnit
   quantity?: number | null
-  unit?: string | null
-  priceInfo?: string | null
-  contactInfo: string
+  contactMethod?: $Enums.ContactMethod
+  contactEmail?: string | null
+  contactPhone?: string | null
   isActive?: boolean
   archivedAt?: Date | string | null
   deletedAt?: Date | string | null
@@ -907,10 +967,12 @@ export type ListingUncheckedCreateWithoutOwnerInput = {
   id?: string
   title: string
   description: string
+  price: number
+  priceUnit: $Enums.PriceUnit
   quantity?: number | null
-  unit?: string | null
-  priceInfo?: string | null
-  contactInfo: string
+  contactMethod?: $Enums.ContactMethod
+  contactEmail?: string | null
+  contactPhone?: string | null
   isActive?: boolean
   archivedAt?: Date | string | null
   deletedAt?: Date | string | null
@@ -958,10 +1020,12 @@ export type ListingScalarWhereInput = {
   id?: Prisma.StringFilter<"Listing"> | string
   title?: Prisma.StringFilter<"Listing"> | string
   description?: Prisma.StringFilter<"Listing"> | string
+  price?: Prisma.FloatFilter<"Listing"> | number
+  priceUnit?: Prisma.EnumPriceUnitFilter<"Listing"> | $Enums.PriceUnit
   quantity?: Prisma.IntNullableFilter<"Listing"> | number | null
-  unit?: Prisma.StringNullableFilter<"Listing"> | string | null
-  priceInfo?: Prisma.StringNullableFilter<"Listing"> | string | null
-  contactInfo?: Prisma.StringFilter<"Listing"> | string
+  contactMethod?: Prisma.EnumContactMethodFilter<"Listing"> | $Enums.ContactMethod
+  contactEmail?: Prisma.StringNullableFilter<"Listing"> | string | null
+  contactPhone?: Prisma.StringNullableFilter<"Listing"> | string | null
   isActive?: Prisma.BoolFilter<"Listing"> | boolean
   archivedAt?: Prisma.DateTimeNullableFilter<"Listing"> | Date | string | null
   deletedAt?: Prisma.DateTimeNullableFilter<"Listing"> | Date | string | null
@@ -977,10 +1041,12 @@ export type ListingCreateWithoutCategoryInput = {
   id?: string
   title: string
   description: string
+  price: number
+  priceUnit: $Enums.PriceUnit
   quantity?: number | null
-  unit?: string | null
-  priceInfo?: string | null
-  contactInfo: string
+  contactMethod?: $Enums.ContactMethod
+  contactEmail?: string | null
+  contactPhone?: string | null
   isActive?: boolean
   archivedAt?: Date | string | null
   deletedAt?: Date | string | null
@@ -999,10 +1065,12 @@ export type ListingUncheckedCreateWithoutCategoryInput = {
   id?: string
   title: string
   description: string
+  price: number
+  priceUnit: $Enums.PriceUnit
   quantity?: number | null
-  unit?: string | null
-  priceInfo?: string | null
-  contactInfo: string
+  contactMethod?: $Enums.ContactMethod
+  contactEmail?: string | null
+  contactPhone?: string | null
   isActive?: boolean
   archivedAt?: Date | string | null
   deletedAt?: Date | string | null
@@ -1031,10 +1099,12 @@ export type ListingCreateWithoutSubCategoryInput = {
   id?: string
   title: string
   description: string
+  price: number
+  priceUnit: $Enums.PriceUnit
   quantity?: number | null
-  unit?: string | null
-  priceInfo?: string | null
-  contactInfo: string
+  contactMethod?: $Enums.ContactMethod
+  contactEmail?: string | null
+  contactPhone?: string | null
   isActive?: boolean
   archivedAt?: Date | string | null
   deletedAt?: Date | string | null
@@ -1053,10 +1123,12 @@ export type ListingUncheckedCreateWithoutSubCategoryInput = {
   id?: string
   title: string
   description: string
+  price: number
+  priceUnit: $Enums.PriceUnit
   quantity?: number | null
-  unit?: string | null
-  priceInfo?: string | null
-  contactInfo: string
+  contactMethod?: $Enums.ContactMethod
+  contactEmail?: string | null
+  contactPhone?: string | null
   isActive?: boolean
   archivedAt?: Date | string | null
   deletedAt?: Date | string | null
@@ -1117,10 +1189,12 @@ export type ListingCreateWithoutLocationInput = {
   id?: string
   title: string
   description: string
+  price: number
+  priceUnit: $Enums.PriceUnit
   quantity?: number | null
-  unit?: string | null
-  priceInfo?: string | null
-  contactInfo: string
+  contactMethod?: $Enums.ContactMethod
+  contactEmail?: string | null
+  contactPhone?: string | null
   isActive?: boolean
   archivedAt?: Date | string | null
   deletedAt?: Date | string | null
@@ -1139,10 +1213,12 @@ export type ListingUncheckedCreateWithoutLocationInput = {
   id?: string
   title: string
   description: string
+  price: number
+  priceUnit: $Enums.PriceUnit
   quantity?: number | null
-  unit?: string | null
-  priceInfo?: string | null
-  contactInfo: string
+  contactMethod?: $Enums.ContactMethod
+  contactEmail?: string | null
+  contactPhone?: string | null
   isActive?: boolean
   archivedAt?: Date | string | null
   deletedAt?: Date | string | null
@@ -1187,10 +1263,12 @@ export type ListingCreateWithoutImagesInput = {
   id?: string
   title: string
   description: string
+  price: number
+  priceUnit: $Enums.PriceUnit
   quantity?: number | null
-  unit?: string | null
-  priceInfo?: string | null
-  contactInfo: string
+  contactMethod?: $Enums.ContactMethod
+  contactEmail?: string | null
+  contactPhone?: string | null
   isActive?: boolean
   archivedAt?: Date | string | null
   deletedAt?: Date | string | null
@@ -1209,10 +1287,12 @@ export type ListingUncheckedCreateWithoutImagesInput = {
   id?: string
   title: string
   description: string
+  price: number
+  priceUnit: $Enums.PriceUnit
   quantity?: number | null
-  unit?: string | null
-  priceInfo?: string | null
-  contactInfo: string
+  contactMethod?: $Enums.ContactMethod
+  contactEmail?: string | null
+  contactPhone?: string | null
   isActive?: boolean
   archivedAt?: Date | string | null
   deletedAt?: Date | string | null
@@ -1247,10 +1327,12 @@ export type ListingUpdateWithoutImagesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  price?: Prisma.FloatFieldUpdateOperationsInput | number
+  priceUnit?: Prisma.EnumPriceUnitFieldUpdateOperationsInput | $Enums.PriceUnit
   quantity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  unit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  priceInfo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  contactInfo?: Prisma.StringFieldUpdateOperationsInput | string
+  contactMethod?: Prisma.EnumContactMethodFieldUpdateOperationsInput | $Enums.ContactMethod
+  contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1269,10 +1351,12 @@ export type ListingUncheckedUpdateWithoutImagesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  price?: Prisma.FloatFieldUpdateOperationsInput | number
+  priceUnit?: Prisma.EnumPriceUnitFieldUpdateOperationsInput | $Enums.PriceUnit
   quantity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  unit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  priceInfo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  contactInfo?: Prisma.StringFieldUpdateOperationsInput | string
+  contactMethod?: Prisma.EnumContactMethodFieldUpdateOperationsInput | $Enums.ContactMethod
+  contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1291,10 +1375,12 @@ export type ListingCreateWithoutConversationsInput = {
   id?: string
   title: string
   description: string
+  price: number
+  priceUnit: $Enums.PriceUnit
   quantity?: number | null
-  unit?: string | null
-  priceInfo?: string | null
-  contactInfo: string
+  contactMethod?: $Enums.ContactMethod
+  contactEmail?: string | null
+  contactPhone?: string | null
   isActive?: boolean
   archivedAt?: Date | string | null
   deletedAt?: Date | string | null
@@ -1313,10 +1399,12 @@ export type ListingUncheckedCreateWithoutConversationsInput = {
   id?: string
   title: string
   description: string
+  price: number
+  priceUnit: $Enums.PriceUnit
   quantity?: number | null
-  unit?: string | null
-  priceInfo?: string | null
-  contactInfo: string
+  contactMethod?: $Enums.ContactMethod
+  contactEmail?: string | null
+  contactPhone?: string | null
   isActive?: boolean
   archivedAt?: Date | string | null
   deletedAt?: Date | string | null
@@ -1351,10 +1439,12 @@ export type ListingUpdateWithoutConversationsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  price?: Prisma.FloatFieldUpdateOperationsInput | number
+  priceUnit?: Prisma.EnumPriceUnitFieldUpdateOperationsInput | $Enums.PriceUnit
   quantity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  unit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  priceInfo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  contactInfo?: Prisma.StringFieldUpdateOperationsInput | string
+  contactMethod?: Prisma.EnumContactMethodFieldUpdateOperationsInput | $Enums.ContactMethod
+  contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1373,10 +1463,12 @@ export type ListingUncheckedUpdateWithoutConversationsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  price?: Prisma.FloatFieldUpdateOperationsInput | number
+  priceUnit?: Prisma.EnumPriceUnitFieldUpdateOperationsInput | $Enums.PriceUnit
   quantity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  unit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  priceInfo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  contactInfo?: Prisma.StringFieldUpdateOperationsInput | string
+  contactMethod?: Prisma.EnumContactMethodFieldUpdateOperationsInput | $Enums.ContactMethod
+  contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1395,10 +1487,12 @@ export type ListingCreateWithoutBookmarksInput = {
   id?: string
   title: string
   description: string
+  price: number
+  priceUnit: $Enums.PriceUnit
   quantity?: number | null
-  unit?: string | null
-  priceInfo?: string | null
-  contactInfo: string
+  contactMethod?: $Enums.ContactMethod
+  contactEmail?: string | null
+  contactPhone?: string | null
   isActive?: boolean
   archivedAt?: Date | string | null
   deletedAt?: Date | string | null
@@ -1417,10 +1511,12 @@ export type ListingUncheckedCreateWithoutBookmarksInput = {
   id?: string
   title: string
   description: string
+  price: number
+  priceUnit: $Enums.PriceUnit
   quantity?: number | null
-  unit?: string | null
-  priceInfo?: string | null
-  contactInfo: string
+  contactMethod?: $Enums.ContactMethod
+  contactEmail?: string | null
+  contactPhone?: string | null
   isActive?: boolean
   archivedAt?: Date | string | null
   deletedAt?: Date | string | null
@@ -1455,10 +1551,12 @@ export type ListingUpdateWithoutBookmarksInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  price?: Prisma.FloatFieldUpdateOperationsInput | number
+  priceUnit?: Prisma.EnumPriceUnitFieldUpdateOperationsInput | $Enums.PriceUnit
   quantity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  unit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  priceInfo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  contactInfo?: Prisma.StringFieldUpdateOperationsInput | string
+  contactMethod?: Prisma.EnumContactMethodFieldUpdateOperationsInput | $Enums.ContactMethod
+  contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1477,10 +1575,12 @@ export type ListingUncheckedUpdateWithoutBookmarksInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  price?: Prisma.FloatFieldUpdateOperationsInput | number
+  priceUnit?: Prisma.EnumPriceUnitFieldUpdateOperationsInput | $Enums.PriceUnit
   quantity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  unit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  priceInfo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  contactInfo?: Prisma.StringFieldUpdateOperationsInput | string
+  contactMethod?: Prisma.EnumContactMethodFieldUpdateOperationsInput | $Enums.ContactMethod
+  contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1499,10 +1599,12 @@ export type ListingCreateWithoutNotificationsInput = {
   id?: string
   title: string
   description: string
+  price: number
+  priceUnit: $Enums.PriceUnit
   quantity?: number | null
-  unit?: string | null
-  priceInfo?: string | null
-  contactInfo: string
+  contactMethod?: $Enums.ContactMethod
+  contactEmail?: string | null
+  contactPhone?: string | null
   isActive?: boolean
   archivedAt?: Date | string | null
   deletedAt?: Date | string | null
@@ -1521,10 +1623,12 @@ export type ListingUncheckedCreateWithoutNotificationsInput = {
   id?: string
   title: string
   description: string
+  price: number
+  priceUnit: $Enums.PriceUnit
   quantity?: number | null
-  unit?: string | null
-  priceInfo?: string | null
-  contactInfo: string
+  contactMethod?: $Enums.ContactMethod
+  contactEmail?: string | null
+  contactPhone?: string | null
   isActive?: boolean
   archivedAt?: Date | string | null
   deletedAt?: Date | string | null
@@ -1559,10 +1663,12 @@ export type ListingUpdateWithoutNotificationsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  price?: Prisma.FloatFieldUpdateOperationsInput | number
+  priceUnit?: Prisma.EnumPriceUnitFieldUpdateOperationsInput | $Enums.PriceUnit
   quantity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  unit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  priceInfo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  contactInfo?: Prisma.StringFieldUpdateOperationsInput | string
+  contactMethod?: Prisma.EnumContactMethodFieldUpdateOperationsInput | $Enums.ContactMethod
+  contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1581,10 +1687,12 @@ export type ListingUncheckedUpdateWithoutNotificationsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  price?: Prisma.FloatFieldUpdateOperationsInput | number
+  priceUnit?: Prisma.EnumPriceUnitFieldUpdateOperationsInput | $Enums.PriceUnit
   quantity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  unit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  priceInfo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  contactInfo?: Prisma.StringFieldUpdateOperationsInput | string
+  contactMethod?: Prisma.EnumContactMethodFieldUpdateOperationsInput | $Enums.ContactMethod
+  contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1603,10 +1711,12 @@ export type ListingCreateManyOwnerInput = {
   id?: string
   title: string
   description: string
+  price: number
+  priceUnit: $Enums.PriceUnit
   quantity?: number | null
-  unit?: string | null
-  priceInfo?: string | null
-  contactInfo: string
+  contactMethod?: $Enums.ContactMethod
+  contactEmail?: string | null
+  contactPhone?: string | null
   isActive?: boolean
   archivedAt?: Date | string | null
   deletedAt?: Date | string | null
@@ -1621,10 +1731,12 @@ export type ListingUpdateWithoutOwnerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  price?: Prisma.FloatFieldUpdateOperationsInput | number
+  priceUnit?: Prisma.EnumPriceUnitFieldUpdateOperationsInput | $Enums.PriceUnit
   quantity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  unit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  priceInfo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  contactInfo?: Prisma.StringFieldUpdateOperationsInput | string
+  contactMethod?: Prisma.EnumContactMethodFieldUpdateOperationsInput | $Enums.ContactMethod
+  contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1643,10 +1755,12 @@ export type ListingUncheckedUpdateWithoutOwnerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  price?: Prisma.FloatFieldUpdateOperationsInput | number
+  priceUnit?: Prisma.EnumPriceUnitFieldUpdateOperationsInput | $Enums.PriceUnit
   quantity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  unit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  priceInfo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  contactInfo?: Prisma.StringFieldUpdateOperationsInput | string
+  contactMethod?: Prisma.EnumContactMethodFieldUpdateOperationsInput | $Enums.ContactMethod
+  contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1665,10 +1779,12 @@ export type ListingUncheckedUpdateManyWithoutOwnerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  price?: Prisma.FloatFieldUpdateOperationsInput | number
+  priceUnit?: Prisma.EnumPriceUnitFieldUpdateOperationsInput | $Enums.PriceUnit
   quantity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  unit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  priceInfo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  contactInfo?: Prisma.StringFieldUpdateOperationsInput | string
+  contactMethod?: Prisma.EnumContactMethodFieldUpdateOperationsInput | $Enums.ContactMethod
+  contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1683,10 +1799,12 @@ export type ListingCreateManyCategoryInput = {
   id?: string
   title: string
   description: string
+  price: number
+  priceUnit: $Enums.PriceUnit
   quantity?: number | null
-  unit?: string | null
-  priceInfo?: string | null
-  contactInfo: string
+  contactMethod?: $Enums.ContactMethod
+  contactEmail?: string | null
+  contactPhone?: string | null
   isActive?: boolean
   archivedAt?: Date | string | null
   deletedAt?: Date | string | null
@@ -1701,10 +1819,12 @@ export type ListingCreateManySubCategoryInput = {
   id?: string
   title: string
   description: string
+  price: number
+  priceUnit: $Enums.PriceUnit
   quantity?: number | null
-  unit?: string | null
-  priceInfo?: string | null
-  contactInfo: string
+  contactMethod?: $Enums.ContactMethod
+  contactEmail?: string | null
+  contactPhone?: string | null
   isActive?: boolean
   archivedAt?: Date | string | null
   deletedAt?: Date | string | null
@@ -1719,10 +1839,12 @@ export type ListingUpdateWithoutCategoryInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  price?: Prisma.FloatFieldUpdateOperationsInput | number
+  priceUnit?: Prisma.EnumPriceUnitFieldUpdateOperationsInput | $Enums.PriceUnit
   quantity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  unit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  priceInfo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  contactInfo?: Prisma.StringFieldUpdateOperationsInput | string
+  contactMethod?: Prisma.EnumContactMethodFieldUpdateOperationsInput | $Enums.ContactMethod
+  contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1741,10 +1863,12 @@ export type ListingUncheckedUpdateWithoutCategoryInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  price?: Prisma.FloatFieldUpdateOperationsInput | number
+  priceUnit?: Prisma.EnumPriceUnitFieldUpdateOperationsInput | $Enums.PriceUnit
   quantity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  unit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  priceInfo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  contactInfo?: Prisma.StringFieldUpdateOperationsInput | string
+  contactMethod?: Prisma.EnumContactMethodFieldUpdateOperationsInput | $Enums.ContactMethod
+  contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1763,10 +1887,12 @@ export type ListingUncheckedUpdateManyWithoutCategoryInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  price?: Prisma.FloatFieldUpdateOperationsInput | number
+  priceUnit?: Prisma.EnumPriceUnitFieldUpdateOperationsInput | $Enums.PriceUnit
   quantity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  unit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  priceInfo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  contactInfo?: Prisma.StringFieldUpdateOperationsInput | string
+  contactMethod?: Prisma.EnumContactMethodFieldUpdateOperationsInput | $Enums.ContactMethod
+  contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1781,10 +1907,12 @@ export type ListingUpdateWithoutSubCategoryInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  price?: Prisma.FloatFieldUpdateOperationsInput | number
+  priceUnit?: Prisma.EnumPriceUnitFieldUpdateOperationsInput | $Enums.PriceUnit
   quantity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  unit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  priceInfo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  contactInfo?: Prisma.StringFieldUpdateOperationsInput | string
+  contactMethod?: Prisma.EnumContactMethodFieldUpdateOperationsInput | $Enums.ContactMethod
+  contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1803,10 +1931,12 @@ export type ListingUncheckedUpdateWithoutSubCategoryInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  price?: Prisma.FloatFieldUpdateOperationsInput | number
+  priceUnit?: Prisma.EnumPriceUnitFieldUpdateOperationsInput | $Enums.PriceUnit
   quantity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  unit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  priceInfo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  contactInfo?: Prisma.StringFieldUpdateOperationsInput | string
+  contactMethod?: Prisma.EnumContactMethodFieldUpdateOperationsInput | $Enums.ContactMethod
+  contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1825,10 +1955,12 @@ export type ListingUncheckedUpdateManyWithoutSubCategoryInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  price?: Prisma.FloatFieldUpdateOperationsInput | number
+  priceUnit?: Prisma.EnumPriceUnitFieldUpdateOperationsInput | $Enums.PriceUnit
   quantity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  unit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  priceInfo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  contactInfo?: Prisma.StringFieldUpdateOperationsInput | string
+  contactMethod?: Prisma.EnumContactMethodFieldUpdateOperationsInput | $Enums.ContactMethod
+  contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1843,10 +1975,12 @@ export type ListingCreateManyLocationInput = {
   id?: string
   title: string
   description: string
+  price: number
+  priceUnit: $Enums.PriceUnit
   quantity?: number | null
-  unit?: string | null
-  priceInfo?: string | null
-  contactInfo: string
+  contactMethod?: $Enums.ContactMethod
+  contactEmail?: string | null
+  contactPhone?: string | null
   isActive?: boolean
   archivedAt?: Date | string | null
   deletedAt?: Date | string | null
@@ -1861,10 +1995,12 @@ export type ListingUpdateWithoutLocationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  price?: Prisma.FloatFieldUpdateOperationsInput | number
+  priceUnit?: Prisma.EnumPriceUnitFieldUpdateOperationsInput | $Enums.PriceUnit
   quantity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  unit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  priceInfo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  contactInfo?: Prisma.StringFieldUpdateOperationsInput | string
+  contactMethod?: Prisma.EnumContactMethodFieldUpdateOperationsInput | $Enums.ContactMethod
+  contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1883,10 +2019,12 @@ export type ListingUncheckedUpdateWithoutLocationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  price?: Prisma.FloatFieldUpdateOperationsInput | number
+  priceUnit?: Prisma.EnumPriceUnitFieldUpdateOperationsInput | $Enums.PriceUnit
   quantity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  unit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  priceInfo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  contactInfo?: Prisma.StringFieldUpdateOperationsInput | string
+  contactMethod?: Prisma.EnumContactMethodFieldUpdateOperationsInput | $Enums.ContactMethod
+  contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1905,10 +2043,12 @@ export type ListingUncheckedUpdateManyWithoutLocationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  price?: Prisma.FloatFieldUpdateOperationsInput | number
+  priceUnit?: Prisma.EnumPriceUnitFieldUpdateOperationsInput | $Enums.PriceUnit
   quantity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  unit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  priceInfo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  contactInfo?: Prisma.StringFieldUpdateOperationsInput | string
+  contactMethod?: Prisma.EnumContactMethodFieldUpdateOperationsInput | $Enums.ContactMethod
+  contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1981,10 +2121,12 @@ export type ListingSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   id?: boolean
   title?: boolean
   description?: boolean
+  price?: boolean
+  priceUnit?: boolean
   quantity?: boolean
-  unit?: boolean
-  priceInfo?: boolean
-  contactInfo?: boolean
+  contactMethod?: boolean
+  contactEmail?: boolean
+  contactPhone?: boolean
   isActive?: boolean
   archivedAt?: boolean
   deletedAt?: boolean
@@ -2009,10 +2151,12 @@ export type ListingSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   id?: boolean
   title?: boolean
   description?: boolean
+  price?: boolean
+  priceUnit?: boolean
   quantity?: boolean
-  unit?: boolean
-  priceInfo?: boolean
-  contactInfo?: boolean
+  contactMethod?: boolean
+  contactEmail?: boolean
+  contactPhone?: boolean
   isActive?: boolean
   archivedAt?: boolean
   deletedAt?: boolean
@@ -2032,10 +2176,12 @@ export type ListingSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   id?: boolean
   title?: boolean
   description?: boolean
+  price?: boolean
+  priceUnit?: boolean
   quantity?: boolean
-  unit?: boolean
-  priceInfo?: boolean
-  contactInfo?: boolean
+  contactMethod?: boolean
+  contactEmail?: boolean
+  contactPhone?: boolean
   isActive?: boolean
   archivedAt?: boolean
   deletedAt?: boolean
@@ -2055,10 +2201,12 @@ export type ListingSelectScalar = {
   id?: boolean
   title?: boolean
   description?: boolean
+  price?: boolean
+  priceUnit?: boolean
   quantity?: boolean
-  unit?: boolean
-  priceInfo?: boolean
-  contactInfo?: boolean
+  contactMethod?: boolean
+  contactEmail?: boolean
+  contactPhone?: boolean
   isActive?: boolean
   archivedAt?: boolean
   deletedAt?: boolean
@@ -2070,7 +2218,7 @@ export type ListingSelectScalar = {
   locationId?: boolean
 }
 
-export type ListingOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "quantity" | "unit" | "priceInfo" | "contactInfo" | "isActive" | "archivedAt" | "deletedAt" | "createdAt" | "updatedAt" | "ownerId" | "categoryId" | "subCategoryId" | "locationId", ExtArgs["result"]["listing"]>
+export type ListingOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "price" | "priceUnit" | "quantity" | "contactMethod" | "contactEmail" | "contactPhone" | "isActive" | "archivedAt" | "deletedAt" | "createdAt" | "updatedAt" | "ownerId" | "categoryId" | "subCategoryId" | "locationId", ExtArgs["result"]["listing"]>
 export type ListingInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   owner?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
@@ -2111,10 +2259,12 @@ export type $ListingPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     id: string
     title: string
     description: string
+    price: number
+    priceUnit: $Enums.PriceUnit
     quantity: number | null
-    unit: string | null
-    priceInfo: string | null
-    contactInfo: string
+    contactMethod: $Enums.ContactMethod
+    contactEmail: string | null
+    contactPhone: string | null
     isActive: boolean
     archivedAt: Date | null
     deletedAt: Date | null
@@ -2558,10 +2708,12 @@ export interface ListingFieldRefs {
   readonly id: Prisma.FieldRef<"Listing", 'String'>
   readonly title: Prisma.FieldRef<"Listing", 'String'>
   readonly description: Prisma.FieldRef<"Listing", 'String'>
+  readonly price: Prisma.FieldRef<"Listing", 'Float'>
+  readonly priceUnit: Prisma.FieldRef<"Listing", 'PriceUnit'>
   readonly quantity: Prisma.FieldRef<"Listing", 'Int'>
-  readonly unit: Prisma.FieldRef<"Listing", 'String'>
-  readonly priceInfo: Prisma.FieldRef<"Listing", 'String'>
-  readonly contactInfo: Prisma.FieldRef<"Listing", 'String'>
+  readonly contactMethod: Prisma.FieldRef<"Listing", 'ContactMethod'>
+  readonly contactEmail: Prisma.FieldRef<"Listing", 'String'>
+  readonly contactPhone: Prisma.FieldRef<"Listing", 'String'>
   readonly isActive: Prisma.FieldRef<"Listing", 'Boolean'>
   readonly archivedAt: Prisma.FieldRef<"Listing", 'DateTime'>
   readonly deletedAt: Prisma.FieldRef<"Listing", 'DateTime'>

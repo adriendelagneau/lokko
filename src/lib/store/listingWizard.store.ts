@@ -5,7 +5,7 @@ import { stepSchemas, ListingDraft } from "../schemas/listing.schema";
 type WizardState = {
   step: number;
   data: Partial<ListingDraft>;
-  errors: Record<string, string[]>;
+  errors: Partial<Record<keyof ListingDraft, string[]>>;
   next: () => boolean;
   prev: () => void;
   update: (values: Partial<ListingDraft>) => void;
@@ -29,7 +29,11 @@ export const useListingWizard = create<WizardState>((set, get) => ({
     const result = schema.safeParse(data);
 
     if (!result.success) {
-      set({ errors: result.error.flatten().fieldErrors });
+      set({
+        errors: result.error.flatten().fieldErrors as Partial<
+          Record<keyof ListingDraft, string[]>
+        >,
+      });
       return false;
     }
 

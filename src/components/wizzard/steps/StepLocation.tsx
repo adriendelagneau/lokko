@@ -16,7 +16,6 @@ type Commune = {
 export default function StepLocation() {
   const { data, update, next, prev, errors } = useListingWizard();
 
-  // Lire la location actuelle depuis le store
   const location = data.location ?? {
     region: "",
     department: "",
@@ -24,22 +23,23 @@ export default function StepLocation() {
     postalCode: "",
   };
 
-  const [query, setQuery] = useState(location.city ?? "");
+  const [query, setQuery] = useState(location.city);
   const [suggestions, setSuggestions] = useState<Commune[]>([]);
   const [loading, setLoading] = useState(false);
-  const [selected, setSelected] = useState<Commune | null>(null);
+  const [isFocused, setIsFocused] = useState(false);
 
-  // Fetch autocomplete
+  // ---- Fetch autocomplete
   const fetchCities = async (q: string) => {
     if (q.length < 2) {
       setSuggestions([]);
       return;
     }
+
     setLoading(true);
     try {
       const res = await fetch(`/api/city?q=${encodeURIComponent(q)}`);
       const data: Commune[] = await res.json();
-      setSuggestions(data.slice(0, 5)); // max 5 suggestions
+      setSuggestions(data.slice(0, 5));
     } catch (err) {
       console.error(err);
       setSuggestions([]);
@@ -48,16 +48,19 @@ export default function StepLocation() {
     }
   };
 
-  const debouncedFetch = useCallback(debounce(fetchCities, 200), []);
+  const debouncedFetch = useCallback(debounce(fetchCities, 250), []);
 
   useEffect(() => {
-    debouncedFetch(query);
-  }, [query, debouncedFetch]);
+    if (isFocused) {
+      debouncedFetch(query);
+    }
+  }, [query, isFocused, debouncedFetch]);
 
+  // ---- Selection
   const handleSelect = (commune: Commune) => {
     setQuery(`${commune.nom} (${commune.codesPostaux[0]})`);
     setSuggestions([]);
-    setSelected(commune);
+    setIsFocused(false);
 
     update({
       location: {
@@ -70,8 +73,8 @@ export default function StepLocation() {
   };
 
   const handleOther = () => {
-    setSelected(null);
     setSuggestions([]);
+    setIsFocused(false);
 
     update({
       location: {
@@ -87,52 +90,53 @@ export default function StepLocation() {
     <div className="space-y-4">
       <h2 className="text-xl font-semibold">Où se situe votre annonce ?</h2>
 
-      <input
-        type="text"
-        placeholder="Commencez à taper une ville..."
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-        className="w-full rounded-md border p-2"
-      />
+      <div className="relative">
+        <input
+          type="text"
+          placeholder="Commencez à taper une ville..."
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setTimeout(() => setIsFocused(false), 150)}
+          className="w-full rounded-md border p-2"
+        />
 
-      {loading && (
-        <p className="text-muted-foreground text-sm">Recherche...</p>
-      )}
+        {isFocused && loading && (
+          <p className="text-muted-foreground mt-1 text-sm">Recherche...</p>
+        )}
 
-      {suggestions.length > 0 && (
-        <ul className="mt-1 max-h-60 overflow-auto rounded-md border bg-white shadow-md">
-          {suggestions.map((commune) => (
+        {isFocused && suggestions.length > 0 && (
+          <ul className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md border bg-white shadow-md">
+            {suggestions.map((commune) => (
+              <li
+                key={commune.nom + commune.codesPostaux[0]}
+                className="cursor-pointer px-3 py-2 hover:bg-gray-100"
+                onMouseDown={() => handleSelect(commune)}
+              >
+                {commune.nom} ({commune.codesPostaux[0]}) –{" "}
+                {commune.departement.nom}
+              </li>
+            ))}
+
             <li
-              key={commune.nom + commune.codesPostaux[0]}
-              className="cursor-pointer px-3 py-2 hover:bg-gray-100"
-              onClick={() => handleSelect(commune)}
+              className="text-muted-foreground cursor-pointer px-3 py-2 text-sm hover:bg-gray-100"
+              onMouseDown={handleOther}
             >
-              {commune.nom} ({commune.codesPostaux[0]}) -{" "}
-              {commune.departement.nom}
+              Autre ville : &quot;{query}&quot;
             </li>
-          ))}
-          <li
-            className="text-muted-foreground cursor-pointer px-3 py-2 text-sm hover:bg-gray-100"
-            onClick={handleOther}
-          >
-            Autre ville : &quot;{query}&quot;
-          </li>
-        </ul>
-      )}
+          </ul>
+        )}
+      </div>
 
-      {/* Affichage d’erreurs Zod si nécessaire */}
-      {errors.location?.city && (
-        <p className="text-destructive text-sm">{errors.location.city[0]}</p>
+      {errors.location && (
+        <p className="text-destructive text-sm">{errors.location[0]}</p>
       )}
 
       <div className="flex justify-between">
         <Button variant="ghost" onClick={prev}>
           Retour
         </Button>
-        <Button
-          onClick={next}
-          disabled={!query || loading} // bloque si vide ou en cours de recherche
-        >
+        <Button onClick={next} disabled={!query || loading}>
           Continuer
         </Button>
       </div>

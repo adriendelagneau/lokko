@@ -192,6 +192,13 @@ export type FloatWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedFloatFilter<$PrismaModel>
 }
 
+export type EnumPriceUnitFilter<$PrismaModel = never> = {
+  equals?: $Enums.PriceUnit | Prisma.EnumPriceUnitFieldRefInput<$PrismaModel>
+  in?: $Enums.PriceUnit[] | Prisma.ListEnumPriceUnitFieldRefInput<$PrismaModel>
+  notIn?: $Enums.PriceUnit[] | Prisma.ListEnumPriceUnitFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumPriceUnitFilter<$PrismaModel> | $Enums.PriceUnit
+}
+
 export type IntNullableFilter<$PrismaModel = never> = {
   equals?: number | Prisma.IntFieldRefInput<$PrismaModel> | null
   in?: number[] | Prisma.ListIntFieldRefInput<$PrismaModel> | null
@@ -201,6 +208,23 @@ export type IntNullableFilter<$PrismaModel = never> = {
   gt?: number | Prisma.IntFieldRefInput<$PrismaModel>
   gte?: number | Prisma.IntFieldRefInput<$PrismaModel>
   not?: Prisma.NestedIntNullableFilter<$PrismaModel> | number | null
+}
+
+export type EnumContactMethodFilter<$PrismaModel = never> = {
+  equals?: $Enums.ContactMethod | Prisma.EnumContactMethodFieldRefInput<$PrismaModel>
+  in?: $Enums.ContactMethod[] | Prisma.ListEnumContactMethodFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ContactMethod[] | Prisma.ListEnumContactMethodFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumContactMethodFilter<$PrismaModel> | $Enums.ContactMethod
+}
+
+export type EnumPriceUnitWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.PriceUnit | Prisma.EnumPriceUnitFieldRefInput<$PrismaModel>
+  in?: $Enums.PriceUnit[] | Prisma.ListEnumPriceUnitFieldRefInput<$PrismaModel>
+  notIn?: $Enums.PriceUnit[] | Prisma.ListEnumPriceUnitFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumPriceUnitWithAggregatesFilter<$PrismaModel> | $Enums.PriceUnit
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumPriceUnitFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumPriceUnitFilter<$PrismaModel>
 }
 
 export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -217,6 +241,16 @@ export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
   _sum?: Prisma.NestedIntNullableFilter<$PrismaModel>
   _min?: Prisma.NestedIntNullableFilter<$PrismaModel>
   _max?: Prisma.NestedIntNullableFilter<$PrismaModel>
+}
+
+export type EnumContactMethodWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.ContactMethod | Prisma.EnumContactMethodFieldRefInput<$PrismaModel>
+  in?: $Enums.ContactMethod[] | Prisma.ListEnumContactMethodFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ContactMethod[] | Prisma.ListEnumContactMethodFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumContactMethodWithAggregatesFilter<$PrismaModel> | $Enums.ContactMethod
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumContactMethodFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumContactMethodFilter<$PrismaModel>
 }
 
 export type EnumNotificationTypeFilter<$PrismaModel = never> = {
@@ -478,6 +512,30 @@ export type NestedFloatWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedFloatFilter<$PrismaModel>
 }
 
+export type NestedEnumPriceUnitFilter<$PrismaModel = never> = {
+  equals?: $Enums.PriceUnit | Prisma.EnumPriceUnitFieldRefInput<$PrismaModel>
+  in?: $Enums.PriceUnit[] | Prisma.ListEnumPriceUnitFieldRefInput<$PrismaModel>
+  notIn?: $Enums.PriceUnit[] | Prisma.ListEnumPriceUnitFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumPriceUnitFilter<$PrismaModel> | $Enums.PriceUnit
+}
+
+export type NestedEnumContactMethodFilter<$PrismaModel = never> = {
+  equals?: $Enums.ContactMethod | Prisma.EnumContactMethodFieldRefInput<$PrismaModel>
+  in?: $Enums.ContactMethod[] | Prisma.ListEnumContactMethodFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ContactMethod[] | Prisma.ListEnumContactMethodFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumContactMethodFilter<$PrismaModel> | $Enums.ContactMethod
+}
+
+export type NestedEnumPriceUnitWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.PriceUnit | Prisma.EnumPriceUnitFieldRefInput<$PrismaModel>
+  in?: $Enums.PriceUnit[] | Prisma.ListEnumPriceUnitFieldRefInput<$PrismaModel>
+  notIn?: $Enums.PriceUnit[] | Prisma.ListEnumPriceUnitFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumPriceUnitWithAggregatesFilter<$PrismaModel> | $Enums.PriceUnit
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumPriceUnitFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumPriceUnitFilter<$PrismaModel>
+}
+
 export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
   equals?: number | Prisma.IntFieldRefInput<$PrismaModel> | null
   in?: number[] | Prisma.ListIntFieldRefInput<$PrismaModel> | null
@@ -503,6 +561,16 @@ export type NestedFloatNullableFilter<$PrismaModel = never> = {
   gt?: number | Prisma.FloatFieldRefInput<$PrismaModel>
   gte?: number | Prisma.FloatFieldRefInput<$PrismaModel>
   not?: Prisma.NestedFloatNullableFilter<$PrismaModel> | number | null
+}
+
+export type NestedEnumContactMethodWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.ContactMethod | Prisma.EnumContactMethodFieldRefInput<$PrismaModel>
+  in?: $Enums.ContactMethod[] | Prisma.ListEnumContactMethodFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ContactMethod[] | Prisma.ListEnumContactMethodFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumContactMethodWithAggregatesFilter<$PrismaModel> | $Enums.ContactMethod
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumContactMethodFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumContactMethodFilter<$PrismaModel>
 }
 
 export type NestedEnumNotificationTypeFilter<$PrismaModel = never> = {

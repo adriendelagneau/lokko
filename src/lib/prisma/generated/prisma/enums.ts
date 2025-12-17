@@ -24,3 +24,22 @@ export const NotificationType = {
 } as const
 
 export type NotificationType = (typeof NotificationType)[keyof typeof NotificationType]
+
+
+export const PriceUnit = {
+  UNIT: 'UNIT',
+  KG: 'KG',
+  L: 'L'
+} as const
+
+export type PriceUnit = (typeof PriceUnit)[keyof typeof PriceUnit]
+
+
+export const ContactMethod = {
+  NONE: 'NONE',
+  EMAIL: 'EMAIL',
+  PHONE: 'PHONE',
+  BOTH: 'BOTH'
+} as const
+
+export type ContactMethod = (typeof ContactMethod)[keyof typeof ContactMethod]

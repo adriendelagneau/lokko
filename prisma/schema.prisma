@@ -22,6 +22,20 @@ enum NotificationType {
   SAVED_SEARCH_MATCH
 }
 
+enum PriceUnit {
+  UNIT
+  KG
+  L
+}
+
+enum ContactMethod {
+  NONE
+  EMAIL
+  PHONE
+  BOTH
+}
+
+
 //
 // AUTH & USERS
 //
@@ -144,15 +158,20 @@ model Location {
   @@map("location")
 }
 
+
 model Listing {
   id String @id @default(uuid())
 
   title       String
   description String
+
+  price       Float
+  priceUnit   PriceUnit
   quantity    Int?
-  unit        String?
-  priceInfo   String?
-  contactInfo String
+  
+  contactMethod ContactMethod @default(NONE) // Nouveau champ
+  contactEmail  String?               // Optionnel
+  contactPhone  String?               // Optionnel
 
   isActive   Boolean   @default(true)
   archivedAt DateTime?
@@ -161,26 +180,20 @@ model Listing {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  ownerId        String
-  categoryId     String   // catégorie principale
-  subCategoryId  String   // sous-catégorie
+  ownerId       String
+  categoryId    String
+  subCategoryId String
+  locationId    String
 
-  owner       User     @relation(fields: [ownerId], references: [id], onDelete: Restrict)
+  owner       User     @relation(fields: [ownerId], references: [id])
   category    Category @relation("ListingCategory", fields: [categoryId], references: [id])
   subCategory Category @relation("ListingSubCategory", fields: [subCategoryId], references: [id])
   location    Location @relation(fields: [locationId], references: [id])
-
-  locationId String
 
   images        ListingImage[]
   conversations Conversation[]
   bookmarks     Bookmark[]
   notifications Notification[]
-
-  @@index([categoryId])
-  @@index([subCategoryId])
-  @@index([isActive, deletedAt])
-  @@map("listing")
 }
 
 
