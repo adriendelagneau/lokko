@@ -20,8 +20,24 @@ export type UserModel = runtime.Types.Result.DefaultSelection<Prisma.$UserPayloa
 
 export type AggregateUser = {
   _count: UserCountAggregateOutputType | null
+  _avg: UserAvgAggregateOutputType | null
+  _sum: UserSumAggregateOutputType | null
   _min: UserMinAggregateOutputType | null
   _max: UserMaxAggregateOutputType | null
+}
+
+export type UserAvgAggregateOutputType = {
+  ratingAverage: number | null
+  ratingCount: number | null
+  ratingSum: number | null
+  salesCount: number | null
+}
+
+export type UserSumAggregateOutputType = {
+  ratingAverage: number | null
+  ratingCount: number | null
+  ratingSum: number | null
+  salesCount: number | null
 }
 
 export type UserMinAggregateOutputType = {
@@ -32,6 +48,10 @@ export type UserMinAggregateOutputType = {
   role: $Enums.Role | null
   emailVerified: boolean | null
   image: string | null
+  ratingAverage: number | null
+  ratingCount: number | null
+  ratingSum: number | null
+  salesCount: number | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -44,6 +64,10 @@ export type UserMaxAggregateOutputType = {
   role: $Enums.Role | null
   emailVerified: boolean | null
   image: string | null
+  ratingAverage: number | null
+  ratingCount: number | null
+  ratingSum: number | null
+  salesCount: number | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -56,11 +80,29 @@ export type UserCountAggregateOutputType = {
   role: number
   emailVerified: number
   image: number
+  ratingAverage: number
+  ratingCount: number
+  ratingSum: number
+  salesCount: number
   createdAt: number
   updatedAt: number
   _all: number
 }
 
+
+export type UserAvgAggregateInputType = {
+  ratingAverage?: true
+  ratingCount?: true
+  ratingSum?: true
+  salesCount?: true
+}
+
+export type UserSumAggregateInputType = {
+  ratingAverage?: true
+  ratingCount?: true
+  ratingSum?: true
+  salesCount?: true
+}
 
 export type UserMinAggregateInputType = {
   id?: true
@@ -70,6 +112,10 @@ export type UserMinAggregateInputType = {
   role?: true
   emailVerified?: true
   image?: true
+  ratingAverage?: true
+  ratingCount?: true
+  ratingSum?: true
+  salesCount?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -82,6 +128,10 @@ export type UserMaxAggregateInputType = {
   role?: true
   emailVerified?: true
   image?: true
+  ratingAverage?: true
+  ratingCount?: true
+  ratingSum?: true
+  salesCount?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -94,6 +144,10 @@ export type UserCountAggregateInputType = {
   role?: true
   emailVerified?: true
   image?: true
+  ratingAverage?: true
+  ratingCount?: true
+  ratingSum?: true
+  salesCount?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -137,6 +191,18 @@ export type UserAggregateArgs<ExtArgs extends runtime.Types.Extensions.InternalA
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: UserAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: UserSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: UserMinAggregateInputType
@@ -167,6 +233,8 @@ export type UserGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
   take?: number
   skip?: number
   _count?: UserCountAggregateInputType | true
+  _avg?: UserAvgAggregateInputType
+  _sum?: UserSumAggregateInputType
   _min?: UserMinAggregateInputType
   _max?: UserMaxAggregateInputType
 }
@@ -179,9 +247,15 @@ export type UserGroupByOutputType = {
   role: $Enums.Role
   emailVerified: boolean
   image: string | null
+  ratingAverage: number
+  ratingCount: number
+  ratingSum: number
+  salesCount: number
   createdAt: Date
   updatedAt: Date
   _count: UserCountAggregateOutputType | null
+  _avg: UserAvgAggregateOutputType | null
+  _sum: UserSumAggregateOutputType | null
   _min: UserMinAggregateOutputType | null
   _max: UserMaxAggregateOutputType | null
 }
@@ -212,6 +286,10 @@ export type UserWhereInput = {
   role?: Prisma.EnumRoleFilter<"User"> | $Enums.Role
   emailVerified?: Prisma.BoolFilter<"User"> | boolean
   image?: Prisma.StringNullableFilter<"User"> | string | null
+  ratingAverage?: Prisma.FloatFilter<"User"> | number
+  ratingCount?: Prisma.IntFilter<"User"> | number
+  ratingSum?: Prisma.IntFilter<"User"> | number
+  salesCount?: Prisma.IntFilter<"User"> | number
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   sessions?: Prisma.SessionListRelationFilter
@@ -223,6 +301,8 @@ export type UserWhereInput = {
   bookmarks?: Prisma.BookmarkListRelationFilter
   notifications?: Prisma.NotificationListRelationFilter
   savedSearches?: Prisma.SavedSearchListRelationFilter
+  receivedReviews?: Prisma.ReviewListRelationFilter
+  writtenReviews?: Prisma.ReviewListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -233,6 +313,10 @@ export type UserOrderByWithRelationInput = {
   role?: Prisma.SortOrder
   emailVerified?: Prisma.SortOrder
   image?: Prisma.SortOrderInput | Prisma.SortOrder
+  ratingAverage?: Prisma.SortOrder
+  ratingCount?: Prisma.SortOrder
+  ratingSum?: Prisma.SortOrder
+  salesCount?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   sessions?: Prisma.SessionOrderByRelationAggregateInput
@@ -244,6 +328,8 @@ export type UserOrderByWithRelationInput = {
   bookmarks?: Prisma.BookmarkOrderByRelationAggregateInput
   notifications?: Prisma.NotificationOrderByRelationAggregateInput
   savedSearches?: Prisma.SavedSearchOrderByRelationAggregateInput
+  receivedReviews?: Prisma.ReviewOrderByRelationAggregateInput
+  writtenReviews?: Prisma.ReviewOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -257,6 +343,10 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   role?: Prisma.EnumRoleFilter<"User"> | $Enums.Role
   emailVerified?: Prisma.BoolFilter<"User"> | boolean
   image?: Prisma.StringNullableFilter<"User"> | string | null
+  ratingAverage?: Prisma.FloatFilter<"User"> | number
+  ratingCount?: Prisma.IntFilter<"User"> | number
+  ratingSum?: Prisma.IntFilter<"User"> | number
+  salesCount?: Prisma.IntFilter<"User"> | number
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   sessions?: Prisma.SessionListRelationFilter
@@ -268,6 +358,8 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   bookmarks?: Prisma.BookmarkListRelationFilter
   notifications?: Prisma.NotificationListRelationFilter
   savedSearches?: Prisma.SavedSearchListRelationFilter
+  receivedReviews?: Prisma.ReviewListRelationFilter
+  writtenReviews?: Prisma.ReviewListRelationFilter
 }, "id" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -278,11 +370,17 @@ export type UserOrderByWithAggregationInput = {
   role?: Prisma.SortOrder
   emailVerified?: Prisma.SortOrder
   image?: Prisma.SortOrderInput | Prisma.SortOrder
+  ratingAverage?: Prisma.SortOrder
+  ratingCount?: Prisma.SortOrder
+  ratingSum?: Prisma.SortOrder
+  salesCount?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
+  _avg?: Prisma.UserAvgOrderByAggregateInput
   _max?: Prisma.UserMaxOrderByAggregateInput
   _min?: Prisma.UserMinOrderByAggregateInput
+  _sum?: Prisma.UserSumOrderByAggregateInput
 }
 
 export type UserScalarWhereWithAggregatesInput = {
@@ -296,6 +394,10 @@ export type UserScalarWhereWithAggregatesInput = {
   role?: Prisma.EnumRoleWithAggregatesFilter<"User"> | $Enums.Role
   emailVerified?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
   image?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  ratingAverage?: Prisma.FloatWithAggregatesFilter<"User"> | number
+  ratingCount?: Prisma.IntWithAggregatesFilter<"User"> | number
+  ratingSum?: Prisma.IntWithAggregatesFilter<"User"> | number
+  salesCount?: Prisma.IntWithAggregatesFilter<"User"> | number
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
 }
@@ -308,6 +410,10 @@ export type UserCreateInput = {
   role?: $Enums.Role
   emailVerified?: boolean
   image?: string | null
+  ratingAverage?: number
+  ratingCount?: number
+  ratingSum?: number
+  salesCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
@@ -319,6 +425,8 @@ export type UserCreateInput = {
   bookmarks?: Prisma.BookmarkCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   savedSearches?: Prisma.SavedSearchCreateNestedManyWithoutUserInput
+  receivedReviews?: Prisma.ReviewCreateNestedManyWithoutSellerInput
+  writtenReviews?: Prisma.ReviewCreateNestedManyWithoutAuthorInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -329,6 +437,10 @@ export type UserUncheckedCreateInput = {
   role?: $Enums.Role
   emailVerified?: boolean
   image?: string | null
+  ratingAverage?: number
+  ratingCount?: number
+  ratingSum?: number
+  salesCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
@@ -340,6 +452,8 @@ export type UserUncheckedCreateInput = {
   bookmarks?: Prisma.BookmarkUncheckedCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   savedSearches?: Prisma.SavedSearchUncheckedCreateNestedManyWithoutUserInput
+  receivedReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutSellerInput
+  writtenReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutAuthorInput
 }
 
 export type UserUpdateInput = {
@@ -350,6 +464,10 @@ export type UserUpdateInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ratingAverage?: Prisma.FloatFieldUpdateOperationsInput | number
+  ratingCount?: Prisma.IntFieldUpdateOperationsInput | number
+  ratingSum?: Prisma.IntFieldUpdateOperationsInput | number
+  salesCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
@@ -361,6 +479,8 @@ export type UserUpdateInput = {
   bookmarks?: Prisma.BookmarkUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   savedSearches?: Prisma.SavedSearchUpdateManyWithoutUserNestedInput
+  receivedReviews?: Prisma.ReviewUpdateManyWithoutSellerNestedInput
+  writtenReviews?: Prisma.ReviewUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -371,6 +491,10 @@ export type UserUncheckedUpdateInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ratingAverage?: Prisma.FloatFieldUpdateOperationsInput | number
+  ratingCount?: Prisma.IntFieldUpdateOperationsInput | number
+  ratingSum?: Prisma.IntFieldUpdateOperationsInput | number
+  salesCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
@@ -382,6 +506,8 @@ export type UserUncheckedUpdateInput = {
   bookmarks?: Prisma.BookmarkUncheckedUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   savedSearches?: Prisma.SavedSearchUncheckedUpdateManyWithoutUserNestedInput
+  receivedReviews?: Prisma.ReviewUncheckedUpdateManyWithoutSellerNestedInput
+  writtenReviews?: Prisma.ReviewUncheckedUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -392,6 +518,10 @@ export type UserCreateManyInput = {
   role?: $Enums.Role
   emailVerified?: boolean
   image?: string | null
+  ratingAverage?: number
+  ratingCount?: number
+  ratingSum?: number
+  salesCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -404,6 +534,10 @@ export type UserUpdateManyMutationInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ratingAverage?: Prisma.FloatFieldUpdateOperationsInput | number
+  ratingCount?: Prisma.IntFieldUpdateOperationsInput | number
+  ratingSum?: Prisma.IntFieldUpdateOperationsInput | number
+  salesCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -416,6 +550,10 @@ export type UserUncheckedUpdateManyInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ratingAverage?: Prisma.FloatFieldUpdateOperationsInput | number
+  ratingCount?: Prisma.IntFieldUpdateOperationsInput | number
+  ratingSum?: Prisma.IntFieldUpdateOperationsInput | number
+  salesCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -428,8 +566,19 @@ export type UserCountOrderByAggregateInput = {
   role?: Prisma.SortOrder
   emailVerified?: Prisma.SortOrder
   image?: Prisma.SortOrder
+  ratingAverage?: Prisma.SortOrder
+  ratingCount?: Prisma.SortOrder
+  ratingSum?: Prisma.SortOrder
+  salesCount?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type UserAvgOrderByAggregateInput = {
+  ratingAverage?: Prisma.SortOrder
+  ratingCount?: Prisma.SortOrder
+  ratingSum?: Prisma.SortOrder
+  salesCount?: Prisma.SortOrder
 }
 
 export type UserMaxOrderByAggregateInput = {
@@ -440,6 +589,10 @@ export type UserMaxOrderByAggregateInput = {
   role?: Prisma.SortOrder
   emailVerified?: Prisma.SortOrder
   image?: Prisma.SortOrder
+  ratingAverage?: Prisma.SortOrder
+  ratingCount?: Prisma.SortOrder
+  ratingSum?: Prisma.SortOrder
+  salesCount?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -452,8 +605,19 @@ export type UserMinOrderByAggregateInput = {
   role?: Prisma.SortOrder
   emailVerified?: Prisma.SortOrder
   image?: Prisma.SortOrder
+  ratingAverage?: Prisma.SortOrder
+  ratingCount?: Prisma.SortOrder
+  ratingSum?: Prisma.SortOrder
+  salesCount?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type UserSumOrderByAggregateInput = {
+  ratingAverage?: Prisma.SortOrder
+  ratingCount?: Prisma.SortOrder
+  ratingSum?: Prisma.SortOrder
+  salesCount?: Prisma.SortOrder
 }
 
 export type UserScalarRelationFilter = {
@@ -475,6 +639,22 @@ export type EnumRoleFieldUpdateOperationsInput = {
 
 export type BoolFieldUpdateOperationsInput = {
   set?: boolean
+}
+
+export type FloatFieldUpdateOperationsInput = {
+  set?: number
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
+}
+
+export type IntFieldUpdateOperationsInput = {
+  set?: number
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
 }
 
 export type DateTimeFieldUpdateOperationsInput = {
@@ -607,6 +787,34 @@ export type UserUpdateOneRequiredWithoutSavedSearchesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutSavedSearchesInput, Prisma.UserUpdateWithoutSavedSearchesInput>, Prisma.UserUncheckedUpdateWithoutSavedSearchesInput>
 }
 
+export type UserCreateNestedOneWithoutReceivedReviewsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutReceivedReviewsInput, Prisma.UserUncheckedCreateWithoutReceivedReviewsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutReceivedReviewsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserCreateNestedOneWithoutWrittenReviewsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutWrittenReviewsInput, Prisma.UserUncheckedCreateWithoutWrittenReviewsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutWrittenReviewsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutReceivedReviewsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutReceivedReviewsInput, Prisma.UserUncheckedCreateWithoutReceivedReviewsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutReceivedReviewsInput
+  upsert?: Prisma.UserUpsertWithoutReceivedReviewsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutReceivedReviewsInput, Prisma.UserUpdateWithoutReceivedReviewsInput>, Prisma.UserUncheckedUpdateWithoutReceivedReviewsInput>
+}
+
+export type UserUpdateOneRequiredWithoutWrittenReviewsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutWrittenReviewsInput, Prisma.UserUncheckedCreateWithoutWrittenReviewsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutWrittenReviewsInput
+  upsert?: Prisma.UserUpsertWithoutWrittenReviewsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutWrittenReviewsInput, Prisma.UserUpdateWithoutWrittenReviewsInput>, Prisma.UserUncheckedUpdateWithoutWrittenReviewsInput>
+}
+
 export type UserCreateWithoutSessionsInput = {
   id?: string
   email: string
@@ -615,6 +823,10 @@ export type UserCreateWithoutSessionsInput = {
   role?: $Enums.Role
   emailVerified?: boolean
   image?: string | null
+  ratingAverage?: number
+  ratingCount?: number
+  ratingSum?: number
+  salesCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
@@ -625,6 +837,8 @@ export type UserCreateWithoutSessionsInput = {
   bookmarks?: Prisma.BookmarkCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   savedSearches?: Prisma.SavedSearchCreateNestedManyWithoutUserInput
+  receivedReviews?: Prisma.ReviewCreateNestedManyWithoutSellerInput
+  writtenReviews?: Prisma.ReviewCreateNestedManyWithoutAuthorInput
 }
 
 export type UserUncheckedCreateWithoutSessionsInput = {
@@ -635,6 +849,10 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   role?: $Enums.Role
   emailVerified?: boolean
   image?: string | null
+  ratingAverage?: number
+  ratingCount?: number
+  ratingSum?: number
+  salesCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
@@ -645,6 +863,8 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   bookmarks?: Prisma.BookmarkUncheckedCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   savedSearches?: Prisma.SavedSearchUncheckedCreateNestedManyWithoutUserInput
+  receivedReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutSellerInput
+  writtenReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutAuthorInput
 }
 
 export type UserCreateOrConnectWithoutSessionsInput = {
@@ -671,6 +891,10 @@ export type UserUpdateWithoutSessionsInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ratingAverage?: Prisma.FloatFieldUpdateOperationsInput | number
+  ratingCount?: Prisma.IntFieldUpdateOperationsInput | number
+  ratingSum?: Prisma.IntFieldUpdateOperationsInput | number
+  salesCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
@@ -681,6 +905,8 @@ export type UserUpdateWithoutSessionsInput = {
   bookmarks?: Prisma.BookmarkUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   savedSearches?: Prisma.SavedSearchUpdateManyWithoutUserNestedInput
+  receivedReviews?: Prisma.ReviewUpdateManyWithoutSellerNestedInput
+  writtenReviews?: Prisma.ReviewUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -691,6 +917,10 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ratingAverage?: Prisma.FloatFieldUpdateOperationsInput | number
+  ratingCount?: Prisma.IntFieldUpdateOperationsInput | number
+  ratingSum?: Prisma.IntFieldUpdateOperationsInput | number
+  salesCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
@@ -701,6 +931,8 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   bookmarks?: Prisma.BookmarkUncheckedUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   savedSearches?: Prisma.SavedSearchUncheckedUpdateManyWithoutUserNestedInput
+  receivedReviews?: Prisma.ReviewUncheckedUpdateManyWithoutSellerNestedInput
+  writtenReviews?: Prisma.ReviewUncheckedUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserCreateWithoutAccountsInput = {
@@ -711,6 +943,10 @@ export type UserCreateWithoutAccountsInput = {
   role?: $Enums.Role
   emailVerified?: boolean
   image?: string | null
+  ratingAverage?: number
+  ratingCount?: number
+  ratingSum?: number
+  salesCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
@@ -721,6 +957,8 @@ export type UserCreateWithoutAccountsInput = {
   bookmarks?: Prisma.BookmarkCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   savedSearches?: Prisma.SavedSearchCreateNestedManyWithoutUserInput
+  receivedReviews?: Prisma.ReviewCreateNestedManyWithoutSellerInput
+  writtenReviews?: Prisma.ReviewCreateNestedManyWithoutAuthorInput
 }
 
 export type UserUncheckedCreateWithoutAccountsInput = {
@@ -731,6 +969,10 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   role?: $Enums.Role
   emailVerified?: boolean
   image?: string | null
+  ratingAverage?: number
+  ratingCount?: number
+  ratingSum?: number
+  salesCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
@@ -741,6 +983,8 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   bookmarks?: Prisma.BookmarkUncheckedCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   savedSearches?: Prisma.SavedSearchUncheckedCreateNestedManyWithoutUserInput
+  receivedReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutSellerInput
+  writtenReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutAuthorInput
 }
 
 export type UserCreateOrConnectWithoutAccountsInput = {
@@ -767,6 +1011,10 @@ export type UserUpdateWithoutAccountsInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ratingAverage?: Prisma.FloatFieldUpdateOperationsInput | number
+  ratingCount?: Prisma.IntFieldUpdateOperationsInput | number
+  ratingSum?: Prisma.IntFieldUpdateOperationsInput | number
+  salesCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
@@ -777,6 +1025,8 @@ export type UserUpdateWithoutAccountsInput = {
   bookmarks?: Prisma.BookmarkUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   savedSearches?: Prisma.SavedSearchUpdateManyWithoutUserNestedInput
+  receivedReviews?: Prisma.ReviewUpdateManyWithoutSellerNestedInput
+  writtenReviews?: Prisma.ReviewUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAccountsInput = {
@@ -787,6 +1037,10 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ratingAverage?: Prisma.FloatFieldUpdateOperationsInput | number
+  ratingCount?: Prisma.IntFieldUpdateOperationsInput | number
+  ratingSum?: Prisma.IntFieldUpdateOperationsInput | number
+  salesCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
@@ -797,6 +1051,8 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   bookmarks?: Prisma.BookmarkUncheckedUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   savedSearches?: Prisma.SavedSearchUncheckedUpdateManyWithoutUserNestedInput
+  receivedReviews?: Prisma.ReviewUncheckedUpdateManyWithoutSellerNestedInput
+  writtenReviews?: Prisma.ReviewUncheckedUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserCreateWithoutListingsInput = {
@@ -807,6 +1063,10 @@ export type UserCreateWithoutListingsInput = {
   role?: $Enums.Role
   emailVerified?: boolean
   image?: string | null
+  ratingAverage?: number
+  ratingCount?: number
+  ratingSum?: number
+  salesCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
@@ -817,6 +1077,8 @@ export type UserCreateWithoutListingsInput = {
   bookmarks?: Prisma.BookmarkCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   savedSearches?: Prisma.SavedSearchCreateNestedManyWithoutUserInput
+  receivedReviews?: Prisma.ReviewCreateNestedManyWithoutSellerInput
+  writtenReviews?: Prisma.ReviewCreateNestedManyWithoutAuthorInput
 }
 
 export type UserUncheckedCreateWithoutListingsInput = {
@@ -827,6 +1089,10 @@ export type UserUncheckedCreateWithoutListingsInput = {
   role?: $Enums.Role
   emailVerified?: boolean
   image?: string | null
+  ratingAverage?: number
+  ratingCount?: number
+  ratingSum?: number
+  salesCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
@@ -837,6 +1103,8 @@ export type UserUncheckedCreateWithoutListingsInput = {
   bookmarks?: Prisma.BookmarkUncheckedCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   savedSearches?: Prisma.SavedSearchUncheckedCreateNestedManyWithoutUserInput
+  receivedReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutSellerInput
+  writtenReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutAuthorInput
 }
 
 export type UserCreateOrConnectWithoutListingsInput = {
@@ -863,6 +1131,10 @@ export type UserUpdateWithoutListingsInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ratingAverage?: Prisma.FloatFieldUpdateOperationsInput | number
+  ratingCount?: Prisma.IntFieldUpdateOperationsInput | number
+  ratingSum?: Prisma.IntFieldUpdateOperationsInput | number
+  salesCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
@@ -873,6 +1145,8 @@ export type UserUpdateWithoutListingsInput = {
   bookmarks?: Prisma.BookmarkUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   savedSearches?: Prisma.SavedSearchUpdateManyWithoutUserNestedInput
+  receivedReviews?: Prisma.ReviewUpdateManyWithoutSellerNestedInput
+  writtenReviews?: Prisma.ReviewUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserUncheckedUpdateWithoutListingsInput = {
@@ -883,6 +1157,10 @@ export type UserUncheckedUpdateWithoutListingsInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ratingAverage?: Prisma.FloatFieldUpdateOperationsInput | number
+  ratingCount?: Prisma.IntFieldUpdateOperationsInput | number
+  ratingSum?: Prisma.IntFieldUpdateOperationsInput | number
+  salesCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
@@ -893,6 +1171,8 @@ export type UserUncheckedUpdateWithoutListingsInput = {
   bookmarks?: Prisma.BookmarkUncheckedUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   savedSearches?: Prisma.SavedSearchUncheckedUpdateManyWithoutUserNestedInput
+  receivedReviews?: Prisma.ReviewUncheckedUpdateManyWithoutSellerNestedInput
+  writtenReviews?: Prisma.ReviewUncheckedUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserCreateWithoutContactConversationsInput = {
@@ -903,6 +1183,10 @@ export type UserCreateWithoutContactConversationsInput = {
   role?: $Enums.Role
   emailVerified?: boolean
   image?: string | null
+  ratingAverage?: number
+  ratingCount?: number
+  ratingSum?: number
+  salesCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
@@ -913,6 +1197,8 @@ export type UserCreateWithoutContactConversationsInput = {
   bookmarks?: Prisma.BookmarkCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   savedSearches?: Prisma.SavedSearchCreateNestedManyWithoutUserInput
+  receivedReviews?: Prisma.ReviewCreateNestedManyWithoutSellerInput
+  writtenReviews?: Prisma.ReviewCreateNestedManyWithoutAuthorInput
 }
 
 export type UserUncheckedCreateWithoutContactConversationsInput = {
@@ -923,6 +1209,10 @@ export type UserUncheckedCreateWithoutContactConversationsInput = {
   role?: $Enums.Role
   emailVerified?: boolean
   image?: string | null
+  ratingAverage?: number
+  ratingCount?: number
+  ratingSum?: number
+  salesCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
@@ -933,6 +1223,8 @@ export type UserUncheckedCreateWithoutContactConversationsInput = {
   bookmarks?: Prisma.BookmarkUncheckedCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   savedSearches?: Prisma.SavedSearchUncheckedCreateNestedManyWithoutUserInput
+  receivedReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutSellerInput
+  writtenReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutAuthorInput
 }
 
 export type UserCreateOrConnectWithoutContactConversationsInput = {
@@ -959,6 +1251,10 @@ export type UserUpdateWithoutContactConversationsInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ratingAverage?: Prisma.FloatFieldUpdateOperationsInput | number
+  ratingCount?: Prisma.IntFieldUpdateOperationsInput | number
+  ratingSum?: Prisma.IntFieldUpdateOperationsInput | number
+  salesCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
@@ -969,6 +1265,8 @@ export type UserUpdateWithoutContactConversationsInput = {
   bookmarks?: Prisma.BookmarkUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   savedSearches?: Prisma.SavedSearchUpdateManyWithoutUserNestedInput
+  receivedReviews?: Prisma.ReviewUpdateManyWithoutSellerNestedInput
+  writtenReviews?: Prisma.ReviewUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserUncheckedUpdateWithoutContactConversationsInput = {
@@ -979,6 +1277,10 @@ export type UserUncheckedUpdateWithoutContactConversationsInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ratingAverage?: Prisma.FloatFieldUpdateOperationsInput | number
+  ratingCount?: Prisma.IntFieldUpdateOperationsInput | number
+  ratingSum?: Prisma.IntFieldUpdateOperationsInput | number
+  salesCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
@@ -989,6 +1291,8 @@ export type UserUncheckedUpdateWithoutContactConversationsInput = {
   bookmarks?: Prisma.BookmarkUncheckedUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   savedSearches?: Prisma.SavedSearchUncheckedUpdateManyWithoutUserNestedInput
+  receivedReviews?: Prisma.ReviewUncheckedUpdateManyWithoutSellerNestedInput
+  writtenReviews?: Prisma.ReviewUncheckedUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserCreateWithoutConversationsInput = {
@@ -999,6 +1303,10 @@ export type UserCreateWithoutConversationsInput = {
   role?: $Enums.Role
   emailVerified?: boolean
   image?: string | null
+  ratingAverage?: number
+  ratingCount?: number
+  ratingSum?: number
+  salesCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
@@ -1009,6 +1317,8 @@ export type UserCreateWithoutConversationsInput = {
   bookmarks?: Prisma.BookmarkCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   savedSearches?: Prisma.SavedSearchCreateNestedManyWithoutUserInput
+  receivedReviews?: Prisma.ReviewCreateNestedManyWithoutSellerInput
+  writtenReviews?: Prisma.ReviewCreateNestedManyWithoutAuthorInput
 }
 
 export type UserUncheckedCreateWithoutConversationsInput = {
@@ -1019,6 +1329,10 @@ export type UserUncheckedCreateWithoutConversationsInput = {
   role?: $Enums.Role
   emailVerified?: boolean
   image?: string | null
+  ratingAverage?: number
+  ratingCount?: number
+  ratingSum?: number
+  salesCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
@@ -1029,6 +1343,8 @@ export type UserUncheckedCreateWithoutConversationsInput = {
   bookmarks?: Prisma.BookmarkUncheckedCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   savedSearches?: Prisma.SavedSearchUncheckedCreateNestedManyWithoutUserInput
+  receivedReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutSellerInput
+  writtenReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutAuthorInput
 }
 
 export type UserCreateOrConnectWithoutConversationsInput = {
@@ -1055,6 +1371,10 @@ export type UserUpdateWithoutConversationsInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ratingAverage?: Prisma.FloatFieldUpdateOperationsInput | number
+  ratingCount?: Prisma.IntFieldUpdateOperationsInput | number
+  ratingSum?: Prisma.IntFieldUpdateOperationsInput | number
+  salesCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
@@ -1065,6 +1385,8 @@ export type UserUpdateWithoutConversationsInput = {
   bookmarks?: Prisma.BookmarkUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   savedSearches?: Prisma.SavedSearchUpdateManyWithoutUserNestedInput
+  receivedReviews?: Prisma.ReviewUpdateManyWithoutSellerNestedInput
+  writtenReviews?: Prisma.ReviewUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserUncheckedUpdateWithoutConversationsInput = {
@@ -1075,6 +1397,10 @@ export type UserUncheckedUpdateWithoutConversationsInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ratingAverage?: Prisma.FloatFieldUpdateOperationsInput | number
+  ratingCount?: Prisma.IntFieldUpdateOperationsInput | number
+  ratingSum?: Prisma.IntFieldUpdateOperationsInput | number
+  salesCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
@@ -1085,6 +1411,8 @@ export type UserUncheckedUpdateWithoutConversationsInput = {
   bookmarks?: Prisma.BookmarkUncheckedUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   savedSearches?: Prisma.SavedSearchUncheckedUpdateManyWithoutUserNestedInput
+  receivedReviews?: Prisma.ReviewUncheckedUpdateManyWithoutSellerNestedInput
+  writtenReviews?: Prisma.ReviewUncheckedUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserCreateWithoutMessagesInput = {
@@ -1095,6 +1423,10 @@ export type UserCreateWithoutMessagesInput = {
   role?: $Enums.Role
   emailVerified?: boolean
   image?: string | null
+  ratingAverage?: number
+  ratingCount?: number
+  ratingSum?: number
+  salesCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
@@ -1105,6 +1437,8 @@ export type UserCreateWithoutMessagesInput = {
   bookmarks?: Prisma.BookmarkCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   savedSearches?: Prisma.SavedSearchCreateNestedManyWithoutUserInput
+  receivedReviews?: Prisma.ReviewCreateNestedManyWithoutSellerInput
+  writtenReviews?: Prisma.ReviewCreateNestedManyWithoutAuthorInput
 }
 
 export type UserUncheckedCreateWithoutMessagesInput = {
@@ -1115,6 +1449,10 @@ export type UserUncheckedCreateWithoutMessagesInput = {
   role?: $Enums.Role
   emailVerified?: boolean
   image?: string | null
+  ratingAverage?: number
+  ratingCount?: number
+  ratingSum?: number
+  salesCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
@@ -1125,6 +1463,8 @@ export type UserUncheckedCreateWithoutMessagesInput = {
   bookmarks?: Prisma.BookmarkUncheckedCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   savedSearches?: Prisma.SavedSearchUncheckedCreateNestedManyWithoutUserInput
+  receivedReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutSellerInput
+  writtenReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutAuthorInput
 }
 
 export type UserCreateOrConnectWithoutMessagesInput = {
@@ -1151,6 +1491,10 @@ export type UserUpdateWithoutMessagesInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ratingAverage?: Prisma.FloatFieldUpdateOperationsInput | number
+  ratingCount?: Prisma.IntFieldUpdateOperationsInput | number
+  ratingSum?: Prisma.IntFieldUpdateOperationsInput | number
+  salesCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
@@ -1161,6 +1505,8 @@ export type UserUpdateWithoutMessagesInput = {
   bookmarks?: Prisma.BookmarkUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   savedSearches?: Prisma.SavedSearchUpdateManyWithoutUserNestedInput
+  receivedReviews?: Prisma.ReviewUpdateManyWithoutSellerNestedInput
+  writtenReviews?: Prisma.ReviewUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserUncheckedUpdateWithoutMessagesInput = {
@@ -1171,6 +1517,10 @@ export type UserUncheckedUpdateWithoutMessagesInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ratingAverage?: Prisma.FloatFieldUpdateOperationsInput | number
+  ratingCount?: Prisma.IntFieldUpdateOperationsInput | number
+  ratingSum?: Prisma.IntFieldUpdateOperationsInput | number
+  salesCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
@@ -1181,6 +1531,8 @@ export type UserUncheckedUpdateWithoutMessagesInput = {
   bookmarks?: Prisma.BookmarkUncheckedUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   savedSearches?: Prisma.SavedSearchUncheckedUpdateManyWithoutUserNestedInput
+  receivedReviews?: Prisma.ReviewUncheckedUpdateManyWithoutSellerNestedInput
+  writtenReviews?: Prisma.ReviewUncheckedUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserCreateWithoutBookmarksInput = {
@@ -1191,6 +1543,10 @@ export type UserCreateWithoutBookmarksInput = {
   role?: $Enums.Role
   emailVerified?: boolean
   image?: string | null
+  ratingAverage?: number
+  ratingCount?: number
+  ratingSum?: number
+  salesCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
@@ -1201,6 +1557,8 @@ export type UserCreateWithoutBookmarksInput = {
   contactConversations?: Prisma.ConversationCreateNestedManyWithoutContactUserInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   savedSearches?: Prisma.SavedSearchCreateNestedManyWithoutUserInput
+  receivedReviews?: Prisma.ReviewCreateNestedManyWithoutSellerInput
+  writtenReviews?: Prisma.ReviewCreateNestedManyWithoutAuthorInput
 }
 
 export type UserUncheckedCreateWithoutBookmarksInput = {
@@ -1211,6 +1569,10 @@ export type UserUncheckedCreateWithoutBookmarksInput = {
   role?: $Enums.Role
   emailVerified?: boolean
   image?: string | null
+  ratingAverage?: number
+  ratingCount?: number
+  ratingSum?: number
+  salesCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
@@ -1221,6 +1583,8 @@ export type UserUncheckedCreateWithoutBookmarksInput = {
   contactConversations?: Prisma.ConversationUncheckedCreateNestedManyWithoutContactUserInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   savedSearches?: Prisma.SavedSearchUncheckedCreateNestedManyWithoutUserInput
+  receivedReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutSellerInput
+  writtenReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutAuthorInput
 }
 
 export type UserCreateOrConnectWithoutBookmarksInput = {
@@ -1247,6 +1611,10 @@ export type UserUpdateWithoutBookmarksInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ratingAverage?: Prisma.FloatFieldUpdateOperationsInput | number
+  ratingCount?: Prisma.IntFieldUpdateOperationsInput | number
+  ratingSum?: Prisma.IntFieldUpdateOperationsInput | number
+  salesCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
@@ -1257,6 +1625,8 @@ export type UserUpdateWithoutBookmarksInput = {
   contactConversations?: Prisma.ConversationUpdateManyWithoutContactUserNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   savedSearches?: Prisma.SavedSearchUpdateManyWithoutUserNestedInput
+  receivedReviews?: Prisma.ReviewUpdateManyWithoutSellerNestedInput
+  writtenReviews?: Prisma.ReviewUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserUncheckedUpdateWithoutBookmarksInput = {
@@ -1267,6 +1637,10 @@ export type UserUncheckedUpdateWithoutBookmarksInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ratingAverage?: Prisma.FloatFieldUpdateOperationsInput | number
+  ratingCount?: Prisma.IntFieldUpdateOperationsInput | number
+  ratingSum?: Prisma.IntFieldUpdateOperationsInput | number
+  salesCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
@@ -1277,6 +1651,8 @@ export type UserUncheckedUpdateWithoutBookmarksInput = {
   contactConversations?: Prisma.ConversationUncheckedUpdateManyWithoutContactUserNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   savedSearches?: Prisma.SavedSearchUncheckedUpdateManyWithoutUserNestedInput
+  receivedReviews?: Prisma.ReviewUncheckedUpdateManyWithoutSellerNestedInput
+  writtenReviews?: Prisma.ReviewUncheckedUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserCreateWithoutNotificationsInput = {
@@ -1287,6 +1663,10 @@ export type UserCreateWithoutNotificationsInput = {
   role?: $Enums.Role
   emailVerified?: boolean
   image?: string | null
+  ratingAverage?: number
+  ratingCount?: number
+  ratingSum?: number
+  salesCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
@@ -1297,6 +1677,8 @@ export type UserCreateWithoutNotificationsInput = {
   contactConversations?: Prisma.ConversationCreateNestedManyWithoutContactUserInput
   bookmarks?: Prisma.BookmarkCreateNestedManyWithoutUserInput
   savedSearches?: Prisma.SavedSearchCreateNestedManyWithoutUserInput
+  receivedReviews?: Prisma.ReviewCreateNestedManyWithoutSellerInput
+  writtenReviews?: Prisma.ReviewCreateNestedManyWithoutAuthorInput
 }
 
 export type UserUncheckedCreateWithoutNotificationsInput = {
@@ -1307,6 +1689,10 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   role?: $Enums.Role
   emailVerified?: boolean
   image?: string | null
+  ratingAverage?: number
+  ratingCount?: number
+  ratingSum?: number
+  salesCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
@@ -1317,6 +1703,8 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   contactConversations?: Prisma.ConversationUncheckedCreateNestedManyWithoutContactUserInput
   bookmarks?: Prisma.BookmarkUncheckedCreateNestedManyWithoutUserInput
   savedSearches?: Prisma.SavedSearchUncheckedCreateNestedManyWithoutUserInput
+  receivedReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutSellerInput
+  writtenReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutAuthorInput
 }
 
 export type UserCreateOrConnectWithoutNotificationsInput = {
@@ -1343,6 +1731,10 @@ export type UserUpdateWithoutNotificationsInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ratingAverage?: Prisma.FloatFieldUpdateOperationsInput | number
+  ratingCount?: Prisma.IntFieldUpdateOperationsInput | number
+  ratingSum?: Prisma.IntFieldUpdateOperationsInput | number
+  salesCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
@@ -1353,6 +1745,8 @@ export type UserUpdateWithoutNotificationsInput = {
   contactConversations?: Prisma.ConversationUpdateManyWithoutContactUserNestedInput
   bookmarks?: Prisma.BookmarkUpdateManyWithoutUserNestedInput
   savedSearches?: Prisma.SavedSearchUpdateManyWithoutUserNestedInput
+  receivedReviews?: Prisma.ReviewUpdateManyWithoutSellerNestedInput
+  writtenReviews?: Prisma.ReviewUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserUncheckedUpdateWithoutNotificationsInput = {
@@ -1363,6 +1757,10 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ratingAverage?: Prisma.FloatFieldUpdateOperationsInput | number
+  ratingCount?: Prisma.IntFieldUpdateOperationsInput | number
+  ratingSum?: Prisma.IntFieldUpdateOperationsInput | number
+  salesCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
@@ -1373,6 +1771,8 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   contactConversations?: Prisma.ConversationUncheckedUpdateManyWithoutContactUserNestedInput
   bookmarks?: Prisma.BookmarkUncheckedUpdateManyWithoutUserNestedInput
   savedSearches?: Prisma.SavedSearchUncheckedUpdateManyWithoutUserNestedInput
+  receivedReviews?: Prisma.ReviewUncheckedUpdateManyWithoutSellerNestedInput
+  writtenReviews?: Prisma.ReviewUncheckedUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserCreateWithoutSavedSearchesInput = {
@@ -1383,6 +1783,10 @@ export type UserCreateWithoutSavedSearchesInput = {
   role?: $Enums.Role
   emailVerified?: boolean
   image?: string | null
+  ratingAverage?: number
+  ratingCount?: number
+  ratingSum?: number
+  salesCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
@@ -1393,6 +1797,8 @@ export type UserCreateWithoutSavedSearchesInput = {
   contactConversations?: Prisma.ConversationCreateNestedManyWithoutContactUserInput
   bookmarks?: Prisma.BookmarkCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  receivedReviews?: Prisma.ReviewCreateNestedManyWithoutSellerInput
+  writtenReviews?: Prisma.ReviewCreateNestedManyWithoutAuthorInput
 }
 
 export type UserUncheckedCreateWithoutSavedSearchesInput = {
@@ -1403,6 +1809,10 @@ export type UserUncheckedCreateWithoutSavedSearchesInput = {
   role?: $Enums.Role
   emailVerified?: boolean
   image?: string | null
+  ratingAverage?: number
+  ratingCount?: number
+  ratingSum?: number
+  salesCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
@@ -1413,6 +1823,8 @@ export type UserUncheckedCreateWithoutSavedSearchesInput = {
   contactConversations?: Prisma.ConversationUncheckedCreateNestedManyWithoutContactUserInput
   bookmarks?: Prisma.BookmarkUncheckedCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  receivedReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutSellerInput
+  writtenReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutAuthorInput
 }
 
 export type UserCreateOrConnectWithoutSavedSearchesInput = {
@@ -1439,6 +1851,10 @@ export type UserUpdateWithoutSavedSearchesInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ratingAverage?: Prisma.FloatFieldUpdateOperationsInput | number
+  ratingCount?: Prisma.IntFieldUpdateOperationsInput | number
+  ratingSum?: Prisma.IntFieldUpdateOperationsInput | number
+  salesCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
@@ -1449,6 +1865,8 @@ export type UserUpdateWithoutSavedSearchesInput = {
   contactConversations?: Prisma.ConversationUpdateManyWithoutContactUserNestedInput
   bookmarks?: Prisma.BookmarkUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  receivedReviews?: Prisma.ReviewUpdateManyWithoutSellerNestedInput
+  writtenReviews?: Prisma.ReviewUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSavedSearchesInput = {
@@ -1459,6 +1877,10 @@ export type UserUncheckedUpdateWithoutSavedSearchesInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ratingAverage?: Prisma.FloatFieldUpdateOperationsInput | number
+  ratingCount?: Prisma.IntFieldUpdateOperationsInput | number
+  ratingSum?: Prisma.IntFieldUpdateOperationsInput | number
+  salesCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
@@ -1469,6 +1891,248 @@ export type UserUncheckedUpdateWithoutSavedSearchesInput = {
   contactConversations?: Prisma.ConversationUncheckedUpdateManyWithoutContactUserNestedInput
   bookmarks?: Prisma.BookmarkUncheckedUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  receivedReviews?: Prisma.ReviewUncheckedUpdateManyWithoutSellerNestedInput
+  writtenReviews?: Prisma.ReviewUncheckedUpdateManyWithoutAuthorNestedInput
+}
+
+export type UserCreateWithoutReceivedReviewsInput = {
+  id?: string
+  email: string
+  name?: string | null
+  password?: string | null
+  role?: $Enums.Role
+  emailVerified?: boolean
+  image?: string | null
+  ratingAverage?: number
+  ratingCount?: number
+  ratingSum?: number
+  salesCount?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  listings?: Prisma.ListingCreateNestedManyWithoutOwnerInput
+  messages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  conversations?: Prisma.ConversationParticipantCreateNestedManyWithoutUserInput
+  contactConversations?: Prisma.ConversationCreateNestedManyWithoutContactUserInput
+  bookmarks?: Prisma.BookmarkCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  savedSearches?: Prisma.SavedSearchCreateNestedManyWithoutUserInput
+  writtenReviews?: Prisma.ReviewCreateNestedManyWithoutAuthorInput
+}
+
+export type UserUncheckedCreateWithoutReceivedReviewsInput = {
+  id?: string
+  email: string
+  name?: string | null
+  password?: string | null
+  role?: $Enums.Role
+  emailVerified?: boolean
+  image?: string | null
+  ratingAverage?: number
+  ratingCount?: number
+  ratingSum?: number
+  salesCount?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  listings?: Prisma.ListingUncheckedCreateNestedManyWithoutOwnerInput
+  messages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  conversations?: Prisma.ConversationParticipantUncheckedCreateNestedManyWithoutUserInput
+  contactConversations?: Prisma.ConversationUncheckedCreateNestedManyWithoutContactUserInput
+  bookmarks?: Prisma.BookmarkUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  savedSearches?: Prisma.SavedSearchUncheckedCreateNestedManyWithoutUserInput
+  writtenReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutAuthorInput
+}
+
+export type UserCreateOrConnectWithoutReceivedReviewsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutReceivedReviewsInput, Prisma.UserUncheckedCreateWithoutReceivedReviewsInput>
+}
+
+export type UserCreateWithoutWrittenReviewsInput = {
+  id?: string
+  email: string
+  name?: string | null
+  password?: string | null
+  role?: $Enums.Role
+  emailVerified?: boolean
+  image?: string | null
+  ratingAverage?: number
+  ratingCount?: number
+  ratingSum?: number
+  salesCount?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  listings?: Prisma.ListingCreateNestedManyWithoutOwnerInput
+  messages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  conversations?: Prisma.ConversationParticipantCreateNestedManyWithoutUserInput
+  contactConversations?: Prisma.ConversationCreateNestedManyWithoutContactUserInput
+  bookmarks?: Prisma.BookmarkCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  savedSearches?: Prisma.SavedSearchCreateNestedManyWithoutUserInput
+  receivedReviews?: Prisma.ReviewCreateNestedManyWithoutSellerInput
+}
+
+export type UserUncheckedCreateWithoutWrittenReviewsInput = {
+  id?: string
+  email: string
+  name?: string | null
+  password?: string | null
+  role?: $Enums.Role
+  emailVerified?: boolean
+  image?: string | null
+  ratingAverage?: number
+  ratingCount?: number
+  ratingSum?: number
+  salesCount?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  listings?: Prisma.ListingUncheckedCreateNestedManyWithoutOwnerInput
+  messages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  conversations?: Prisma.ConversationParticipantUncheckedCreateNestedManyWithoutUserInput
+  contactConversations?: Prisma.ConversationUncheckedCreateNestedManyWithoutContactUserInput
+  bookmarks?: Prisma.BookmarkUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  savedSearches?: Prisma.SavedSearchUncheckedCreateNestedManyWithoutUserInput
+  receivedReviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutSellerInput
+}
+
+export type UserCreateOrConnectWithoutWrittenReviewsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutWrittenReviewsInput, Prisma.UserUncheckedCreateWithoutWrittenReviewsInput>
+}
+
+export type UserUpsertWithoutReceivedReviewsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutReceivedReviewsInput, Prisma.UserUncheckedUpdateWithoutReceivedReviewsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutReceivedReviewsInput, Prisma.UserUncheckedCreateWithoutReceivedReviewsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutReceivedReviewsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutReceivedReviewsInput, Prisma.UserUncheckedUpdateWithoutReceivedReviewsInput>
+}
+
+export type UserUpdateWithoutReceivedReviewsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ratingAverage?: Prisma.FloatFieldUpdateOperationsInput | number
+  ratingCount?: Prisma.IntFieldUpdateOperationsInput | number
+  ratingSum?: Prisma.IntFieldUpdateOperationsInput | number
+  salesCount?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  listings?: Prisma.ListingUpdateManyWithoutOwnerNestedInput
+  messages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  conversations?: Prisma.ConversationParticipantUpdateManyWithoutUserNestedInput
+  contactConversations?: Prisma.ConversationUpdateManyWithoutContactUserNestedInput
+  bookmarks?: Prisma.BookmarkUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  savedSearches?: Prisma.SavedSearchUpdateManyWithoutUserNestedInput
+  writtenReviews?: Prisma.ReviewUpdateManyWithoutAuthorNestedInput
+}
+
+export type UserUncheckedUpdateWithoutReceivedReviewsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ratingAverage?: Prisma.FloatFieldUpdateOperationsInput | number
+  ratingCount?: Prisma.IntFieldUpdateOperationsInput | number
+  ratingSum?: Prisma.IntFieldUpdateOperationsInput | number
+  salesCount?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  listings?: Prisma.ListingUncheckedUpdateManyWithoutOwnerNestedInput
+  messages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  conversations?: Prisma.ConversationParticipantUncheckedUpdateManyWithoutUserNestedInput
+  contactConversations?: Prisma.ConversationUncheckedUpdateManyWithoutContactUserNestedInput
+  bookmarks?: Prisma.BookmarkUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  savedSearches?: Prisma.SavedSearchUncheckedUpdateManyWithoutUserNestedInput
+  writtenReviews?: Prisma.ReviewUncheckedUpdateManyWithoutAuthorNestedInput
+}
+
+export type UserUpsertWithoutWrittenReviewsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutWrittenReviewsInput, Prisma.UserUncheckedUpdateWithoutWrittenReviewsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutWrittenReviewsInput, Prisma.UserUncheckedCreateWithoutWrittenReviewsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutWrittenReviewsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutWrittenReviewsInput, Prisma.UserUncheckedUpdateWithoutWrittenReviewsInput>
+}
+
+export type UserUpdateWithoutWrittenReviewsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ratingAverage?: Prisma.FloatFieldUpdateOperationsInput | number
+  ratingCount?: Prisma.IntFieldUpdateOperationsInput | number
+  ratingSum?: Prisma.IntFieldUpdateOperationsInput | number
+  salesCount?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  listings?: Prisma.ListingUpdateManyWithoutOwnerNestedInput
+  messages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  conversations?: Prisma.ConversationParticipantUpdateManyWithoutUserNestedInput
+  contactConversations?: Prisma.ConversationUpdateManyWithoutContactUserNestedInput
+  bookmarks?: Prisma.BookmarkUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  savedSearches?: Prisma.SavedSearchUpdateManyWithoutUserNestedInput
+  receivedReviews?: Prisma.ReviewUpdateManyWithoutSellerNestedInput
+}
+
+export type UserUncheckedUpdateWithoutWrittenReviewsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ratingAverage?: Prisma.FloatFieldUpdateOperationsInput | number
+  ratingCount?: Prisma.IntFieldUpdateOperationsInput | number
+  ratingSum?: Prisma.IntFieldUpdateOperationsInput | number
+  salesCount?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  listings?: Prisma.ListingUncheckedUpdateManyWithoutOwnerNestedInput
+  messages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  conversations?: Prisma.ConversationParticipantUncheckedUpdateManyWithoutUserNestedInput
+  contactConversations?: Prisma.ConversationUncheckedUpdateManyWithoutContactUserNestedInput
+  bookmarks?: Prisma.BookmarkUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  savedSearches?: Prisma.SavedSearchUncheckedUpdateManyWithoutUserNestedInput
+  receivedReviews?: Prisma.ReviewUncheckedUpdateManyWithoutSellerNestedInput
 }
 
 
@@ -1486,6 +2150,8 @@ export type UserCountOutputType = {
   bookmarks: number
   notifications: number
   savedSearches: number
+  receivedReviews: number
+  writtenReviews: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1498,6 +2164,8 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   bookmarks?: boolean | UserCountOutputTypeCountBookmarksArgs
   notifications?: boolean | UserCountOutputTypeCountNotificationsArgs
   savedSearches?: boolean | UserCountOutputTypeCountSavedSearchesArgs
+  receivedReviews?: boolean | UserCountOutputTypeCountReceivedReviewsArgs
+  writtenReviews?: boolean | UserCountOutputTypeCountWrittenReviewsArgs
 }
 
 /**
@@ -1573,6 +2241,20 @@ export type UserCountOutputTypeCountSavedSearchesArgs<ExtArgs extends runtime.Ty
   where?: Prisma.SavedSearchWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountReceivedReviewsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ReviewWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountWrittenReviewsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ReviewWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1582,6 +2264,10 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   role?: boolean
   emailVerified?: boolean
   image?: boolean
+  ratingAverage?: boolean
+  ratingCount?: boolean
+  ratingSum?: boolean
+  salesCount?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   sessions?: boolean | Prisma.User$sessionsArgs<ExtArgs>
@@ -1593,6 +2279,8 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   bookmarks?: boolean | Prisma.User$bookmarksArgs<ExtArgs>
   notifications?: boolean | Prisma.User$notificationsArgs<ExtArgs>
   savedSearches?: boolean | Prisma.User$savedSearchesArgs<ExtArgs>
+  receivedReviews?: boolean | Prisma.User$receivedReviewsArgs<ExtArgs>
+  writtenReviews?: boolean | Prisma.User$writtenReviewsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -1604,6 +2292,10 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   role?: boolean
   emailVerified?: boolean
   image?: boolean
+  ratingAverage?: boolean
+  ratingCount?: boolean
+  ratingSum?: boolean
+  salesCount?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["user"]>
@@ -1616,6 +2308,10 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   role?: boolean
   emailVerified?: boolean
   image?: boolean
+  ratingAverage?: boolean
+  ratingCount?: boolean
+  ratingSum?: boolean
+  salesCount?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["user"]>
@@ -1628,11 +2324,15 @@ export type UserSelectScalar = {
   role?: boolean
   emailVerified?: boolean
   image?: boolean
+  ratingAverage?: boolean
+  ratingCount?: boolean
+  ratingSum?: boolean
+  salesCount?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "name" | "password" | "role" | "emailVerified" | "image" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "name" | "password" | "role" | "emailVerified" | "image" | "ratingAverage" | "ratingCount" | "ratingSum" | "salesCount" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   sessions?: boolean | Prisma.User$sessionsArgs<ExtArgs>
   accounts?: boolean | Prisma.User$accountsArgs<ExtArgs>
@@ -1643,6 +2343,8 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   bookmarks?: boolean | Prisma.User$bookmarksArgs<ExtArgs>
   notifications?: boolean | Prisma.User$notificationsArgs<ExtArgs>
   savedSearches?: boolean | Prisma.User$savedSearchesArgs<ExtArgs>
+  receivedReviews?: boolean | Prisma.User$receivedReviewsArgs<ExtArgs>
+  writtenReviews?: boolean | Prisma.User$writtenReviewsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -1660,6 +2362,8 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     bookmarks: Prisma.$BookmarkPayload<ExtArgs>[]
     notifications: Prisma.$NotificationPayload<ExtArgs>[]
     savedSearches: Prisma.$SavedSearchPayload<ExtArgs>[]
+    receivedReviews: Prisma.$ReviewPayload<ExtArgs>[]
+    writtenReviews: Prisma.$ReviewPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1669,6 +2373,10 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     role: $Enums.Role
     emailVerified: boolean
     image: string | null
+    ratingAverage: number
+    ratingCount: number
+    ratingSum: number
+    salesCount: number
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["user"]>
@@ -2074,6 +2782,8 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   bookmarks<T extends Prisma.User$bookmarksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$bookmarksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BookmarkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   notifications<T extends Prisma.User$notificationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$notificationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   savedSearches<T extends Prisma.User$savedSearchesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$savedSearchesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SavedSearchPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  receivedReviews<T extends Prisma.User$receivedReviewsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$receivedReviewsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReviewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  writtenReviews<T extends Prisma.User$writtenReviewsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$writtenReviewsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReviewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2110,6 +2820,10 @@ export interface UserFieldRefs {
   readonly role: Prisma.FieldRef<"User", 'Role'>
   readonly emailVerified: Prisma.FieldRef<"User", 'Boolean'>
   readonly image: Prisma.FieldRef<"User", 'String'>
+  readonly ratingAverage: Prisma.FieldRef<"User", 'Float'>
+  readonly ratingCount: Prisma.FieldRef<"User", 'Int'>
+  readonly ratingSum: Prisma.FieldRef<"User", 'Int'>
+  readonly salesCount: Prisma.FieldRef<"User", 'Int'>
   readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"User", 'DateTime'>
 }
@@ -2713,6 +3427,54 @@ export type User$savedSearchesArgs<ExtArgs extends runtime.Types.Extensions.Inte
   take?: number
   skip?: number
   distinct?: Prisma.SavedSearchScalarFieldEnum | Prisma.SavedSearchScalarFieldEnum[]
+}
+
+/**
+ * User.receivedReviews
+ */
+export type User$receivedReviewsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Review
+   */
+  select?: Prisma.ReviewSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Review
+   */
+  omit?: Prisma.ReviewOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ReviewInclude<ExtArgs> | null
+  where?: Prisma.ReviewWhereInput
+  orderBy?: Prisma.ReviewOrderByWithRelationInput | Prisma.ReviewOrderByWithRelationInput[]
+  cursor?: Prisma.ReviewWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ReviewScalarFieldEnum | Prisma.ReviewScalarFieldEnum[]
+}
+
+/**
+ * User.writtenReviews
+ */
+export type User$writtenReviewsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Review
+   */
+  select?: Prisma.ReviewSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Review
+   */
+  omit?: Prisma.ReviewOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ReviewInclude<ExtArgs> | null
+  where?: Prisma.ReviewWhereInput
+  orderBy?: Prisma.ReviewOrderByWithRelationInput | Prisma.ReviewOrderByWithRelationInput[]
+  cursor?: Prisma.ReviewWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ReviewScalarFieldEnum | Prisma.ReviewScalarFieldEnum[]
 }
 
 /**

@@ -1,71 +1,51 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import { useTransition, useEffect } from "react";
-import { useForm } from "react-hook-form";
+import { useTransition } from "react";
+import { useFormContext } from "react-hook-form";
 
 import { createListing } from "@/actions/listing-actions";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { listingSchema, ListingDraft } from "@/lib/schemas/listing.schema";
-import { useListingWizard } from "@/lib/store/listingWizard.store";
+import { ListingDraft } from "@/lib/schemas/listing.schema";
 
-export default function StepDescription() {
-  const { data, update, prev } = useListingWizard();
+type StepDescriptionProps = { onPrev: () => void };
+
+export default function StepDescription({ onPrev }: StepDescriptionProps) {
+  const { watch, setValue } = useFormContext<ListingDraft>();
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
+  const data = watch();
 
-  const form = useForm<ListingDraft>({
-    resolver: zodResolver(listingSchema),
-    defaultValues: data as ListingDraft,
-    mode: "onTouched",
-  });
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = form;
-
-  // 🔁 sync textarea -> wizard store (optionnel mais safe)
-  useEffect(() => {
-    const sub = form.watch((values) => update(values));
-    return () => sub.unsubscribe();
-  }, [form, update]);
-
-  const onSubmit = (values: ListingDraft) => {
+  const onSubmit = async () => {
     startTransition(async () => {
-      const res = await createListing(values);
-
-      if (!res.success) {
-        console.error(res.error);
-        return;
-      }
-
-      router.push(`/listing/${res.listingId}`);
+      const res = await createListing(data);
+      if (res.success) router.push(`/listing/${res.listingId}`);
+      else console.error(res.error);
     });
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        onSubmit();
+      }}
+      className="space-y-6"
+    >
       <h2 className="text-xl font-semibold">Décrivez votre annonce</h2>
-
       <Textarea
-        {...register("description")}
-        rows={6}
         placeholder="Décrivez votre annonce..."
+        value={data.description}
+        onChange={(e) =>
+          setValue("description", e.target.value, { shouldValidate: true })
+        }
+        rows={6}
       />
-
-      {errors.description && (
-        <p className="text-destructive text-sm">{errors.description.message}</p>
-      )}
-
       <div className="flex justify-between">
-        <Button type="button" variant="ghost" onClick={prev}>
+        <Button variant="ghost" onClick={onPrev}>
           Retour
         </Button>
-
         <Button type="submit" disabled={isPending}>
           {isPending ? "Publication..." : "Publier"}
         </Button>

@@ -43,6 +43,8 @@ export type ListingMinAggregateOutputType = {
   price: number | null
   priceUnit: $Enums.PriceUnit | null
   quantity: number | null
+  isSold: boolean | null
+  soldAt: Date | null
   contactMethod: $Enums.ContactMethod | null
   contactEmail: string | null
   contactPhone: string | null
@@ -64,6 +66,8 @@ export type ListingMaxAggregateOutputType = {
   price: number | null
   priceUnit: $Enums.PriceUnit | null
   quantity: number | null
+  isSold: boolean | null
+  soldAt: Date | null
   contactMethod: $Enums.ContactMethod | null
   contactEmail: string | null
   contactPhone: string | null
@@ -85,6 +89,8 @@ export type ListingCountAggregateOutputType = {
   price: number
   priceUnit: number
   quantity: number
+  isSold: number
+  soldAt: number
   contactMethod: number
   contactEmail: number
   contactPhone: number
@@ -118,6 +124,8 @@ export type ListingMinAggregateInputType = {
   price?: true
   priceUnit?: true
   quantity?: true
+  isSold?: true
+  soldAt?: true
   contactMethod?: true
   contactEmail?: true
   contactPhone?: true
@@ -139,6 +147,8 @@ export type ListingMaxAggregateInputType = {
   price?: true
   priceUnit?: true
   quantity?: true
+  isSold?: true
+  soldAt?: true
   contactMethod?: true
   contactEmail?: true
   contactPhone?: true
@@ -160,6 +170,8 @@ export type ListingCountAggregateInputType = {
   price?: true
   priceUnit?: true
   quantity?: true
+  isSold?: true
+  soldAt?: true
   contactMethod?: true
   contactEmail?: true
   contactPhone?: true
@@ -268,6 +280,8 @@ export type ListingGroupByOutputType = {
   price: number
   priceUnit: $Enums.PriceUnit
   quantity: number | null
+  isSold: boolean
+  soldAt: Date | null
   contactMethod: $Enums.ContactMethod
   contactEmail: string | null
   contactPhone: string | null
@@ -312,6 +326,8 @@ export type ListingWhereInput = {
   price?: Prisma.FloatFilter<"Listing"> | number
   priceUnit?: Prisma.EnumPriceUnitFilter<"Listing"> | $Enums.PriceUnit
   quantity?: Prisma.IntNullableFilter<"Listing"> | number | null
+  isSold?: Prisma.BoolFilter<"Listing"> | boolean
+  soldAt?: Prisma.DateTimeNullableFilter<"Listing"> | Date | string | null
   contactMethod?: Prisma.EnumContactMethodFilter<"Listing"> | $Enums.ContactMethod
   contactEmail?: Prisma.StringNullableFilter<"Listing"> | string | null
   contactPhone?: Prisma.StringNullableFilter<"Listing"> | string | null
@@ -332,6 +348,7 @@ export type ListingWhereInput = {
   conversations?: Prisma.ConversationListRelationFilter
   bookmarks?: Prisma.BookmarkListRelationFilter
   notifications?: Prisma.NotificationListRelationFilter
+  review?: Prisma.XOR<Prisma.ReviewNullableScalarRelationFilter, Prisma.ReviewWhereInput> | null
 }
 
 export type ListingOrderByWithRelationInput = {
@@ -341,6 +358,8 @@ export type ListingOrderByWithRelationInput = {
   price?: Prisma.SortOrder
   priceUnit?: Prisma.SortOrder
   quantity?: Prisma.SortOrderInput | Prisma.SortOrder
+  isSold?: Prisma.SortOrder
+  soldAt?: Prisma.SortOrderInput | Prisma.SortOrder
   contactMethod?: Prisma.SortOrder
   contactEmail?: Prisma.SortOrderInput | Prisma.SortOrder
   contactPhone?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -361,6 +380,7 @@ export type ListingOrderByWithRelationInput = {
   conversations?: Prisma.ConversationOrderByRelationAggregateInput
   bookmarks?: Prisma.BookmarkOrderByRelationAggregateInput
   notifications?: Prisma.NotificationOrderByRelationAggregateInput
+  review?: Prisma.ReviewOrderByWithRelationInput
 }
 
 export type ListingWhereUniqueInput = Prisma.AtLeast<{
@@ -373,6 +393,8 @@ export type ListingWhereUniqueInput = Prisma.AtLeast<{
   price?: Prisma.FloatFilter<"Listing"> | number
   priceUnit?: Prisma.EnumPriceUnitFilter<"Listing"> | $Enums.PriceUnit
   quantity?: Prisma.IntNullableFilter<"Listing"> | number | null
+  isSold?: Prisma.BoolFilter<"Listing"> | boolean
+  soldAt?: Prisma.DateTimeNullableFilter<"Listing"> | Date | string | null
   contactMethod?: Prisma.EnumContactMethodFilter<"Listing"> | $Enums.ContactMethod
   contactEmail?: Prisma.StringNullableFilter<"Listing"> | string | null
   contactPhone?: Prisma.StringNullableFilter<"Listing"> | string | null
@@ -393,6 +415,7 @@ export type ListingWhereUniqueInput = Prisma.AtLeast<{
   conversations?: Prisma.ConversationListRelationFilter
   bookmarks?: Prisma.BookmarkListRelationFilter
   notifications?: Prisma.NotificationListRelationFilter
+  review?: Prisma.XOR<Prisma.ReviewNullableScalarRelationFilter, Prisma.ReviewWhereInput> | null
 }, "id">
 
 export type ListingOrderByWithAggregationInput = {
@@ -402,6 +425,8 @@ export type ListingOrderByWithAggregationInput = {
   price?: Prisma.SortOrder
   priceUnit?: Prisma.SortOrder
   quantity?: Prisma.SortOrderInput | Prisma.SortOrder
+  isSold?: Prisma.SortOrder
+  soldAt?: Prisma.SortOrderInput | Prisma.SortOrder
   contactMethod?: Prisma.SortOrder
   contactEmail?: Prisma.SortOrderInput | Prisma.SortOrder
   contactPhone?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -431,6 +456,8 @@ export type ListingScalarWhereWithAggregatesInput = {
   price?: Prisma.FloatWithAggregatesFilter<"Listing"> | number
   priceUnit?: Prisma.EnumPriceUnitWithAggregatesFilter<"Listing"> | $Enums.PriceUnit
   quantity?: Prisma.IntNullableWithAggregatesFilter<"Listing"> | number | null
+  isSold?: Prisma.BoolWithAggregatesFilter<"Listing"> | boolean
+  soldAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Listing"> | Date | string | null
   contactMethod?: Prisma.EnumContactMethodWithAggregatesFilter<"Listing"> | $Enums.ContactMethod
   contactEmail?: Prisma.StringNullableWithAggregatesFilter<"Listing"> | string | null
   contactPhone?: Prisma.StringNullableWithAggregatesFilter<"Listing"> | string | null
@@ -452,6 +479,8 @@ export type ListingCreateInput = {
   price: number
   priceUnit: $Enums.PriceUnit
   quantity?: number | null
+  isSold?: boolean
+  soldAt?: Date | string | null
   contactMethod?: $Enums.ContactMethod
   contactEmail?: string | null
   contactPhone?: string | null
@@ -468,6 +497,7 @@ export type ListingCreateInput = {
   conversations?: Prisma.ConversationCreateNestedManyWithoutListingInput
   bookmarks?: Prisma.BookmarkCreateNestedManyWithoutListingInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutListingInput
+  review?: Prisma.ReviewCreateNestedOneWithoutListingInput
 }
 
 export type ListingUncheckedCreateInput = {
@@ -477,6 +507,8 @@ export type ListingUncheckedCreateInput = {
   price: number
   priceUnit: $Enums.PriceUnit
   quantity?: number | null
+  isSold?: boolean
+  soldAt?: Date | string | null
   contactMethod?: $Enums.ContactMethod
   contactEmail?: string | null
   contactPhone?: string | null
@@ -493,6 +525,7 @@ export type ListingUncheckedCreateInput = {
   conversations?: Prisma.ConversationUncheckedCreateNestedManyWithoutListingInput
   bookmarks?: Prisma.BookmarkUncheckedCreateNestedManyWithoutListingInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutListingInput
+  review?: Prisma.ReviewUncheckedCreateNestedOneWithoutListingInput
 }
 
 export type ListingUpdateInput = {
@@ -502,6 +535,8 @@ export type ListingUpdateInput = {
   price?: Prisma.FloatFieldUpdateOperationsInput | number
   priceUnit?: Prisma.EnumPriceUnitFieldUpdateOperationsInput | $Enums.PriceUnit
   quantity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  isSold?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  soldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   contactMethod?: Prisma.EnumContactMethodFieldUpdateOperationsInput | $Enums.ContactMethod
   contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -518,6 +553,7 @@ export type ListingUpdateInput = {
   conversations?: Prisma.ConversationUpdateManyWithoutListingNestedInput
   bookmarks?: Prisma.BookmarkUpdateManyWithoutListingNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutListingNestedInput
+  review?: Prisma.ReviewUpdateOneWithoutListingNestedInput
 }
 
 export type ListingUncheckedUpdateInput = {
@@ -527,6 +563,8 @@ export type ListingUncheckedUpdateInput = {
   price?: Prisma.FloatFieldUpdateOperationsInput | number
   priceUnit?: Prisma.EnumPriceUnitFieldUpdateOperationsInput | $Enums.PriceUnit
   quantity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  isSold?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  soldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   contactMethod?: Prisma.EnumContactMethodFieldUpdateOperationsInput | $Enums.ContactMethod
   contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -543,6 +581,7 @@ export type ListingUncheckedUpdateInput = {
   conversations?: Prisma.ConversationUncheckedUpdateManyWithoutListingNestedInput
   bookmarks?: Prisma.BookmarkUncheckedUpdateManyWithoutListingNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutListingNestedInput
+  review?: Prisma.ReviewUncheckedUpdateOneWithoutListingNestedInput
 }
 
 export type ListingCreateManyInput = {
@@ -552,6 +591,8 @@ export type ListingCreateManyInput = {
   price: number
   priceUnit: $Enums.PriceUnit
   quantity?: number | null
+  isSold?: boolean
+  soldAt?: Date | string | null
   contactMethod?: $Enums.ContactMethod
   contactEmail?: string | null
   contactPhone?: string | null
@@ -573,6 +614,8 @@ export type ListingUpdateManyMutationInput = {
   price?: Prisma.FloatFieldUpdateOperationsInput | number
   priceUnit?: Prisma.EnumPriceUnitFieldUpdateOperationsInput | $Enums.PriceUnit
   quantity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  isSold?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  soldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   contactMethod?: Prisma.EnumContactMethodFieldUpdateOperationsInput | $Enums.ContactMethod
   contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -590,6 +633,8 @@ export type ListingUncheckedUpdateManyInput = {
   price?: Prisma.FloatFieldUpdateOperationsInput | number
   priceUnit?: Prisma.EnumPriceUnitFieldUpdateOperationsInput | $Enums.PriceUnit
   quantity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  isSold?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  soldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   contactMethod?: Prisma.EnumContactMethodFieldUpdateOperationsInput | $Enums.ContactMethod
   contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -621,6 +666,8 @@ export type ListingCountOrderByAggregateInput = {
   price?: Prisma.SortOrder
   priceUnit?: Prisma.SortOrder
   quantity?: Prisma.SortOrder
+  isSold?: Prisma.SortOrder
+  soldAt?: Prisma.SortOrder
   contactMethod?: Prisma.SortOrder
   contactEmail?: Prisma.SortOrder
   contactPhone?: Prisma.SortOrder
@@ -647,6 +694,8 @@ export type ListingMaxOrderByAggregateInput = {
   price?: Prisma.SortOrder
   priceUnit?: Prisma.SortOrder
   quantity?: Prisma.SortOrder
+  isSold?: Prisma.SortOrder
+  soldAt?: Prisma.SortOrder
   contactMethod?: Prisma.SortOrder
   contactEmail?: Prisma.SortOrder
   contactPhone?: Prisma.SortOrder
@@ -668,6 +717,8 @@ export type ListingMinOrderByAggregateInput = {
   price?: Prisma.SortOrder
   priceUnit?: Prisma.SortOrder
   quantity?: Prisma.SortOrder
+  isSold?: Prisma.SortOrder
+  soldAt?: Prisma.SortOrder
   contactMethod?: Prisma.SortOrder
   contactEmail?: Prisma.SortOrder
   contactPhone?: Prisma.SortOrder
@@ -939,6 +990,20 @@ export type ListingUpdateOneWithoutNotificationsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ListingUpdateToOneWithWhereWithoutNotificationsInput, Prisma.ListingUpdateWithoutNotificationsInput>, Prisma.ListingUncheckedUpdateWithoutNotificationsInput>
 }
 
+export type ListingCreateNestedOneWithoutReviewInput = {
+  create?: Prisma.XOR<Prisma.ListingCreateWithoutReviewInput, Prisma.ListingUncheckedCreateWithoutReviewInput>
+  connectOrCreate?: Prisma.ListingCreateOrConnectWithoutReviewInput
+  connect?: Prisma.ListingWhereUniqueInput
+}
+
+export type ListingUpdateOneRequiredWithoutReviewNestedInput = {
+  create?: Prisma.XOR<Prisma.ListingCreateWithoutReviewInput, Prisma.ListingUncheckedCreateWithoutReviewInput>
+  connectOrCreate?: Prisma.ListingCreateOrConnectWithoutReviewInput
+  upsert?: Prisma.ListingUpsertWithoutReviewInput
+  connect?: Prisma.ListingWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ListingUpdateToOneWithWhereWithoutReviewInput, Prisma.ListingUpdateWithoutReviewInput>, Prisma.ListingUncheckedUpdateWithoutReviewInput>
+}
+
 export type ListingCreateWithoutOwnerInput = {
   id?: string
   title: string
@@ -946,6 +1011,8 @@ export type ListingCreateWithoutOwnerInput = {
   price: number
   priceUnit: $Enums.PriceUnit
   quantity?: number | null
+  isSold?: boolean
+  soldAt?: Date | string | null
   contactMethod?: $Enums.ContactMethod
   contactEmail?: string | null
   contactPhone?: string | null
@@ -961,6 +1028,7 @@ export type ListingCreateWithoutOwnerInput = {
   conversations?: Prisma.ConversationCreateNestedManyWithoutListingInput
   bookmarks?: Prisma.BookmarkCreateNestedManyWithoutListingInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutListingInput
+  review?: Prisma.ReviewCreateNestedOneWithoutListingInput
 }
 
 export type ListingUncheckedCreateWithoutOwnerInput = {
@@ -970,6 +1038,8 @@ export type ListingUncheckedCreateWithoutOwnerInput = {
   price: number
   priceUnit: $Enums.PriceUnit
   quantity?: number | null
+  isSold?: boolean
+  soldAt?: Date | string | null
   contactMethod?: $Enums.ContactMethod
   contactEmail?: string | null
   contactPhone?: string | null
@@ -985,6 +1055,7 @@ export type ListingUncheckedCreateWithoutOwnerInput = {
   conversations?: Prisma.ConversationUncheckedCreateNestedManyWithoutListingInput
   bookmarks?: Prisma.BookmarkUncheckedCreateNestedManyWithoutListingInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutListingInput
+  review?: Prisma.ReviewUncheckedCreateNestedOneWithoutListingInput
 }
 
 export type ListingCreateOrConnectWithoutOwnerInput = {
@@ -1023,6 +1094,8 @@ export type ListingScalarWhereInput = {
   price?: Prisma.FloatFilter<"Listing"> | number
   priceUnit?: Prisma.EnumPriceUnitFilter<"Listing"> | $Enums.PriceUnit
   quantity?: Prisma.IntNullableFilter<"Listing"> | number | null
+  isSold?: Prisma.BoolFilter<"Listing"> | boolean
+  soldAt?: Prisma.DateTimeNullableFilter<"Listing"> | Date | string | null
   contactMethod?: Prisma.EnumContactMethodFilter<"Listing"> | $Enums.ContactMethod
   contactEmail?: Prisma.StringNullableFilter<"Listing"> | string | null
   contactPhone?: Prisma.StringNullableFilter<"Listing"> | string | null
@@ -1044,6 +1117,8 @@ export type ListingCreateWithoutCategoryInput = {
   price: number
   priceUnit: $Enums.PriceUnit
   quantity?: number | null
+  isSold?: boolean
+  soldAt?: Date | string | null
   contactMethod?: $Enums.ContactMethod
   contactEmail?: string | null
   contactPhone?: string | null
@@ -1059,6 +1134,7 @@ export type ListingCreateWithoutCategoryInput = {
   conversations?: Prisma.ConversationCreateNestedManyWithoutListingInput
   bookmarks?: Prisma.BookmarkCreateNestedManyWithoutListingInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutListingInput
+  review?: Prisma.ReviewCreateNestedOneWithoutListingInput
 }
 
 export type ListingUncheckedCreateWithoutCategoryInput = {
@@ -1068,6 +1144,8 @@ export type ListingUncheckedCreateWithoutCategoryInput = {
   price: number
   priceUnit: $Enums.PriceUnit
   quantity?: number | null
+  isSold?: boolean
+  soldAt?: Date | string | null
   contactMethod?: $Enums.ContactMethod
   contactEmail?: string | null
   contactPhone?: string | null
@@ -1083,6 +1161,7 @@ export type ListingUncheckedCreateWithoutCategoryInput = {
   conversations?: Prisma.ConversationUncheckedCreateNestedManyWithoutListingInput
   bookmarks?: Prisma.BookmarkUncheckedCreateNestedManyWithoutListingInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutListingInput
+  review?: Prisma.ReviewUncheckedCreateNestedOneWithoutListingInput
 }
 
 export type ListingCreateOrConnectWithoutCategoryInput = {
@@ -1102,6 +1181,8 @@ export type ListingCreateWithoutSubCategoryInput = {
   price: number
   priceUnit: $Enums.PriceUnit
   quantity?: number | null
+  isSold?: boolean
+  soldAt?: Date | string | null
   contactMethod?: $Enums.ContactMethod
   contactEmail?: string | null
   contactPhone?: string | null
@@ -1117,6 +1198,7 @@ export type ListingCreateWithoutSubCategoryInput = {
   conversations?: Prisma.ConversationCreateNestedManyWithoutListingInput
   bookmarks?: Prisma.BookmarkCreateNestedManyWithoutListingInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutListingInput
+  review?: Prisma.ReviewCreateNestedOneWithoutListingInput
 }
 
 export type ListingUncheckedCreateWithoutSubCategoryInput = {
@@ -1126,6 +1208,8 @@ export type ListingUncheckedCreateWithoutSubCategoryInput = {
   price: number
   priceUnit: $Enums.PriceUnit
   quantity?: number | null
+  isSold?: boolean
+  soldAt?: Date | string | null
   contactMethod?: $Enums.ContactMethod
   contactEmail?: string | null
   contactPhone?: string | null
@@ -1141,6 +1225,7 @@ export type ListingUncheckedCreateWithoutSubCategoryInput = {
   conversations?: Prisma.ConversationUncheckedCreateNestedManyWithoutListingInput
   bookmarks?: Prisma.BookmarkUncheckedCreateNestedManyWithoutListingInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutListingInput
+  review?: Prisma.ReviewUncheckedCreateNestedOneWithoutListingInput
 }
 
 export type ListingCreateOrConnectWithoutSubCategoryInput = {
@@ -1192,6 +1277,8 @@ export type ListingCreateWithoutLocationInput = {
   price: number
   priceUnit: $Enums.PriceUnit
   quantity?: number | null
+  isSold?: boolean
+  soldAt?: Date | string | null
   contactMethod?: $Enums.ContactMethod
   contactEmail?: string | null
   contactPhone?: string | null
@@ -1207,6 +1294,7 @@ export type ListingCreateWithoutLocationInput = {
   conversations?: Prisma.ConversationCreateNestedManyWithoutListingInput
   bookmarks?: Prisma.BookmarkCreateNestedManyWithoutListingInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutListingInput
+  review?: Prisma.ReviewCreateNestedOneWithoutListingInput
 }
 
 export type ListingUncheckedCreateWithoutLocationInput = {
@@ -1216,6 +1304,8 @@ export type ListingUncheckedCreateWithoutLocationInput = {
   price: number
   priceUnit: $Enums.PriceUnit
   quantity?: number | null
+  isSold?: boolean
+  soldAt?: Date | string | null
   contactMethod?: $Enums.ContactMethod
   contactEmail?: string | null
   contactPhone?: string | null
@@ -1231,6 +1321,7 @@ export type ListingUncheckedCreateWithoutLocationInput = {
   conversations?: Prisma.ConversationUncheckedCreateNestedManyWithoutListingInput
   bookmarks?: Prisma.BookmarkUncheckedCreateNestedManyWithoutListingInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutListingInput
+  review?: Prisma.ReviewUncheckedCreateNestedOneWithoutListingInput
 }
 
 export type ListingCreateOrConnectWithoutLocationInput = {
@@ -1266,6 +1357,8 @@ export type ListingCreateWithoutImagesInput = {
   price: number
   priceUnit: $Enums.PriceUnit
   quantity?: number | null
+  isSold?: boolean
+  soldAt?: Date | string | null
   contactMethod?: $Enums.ContactMethod
   contactEmail?: string | null
   contactPhone?: string | null
@@ -1281,6 +1374,7 @@ export type ListingCreateWithoutImagesInput = {
   conversations?: Prisma.ConversationCreateNestedManyWithoutListingInput
   bookmarks?: Prisma.BookmarkCreateNestedManyWithoutListingInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutListingInput
+  review?: Prisma.ReviewCreateNestedOneWithoutListingInput
 }
 
 export type ListingUncheckedCreateWithoutImagesInput = {
@@ -1290,6 +1384,8 @@ export type ListingUncheckedCreateWithoutImagesInput = {
   price: number
   priceUnit: $Enums.PriceUnit
   quantity?: number | null
+  isSold?: boolean
+  soldAt?: Date | string | null
   contactMethod?: $Enums.ContactMethod
   contactEmail?: string | null
   contactPhone?: string | null
@@ -1305,6 +1401,7 @@ export type ListingUncheckedCreateWithoutImagesInput = {
   conversations?: Prisma.ConversationUncheckedCreateNestedManyWithoutListingInput
   bookmarks?: Prisma.BookmarkUncheckedCreateNestedManyWithoutListingInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutListingInput
+  review?: Prisma.ReviewUncheckedCreateNestedOneWithoutListingInput
 }
 
 export type ListingCreateOrConnectWithoutImagesInput = {
@@ -1330,6 +1427,8 @@ export type ListingUpdateWithoutImagesInput = {
   price?: Prisma.FloatFieldUpdateOperationsInput | number
   priceUnit?: Prisma.EnumPriceUnitFieldUpdateOperationsInput | $Enums.PriceUnit
   quantity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  isSold?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  soldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   contactMethod?: Prisma.EnumContactMethodFieldUpdateOperationsInput | $Enums.ContactMethod
   contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1345,6 +1444,7 @@ export type ListingUpdateWithoutImagesInput = {
   conversations?: Prisma.ConversationUpdateManyWithoutListingNestedInput
   bookmarks?: Prisma.BookmarkUpdateManyWithoutListingNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutListingNestedInput
+  review?: Prisma.ReviewUpdateOneWithoutListingNestedInput
 }
 
 export type ListingUncheckedUpdateWithoutImagesInput = {
@@ -1354,6 +1454,8 @@ export type ListingUncheckedUpdateWithoutImagesInput = {
   price?: Prisma.FloatFieldUpdateOperationsInput | number
   priceUnit?: Prisma.EnumPriceUnitFieldUpdateOperationsInput | $Enums.PriceUnit
   quantity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  isSold?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  soldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   contactMethod?: Prisma.EnumContactMethodFieldUpdateOperationsInput | $Enums.ContactMethod
   contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1369,6 +1471,7 @@ export type ListingUncheckedUpdateWithoutImagesInput = {
   conversations?: Prisma.ConversationUncheckedUpdateManyWithoutListingNestedInput
   bookmarks?: Prisma.BookmarkUncheckedUpdateManyWithoutListingNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutListingNestedInput
+  review?: Prisma.ReviewUncheckedUpdateOneWithoutListingNestedInput
 }
 
 export type ListingCreateWithoutConversationsInput = {
@@ -1378,6 +1481,8 @@ export type ListingCreateWithoutConversationsInput = {
   price: number
   priceUnit: $Enums.PriceUnit
   quantity?: number | null
+  isSold?: boolean
+  soldAt?: Date | string | null
   contactMethod?: $Enums.ContactMethod
   contactEmail?: string | null
   contactPhone?: string | null
@@ -1393,6 +1498,7 @@ export type ListingCreateWithoutConversationsInput = {
   images?: Prisma.ListingImageCreateNestedManyWithoutListingInput
   bookmarks?: Prisma.BookmarkCreateNestedManyWithoutListingInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutListingInput
+  review?: Prisma.ReviewCreateNestedOneWithoutListingInput
 }
 
 export type ListingUncheckedCreateWithoutConversationsInput = {
@@ -1402,6 +1508,8 @@ export type ListingUncheckedCreateWithoutConversationsInput = {
   price: number
   priceUnit: $Enums.PriceUnit
   quantity?: number | null
+  isSold?: boolean
+  soldAt?: Date | string | null
   contactMethod?: $Enums.ContactMethod
   contactEmail?: string | null
   contactPhone?: string | null
@@ -1417,6 +1525,7 @@ export type ListingUncheckedCreateWithoutConversationsInput = {
   images?: Prisma.ListingImageUncheckedCreateNestedManyWithoutListingInput
   bookmarks?: Prisma.BookmarkUncheckedCreateNestedManyWithoutListingInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutListingInput
+  review?: Prisma.ReviewUncheckedCreateNestedOneWithoutListingInput
 }
 
 export type ListingCreateOrConnectWithoutConversationsInput = {
@@ -1442,6 +1551,8 @@ export type ListingUpdateWithoutConversationsInput = {
   price?: Prisma.FloatFieldUpdateOperationsInput | number
   priceUnit?: Prisma.EnumPriceUnitFieldUpdateOperationsInput | $Enums.PriceUnit
   quantity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  isSold?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  soldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   contactMethod?: Prisma.EnumContactMethodFieldUpdateOperationsInput | $Enums.ContactMethod
   contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1457,6 +1568,7 @@ export type ListingUpdateWithoutConversationsInput = {
   images?: Prisma.ListingImageUpdateManyWithoutListingNestedInput
   bookmarks?: Prisma.BookmarkUpdateManyWithoutListingNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutListingNestedInput
+  review?: Prisma.ReviewUpdateOneWithoutListingNestedInput
 }
 
 export type ListingUncheckedUpdateWithoutConversationsInput = {
@@ -1466,6 +1578,8 @@ export type ListingUncheckedUpdateWithoutConversationsInput = {
   price?: Prisma.FloatFieldUpdateOperationsInput | number
   priceUnit?: Prisma.EnumPriceUnitFieldUpdateOperationsInput | $Enums.PriceUnit
   quantity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  isSold?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  soldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   contactMethod?: Prisma.EnumContactMethodFieldUpdateOperationsInput | $Enums.ContactMethod
   contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1481,6 +1595,7 @@ export type ListingUncheckedUpdateWithoutConversationsInput = {
   images?: Prisma.ListingImageUncheckedUpdateManyWithoutListingNestedInput
   bookmarks?: Prisma.BookmarkUncheckedUpdateManyWithoutListingNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutListingNestedInput
+  review?: Prisma.ReviewUncheckedUpdateOneWithoutListingNestedInput
 }
 
 export type ListingCreateWithoutBookmarksInput = {
@@ -1490,6 +1605,8 @@ export type ListingCreateWithoutBookmarksInput = {
   price: number
   priceUnit: $Enums.PriceUnit
   quantity?: number | null
+  isSold?: boolean
+  soldAt?: Date | string | null
   contactMethod?: $Enums.ContactMethod
   contactEmail?: string | null
   contactPhone?: string | null
@@ -1505,6 +1622,7 @@ export type ListingCreateWithoutBookmarksInput = {
   images?: Prisma.ListingImageCreateNestedManyWithoutListingInput
   conversations?: Prisma.ConversationCreateNestedManyWithoutListingInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutListingInput
+  review?: Prisma.ReviewCreateNestedOneWithoutListingInput
 }
 
 export type ListingUncheckedCreateWithoutBookmarksInput = {
@@ -1514,6 +1632,8 @@ export type ListingUncheckedCreateWithoutBookmarksInput = {
   price: number
   priceUnit: $Enums.PriceUnit
   quantity?: number | null
+  isSold?: boolean
+  soldAt?: Date | string | null
   contactMethod?: $Enums.ContactMethod
   contactEmail?: string | null
   contactPhone?: string | null
@@ -1529,6 +1649,7 @@ export type ListingUncheckedCreateWithoutBookmarksInput = {
   images?: Prisma.ListingImageUncheckedCreateNestedManyWithoutListingInput
   conversations?: Prisma.ConversationUncheckedCreateNestedManyWithoutListingInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutListingInput
+  review?: Prisma.ReviewUncheckedCreateNestedOneWithoutListingInput
 }
 
 export type ListingCreateOrConnectWithoutBookmarksInput = {
@@ -1554,6 +1675,8 @@ export type ListingUpdateWithoutBookmarksInput = {
   price?: Prisma.FloatFieldUpdateOperationsInput | number
   priceUnit?: Prisma.EnumPriceUnitFieldUpdateOperationsInput | $Enums.PriceUnit
   quantity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  isSold?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  soldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   contactMethod?: Prisma.EnumContactMethodFieldUpdateOperationsInput | $Enums.ContactMethod
   contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1569,6 +1692,7 @@ export type ListingUpdateWithoutBookmarksInput = {
   images?: Prisma.ListingImageUpdateManyWithoutListingNestedInput
   conversations?: Prisma.ConversationUpdateManyWithoutListingNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutListingNestedInput
+  review?: Prisma.ReviewUpdateOneWithoutListingNestedInput
 }
 
 export type ListingUncheckedUpdateWithoutBookmarksInput = {
@@ -1578,6 +1702,8 @@ export type ListingUncheckedUpdateWithoutBookmarksInput = {
   price?: Prisma.FloatFieldUpdateOperationsInput | number
   priceUnit?: Prisma.EnumPriceUnitFieldUpdateOperationsInput | $Enums.PriceUnit
   quantity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  isSold?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  soldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   contactMethod?: Prisma.EnumContactMethodFieldUpdateOperationsInput | $Enums.ContactMethod
   contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1593,6 +1719,7 @@ export type ListingUncheckedUpdateWithoutBookmarksInput = {
   images?: Prisma.ListingImageUncheckedUpdateManyWithoutListingNestedInput
   conversations?: Prisma.ConversationUncheckedUpdateManyWithoutListingNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutListingNestedInput
+  review?: Prisma.ReviewUncheckedUpdateOneWithoutListingNestedInput
 }
 
 export type ListingCreateWithoutNotificationsInput = {
@@ -1602,6 +1729,8 @@ export type ListingCreateWithoutNotificationsInput = {
   price: number
   priceUnit: $Enums.PriceUnit
   quantity?: number | null
+  isSold?: boolean
+  soldAt?: Date | string | null
   contactMethod?: $Enums.ContactMethod
   contactEmail?: string | null
   contactPhone?: string | null
@@ -1617,6 +1746,7 @@ export type ListingCreateWithoutNotificationsInput = {
   images?: Prisma.ListingImageCreateNestedManyWithoutListingInput
   conversations?: Prisma.ConversationCreateNestedManyWithoutListingInput
   bookmarks?: Prisma.BookmarkCreateNestedManyWithoutListingInput
+  review?: Prisma.ReviewCreateNestedOneWithoutListingInput
 }
 
 export type ListingUncheckedCreateWithoutNotificationsInput = {
@@ -1626,6 +1756,8 @@ export type ListingUncheckedCreateWithoutNotificationsInput = {
   price: number
   priceUnit: $Enums.PriceUnit
   quantity?: number | null
+  isSold?: boolean
+  soldAt?: Date | string | null
   contactMethod?: $Enums.ContactMethod
   contactEmail?: string | null
   contactPhone?: string | null
@@ -1641,6 +1773,7 @@ export type ListingUncheckedCreateWithoutNotificationsInput = {
   images?: Prisma.ListingImageUncheckedCreateNestedManyWithoutListingInput
   conversations?: Prisma.ConversationUncheckedCreateNestedManyWithoutListingInput
   bookmarks?: Prisma.BookmarkUncheckedCreateNestedManyWithoutListingInput
+  review?: Prisma.ReviewUncheckedCreateNestedOneWithoutListingInput
 }
 
 export type ListingCreateOrConnectWithoutNotificationsInput = {
@@ -1666,6 +1799,8 @@ export type ListingUpdateWithoutNotificationsInput = {
   price?: Prisma.FloatFieldUpdateOperationsInput | number
   priceUnit?: Prisma.EnumPriceUnitFieldUpdateOperationsInput | $Enums.PriceUnit
   quantity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  isSold?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  soldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   contactMethod?: Prisma.EnumContactMethodFieldUpdateOperationsInput | $Enums.ContactMethod
   contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1681,6 +1816,7 @@ export type ListingUpdateWithoutNotificationsInput = {
   images?: Prisma.ListingImageUpdateManyWithoutListingNestedInput
   conversations?: Prisma.ConversationUpdateManyWithoutListingNestedInput
   bookmarks?: Prisma.BookmarkUpdateManyWithoutListingNestedInput
+  review?: Prisma.ReviewUpdateOneWithoutListingNestedInput
 }
 
 export type ListingUncheckedUpdateWithoutNotificationsInput = {
@@ -1690,6 +1826,8 @@ export type ListingUncheckedUpdateWithoutNotificationsInput = {
   price?: Prisma.FloatFieldUpdateOperationsInput | number
   priceUnit?: Prisma.EnumPriceUnitFieldUpdateOperationsInput | $Enums.PriceUnit
   quantity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  isSold?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  soldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   contactMethod?: Prisma.EnumContactMethodFieldUpdateOperationsInput | $Enums.ContactMethod
   contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1705,6 +1843,131 @@ export type ListingUncheckedUpdateWithoutNotificationsInput = {
   images?: Prisma.ListingImageUncheckedUpdateManyWithoutListingNestedInput
   conversations?: Prisma.ConversationUncheckedUpdateManyWithoutListingNestedInput
   bookmarks?: Prisma.BookmarkUncheckedUpdateManyWithoutListingNestedInput
+  review?: Prisma.ReviewUncheckedUpdateOneWithoutListingNestedInput
+}
+
+export type ListingCreateWithoutReviewInput = {
+  id?: string
+  title: string
+  description: string
+  price: number
+  priceUnit: $Enums.PriceUnit
+  quantity?: number | null
+  isSold?: boolean
+  soldAt?: Date | string | null
+  contactMethod?: $Enums.ContactMethod
+  contactEmail?: string | null
+  contactPhone?: string | null
+  isActive?: boolean
+  archivedAt?: Date | string | null
+  deletedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  owner: Prisma.UserCreateNestedOneWithoutListingsInput
+  category: Prisma.CategoryCreateNestedOneWithoutListingsAsCategoryInput
+  subCategory: Prisma.CategoryCreateNestedOneWithoutListingsAsSubCategoryInput
+  location: Prisma.LocationCreateNestedOneWithoutListingsInput
+  images?: Prisma.ListingImageCreateNestedManyWithoutListingInput
+  conversations?: Prisma.ConversationCreateNestedManyWithoutListingInput
+  bookmarks?: Prisma.BookmarkCreateNestedManyWithoutListingInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutListingInput
+}
+
+export type ListingUncheckedCreateWithoutReviewInput = {
+  id?: string
+  title: string
+  description: string
+  price: number
+  priceUnit: $Enums.PriceUnit
+  quantity?: number | null
+  isSold?: boolean
+  soldAt?: Date | string | null
+  contactMethod?: $Enums.ContactMethod
+  contactEmail?: string | null
+  contactPhone?: string | null
+  isActive?: boolean
+  archivedAt?: Date | string | null
+  deletedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  ownerId: string
+  categoryId: string
+  subCategoryId: string
+  locationId: string
+  images?: Prisma.ListingImageUncheckedCreateNestedManyWithoutListingInput
+  conversations?: Prisma.ConversationUncheckedCreateNestedManyWithoutListingInput
+  bookmarks?: Prisma.BookmarkUncheckedCreateNestedManyWithoutListingInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutListingInput
+}
+
+export type ListingCreateOrConnectWithoutReviewInput = {
+  where: Prisma.ListingWhereUniqueInput
+  create: Prisma.XOR<Prisma.ListingCreateWithoutReviewInput, Prisma.ListingUncheckedCreateWithoutReviewInput>
+}
+
+export type ListingUpsertWithoutReviewInput = {
+  update: Prisma.XOR<Prisma.ListingUpdateWithoutReviewInput, Prisma.ListingUncheckedUpdateWithoutReviewInput>
+  create: Prisma.XOR<Prisma.ListingCreateWithoutReviewInput, Prisma.ListingUncheckedCreateWithoutReviewInput>
+  where?: Prisma.ListingWhereInput
+}
+
+export type ListingUpdateToOneWithWhereWithoutReviewInput = {
+  where?: Prisma.ListingWhereInput
+  data: Prisma.XOR<Prisma.ListingUpdateWithoutReviewInput, Prisma.ListingUncheckedUpdateWithoutReviewInput>
+}
+
+export type ListingUpdateWithoutReviewInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  price?: Prisma.FloatFieldUpdateOperationsInput | number
+  priceUnit?: Prisma.EnumPriceUnitFieldUpdateOperationsInput | $Enums.PriceUnit
+  quantity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  isSold?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  soldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  contactMethod?: Prisma.EnumContactMethodFieldUpdateOperationsInput | $Enums.ContactMethod
+  contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  owner?: Prisma.UserUpdateOneRequiredWithoutListingsNestedInput
+  category?: Prisma.CategoryUpdateOneRequiredWithoutListingsAsCategoryNestedInput
+  subCategory?: Prisma.CategoryUpdateOneRequiredWithoutListingsAsSubCategoryNestedInput
+  location?: Prisma.LocationUpdateOneRequiredWithoutListingsNestedInput
+  images?: Prisma.ListingImageUpdateManyWithoutListingNestedInput
+  conversations?: Prisma.ConversationUpdateManyWithoutListingNestedInput
+  bookmarks?: Prisma.BookmarkUpdateManyWithoutListingNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutListingNestedInput
+}
+
+export type ListingUncheckedUpdateWithoutReviewInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  price?: Prisma.FloatFieldUpdateOperationsInput | number
+  priceUnit?: Prisma.EnumPriceUnitFieldUpdateOperationsInput | $Enums.PriceUnit
+  quantity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  isSold?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  soldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  contactMethod?: Prisma.EnumContactMethodFieldUpdateOperationsInput | $Enums.ContactMethod
+  contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  ownerId?: Prisma.StringFieldUpdateOperationsInput | string
+  categoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  subCategoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  locationId?: Prisma.StringFieldUpdateOperationsInput | string
+  images?: Prisma.ListingImageUncheckedUpdateManyWithoutListingNestedInput
+  conversations?: Prisma.ConversationUncheckedUpdateManyWithoutListingNestedInput
+  bookmarks?: Prisma.BookmarkUncheckedUpdateManyWithoutListingNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutListingNestedInput
 }
 
 export type ListingCreateManyOwnerInput = {
@@ -1714,6 +1977,8 @@ export type ListingCreateManyOwnerInput = {
   price: number
   priceUnit: $Enums.PriceUnit
   quantity?: number | null
+  isSold?: boolean
+  soldAt?: Date | string | null
   contactMethod?: $Enums.ContactMethod
   contactEmail?: string | null
   contactPhone?: string | null
@@ -1734,6 +1999,8 @@ export type ListingUpdateWithoutOwnerInput = {
   price?: Prisma.FloatFieldUpdateOperationsInput | number
   priceUnit?: Prisma.EnumPriceUnitFieldUpdateOperationsInput | $Enums.PriceUnit
   quantity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  isSold?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  soldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   contactMethod?: Prisma.EnumContactMethodFieldUpdateOperationsInput | $Enums.ContactMethod
   contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1749,6 +2016,7 @@ export type ListingUpdateWithoutOwnerInput = {
   conversations?: Prisma.ConversationUpdateManyWithoutListingNestedInput
   bookmarks?: Prisma.BookmarkUpdateManyWithoutListingNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutListingNestedInput
+  review?: Prisma.ReviewUpdateOneWithoutListingNestedInput
 }
 
 export type ListingUncheckedUpdateWithoutOwnerInput = {
@@ -1758,6 +2026,8 @@ export type ListingUncheckedUpdateWithoutOwnerInput = {
   price?: Prisma.FloatFieldUpdateOperationsInput | number
   priceUnit?: Prisma.EnumPriceUnitFieldUpdateOperationsInput | $Enums.PriceUnit
   quantity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  isSold?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  soldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   contactMethod?: Prisma.EnumContactMethodFieldUpdateOperationsInput | $Enums.ContactMethod
   contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1773,6 +2043,7 @@ export type ListingUncheckedUpdateWithoutOwnerInput = {
   conversations?: Prisma.ConversationUncheckedUpdateManyWithoutListingNestedInput
   bookmarks?: Prisma.BookmarkUncheckedUpdateManyWithoutListingNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutListingNestedInput
+  review?: Prisma.ReviewUncheckedUpdateOneWithoutListingNestedInput
 }
 
 export type ListingUncheckedUpdateManyWithoutOwnerInput = {
@@ -1782,6 +2053,8 @@ export type ListingUncheckedUpdateManyWithoutOwnerInput = {
   price?: Prisma.FloatFieldUpdateOperationsInput | number
   priceUnit?: Prisma.EnumPriceUnitFieldUpdateOperationsInput | $Enums.PriceUnit
   quantity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  isSold?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  soldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   contactMethod?: Prisma.EnumContactMethodFieldUpdateOperationsInput | $Enums.ContactMethod
   contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1802,6 +2075,8 @@ export type ListingCreateManyCategoryInput = {
   price: number
   priceUnit: $Enums.PriceUnit
   quantity?: number | null
+  isSold?: boolean
+  soldAt?: Date | string | null
   contactMethod?: $Enums.ContactMethod
   contactEmail?: string | null
   contactPhone?: string | null
@@ -1822,6 +2097,8 @@ export type ListingCreateManySubCategoryInput = {
   price: number
   priceUnit: $Enums.PriceUnit
   quantity?: number | null
+  isSold?: boolean
+  soldAt?: Date | string | null
   contactMethod?: $Enums.ContactMethod
   contactEmail?: string | null
   contactPhone?: string | null
@@ -1842,6 +2119,8 @@ export type ListingUpdateWithoutCategoryInput = {
   price?: Prisma.FloatFieldUpdateOperationsInput | number
   priceUnit?: Prisma.EnumPriceUnitFieldUpdateOperationsInput | $Enums.PriceUnit
   quantity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  isSold?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  soldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   contactMethod?: Prisma.EnumContactMethodFieldUpdateOperationsInput | $Enums.ContactMethod
   contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1857,6 +2136,7 @@ export type ListingUpdateWithoutCategoryInput = {
   conversations?: Prisma.ConversationUpdateManyWithoutListingNestedInput
   bookmarks?: Prisma.BookmarkUpdateManyWithoutListingNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutListingNestedInput
+  review?: Prisma.ReviewUpdateOneWithoutListingNestedInput
 }
 
 export type ListingUncheckedUpdateWithoutCategoryInput = {
@@ -1866,6 +2146,8 @@ export type ListingUncheckedUpdateWithoutCategoryInput = {
   price?: Prisma.FloatFieldUpdateOperationsInput | number
   priceUnit?: Prisma.EnumPriceUnitFieldUpdateOperationsInput | $Enums.PriceUnit
   quantity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  isSold?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  soldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   contactMethod?: Prisma.EnumContactMethodFieldUpdateOperationsInput | $Enums.ContactMethod
   contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1881,6 +2163,7 @@ export type ListingUncheckedUpdateWithoutCategoryInput = {
   conversations?: Prisma.ConversationUncheckedUpdateManyWithoutListingNestedInput
   bookmarks?: Prisma.BookmarkUncheckedUpdateManyWithoutListingNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutListingNestedInput
+  review?: Prisma.ReviewUncheckedUpdateOneWithoutListingNestedInput
 }
 
 export type ListingUncheckedUpdateManyWithoutCategoryInput = {
@@ -1890,6 +2173,8 @@ export type ListingUncheckedUpdateManyWithoutCategoryInput = {
   price?: Prisma.FloatFieldUpdateOperationsInput | number
   priceUnit?: Prisma.EnumPriceUnitFieldUpdateOperationsInput | $Enums.PriceUnit
   quantity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  isSold?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  soldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   contactMethod?: Prisma.EnumContactMethodFieldUpdateOperationsInput | $Enums.ContactMethod
   contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1910,6 +2195,8 @@ export type ListingUpdateWithoutSubCategoryInput = {
   price?: Prisma.FloatFieldUpdateOperationsInput | number
   priceUnit?: Prisma.EnumPriceUnitFieldUpdateOperationsInput | $Enums.PriceUnit
   quantity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  isSold?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  soldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   contactMethod?: Prisma.EnumContactMethodFieldUpdateOperationsInput | $Enums.ContactMethod
   contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1925,6 +2212,7 @@ export type ListingUpdateWithoutSubCategoryInput = {
   conversations?: Prisma.ConversationUpdateManyWithoutListingNestedInput
   bookmarks?: Prisma.BookmarkUpdateManyWithoutListingNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutListingNestedInput
+  review?: Prisma.ReviewUpdateOneWithoutListingNestedInput
 }
 
 export type ListingUncheckedUpdateWithoutSubCategoryInput = {
@@ -1934,6 +2222,8 @@ export type ListingUncheckedUpdateWithoutSubCategoryInput = {
   price?: Prisma.FloatFieldUpdateOperationsInput | number
   priceUnit?: Prisma.EnumPriceUnitFieldUpdateOperationsInput | $Enums.PriceUnit
   quantity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  isSold?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  soldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   contactMethod?: Prisma.EnumContactMethodFieldUpdateOperationsInput | $Enums.ContactMethod
   contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1949,6 +2239,7 @@ export type ListingUncheckedUpdateWithoutSubCategoryInput = {
   conversations?: Prisma.ConversationUncheckedUpdateManyWithoutListingNestedInput
   bookmarks?: Prisma.BookmarkUncheckedUpdateManyWithoutListingNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutListingNestedInput
+  review?: Prisma.ReviewUncheckedUpdateOneWithoutListingNestedInput
 }
 
 export type ListingUncheckedUpdateManyWithoutSubCategoryInput = {
@@ -1958,6 +2249,8 @@ export type ListingUncheckedUpdateManyWithoutSubCategoryInput = {
   price?: Prisma.FloatFieldUpdateOperationsInput | number
   priceUnit?: Prisma.EnumPriceUnitFieldUpdateOperationsInput | $Enums.PriceUnit
   quantity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  isSold?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  soldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   contactMethod?: Prisma.EnumContactMethodFieldUpdateOperationsInput | $Enums.ContactMethod
   contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1978,6 +2271,8 @@ export type ListingCreateManyLocationInput = {
   price: number
   priceUnit: $Enums.PriceUnit
   quantity?: number | null
+  isSold?: boolean
+  soldAt?: Date | string | null
   contactMethod?: $Enums.ContactMethod
   contactEmail?: string | null
   contactPhone?: string | null
@@ -1998,6 +2293,8 @@ export type ListingUpdateWithoutLocationInput = {
   price?: Prisma.FloatFieldUpdateOperationsInput | number
   priceUnit?: Prisma.EnumPriceUnitFieldUpdateOperationsInput | $Enums.PriceUnit
   quantity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  isSold?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  soldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   contactMethod?: Prisma.EnumContactMethodFieldUpdateOperationsInput | $Enums.ContactMethod
   contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2013,6 +2310,7 @@ export type ListingUpdateWithoutLocationInput = {
   conversations?: Prisma.ConversationUpdateManyWithoutListingNestedInput
   bookmarks?: Prisma.BookmarkUpdateManyWithoutListingNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutListingNestedInput
+  review?: Prisma.ReviewUpdateOneWithoutListingNestedInput
 }
 
 export type ListingUncheckedUpdateWithoutLocationInput = {
@@ -2022,6 +2320,8 @@ export type ListingUncheckedUpdateWithoutLocationInput = {
   price?: Prisma.FloatFieldUpdateOperationsInput | number
   priceUnit?: Prisma.EnumPriceUnitFieldUpdateOperationsInput | $Enums.PriceUnit
   quantity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  isSold?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  soldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   contactMethod?: Prisma.EnumContactMethodFieldUpdateOperationsInput | $Enums.ContactMethod
   contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2037,6 +2337,7 @@ export type ListingUncheckedUpdateWithoutLocationInput = {
   conversations?: Prisma.ConversationUncheckedUpdateManyWithoutListingNestedInput
   bookmarks?: Prisma.BookmarkUncheckedUpdateManyWithoutListingNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutListingNestedInput
+  review?: Prisma.ReviewUncheckedUpdateOneWithoutListingNestedInput
 }
 
 export type ListingUncheckedUpdateManyWithoutLocationInput = {
@@ -2046,6 +2347,8 @@ export type ListingUncheckedUpdateManyWithoutLocationInput = {
   price?: Prisma.FloatFieldUpdateOperationsInput | number
   priceUnit?: Prisma.EnumPriceUnitFieldUpdateOperationsInput | $Enums.PriceUnit
   quantity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  isSold?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  soldAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   contactMethod?: Prisma.EnumContactMethodFieldUpdateOperationsInput | $Enums.ContactMethod
   contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2124,6 +2427,8 @@ export type ListingSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   price?: boolean
   priceUnit?: boolean
   quantity?: boolean
+  isSold?: boolean
+  soldAt?: boolean
   contactMethod?: boolean
   contactEmail?: boolean
   contactPhone?: boolean
@@ -2144,6 +2449,7 @@ export type ListingSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   conversations?: boolean | Prisma.Listing$conversationsArgs<ExtArgs>
   bookmarks?: boolean | Prisma.Listing$bookmarksArgs<ExtArgs>
   notifications?: boolean | Prisma.Listing$notificationsArgs<ExtArgs>
+  review?: boolean | Prisma.Listing$reviewArgs<ExtArgs>
   _count?: boolean | Prisma.ListingCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["listing"]>
 
@@ -2154,6 +2460,8 @@ export type ListingSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   price?: boolean
   priceUnit?: boolean
   quantity?: boolean
+  isSold?: boolean
+  soldAt?: boolean
   contactMethod?: boolean
   contactEmail?: boolean
   contactPhone?: boolean
@@ -2179,6 +2487,8 @@ export type ListingSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   price?: boolean
   priceUnit?: boolean
   quantity?: boolean
+  isSold?: boolean
+  soldAt?: boolean
   contactMethod?: boolean
   contactEmail?: boolean
   contactPhone?: boolean
@@ -2204,6 +2514,8 @@ export type ListingSelectScalar = {
   price?: boolean
   priceUnit?: boolean
   quantity?: boolean
+  isSold?: boolean
+  soldAt?: boolean
   contactMethod?: boolean
   contactEmail?: boolean
   contactPhone?: boolean
@@ -2218,7 +2530,7 @@ export type ListingSelectScalar = {
   locationId?: boolean
 }
 
-export type ListingOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "price" | "priceUnit" | "quantity" | "contactMethod" | "contactEmail" | "contactPhone" | "isActive" | "archivedAt" | "deletedAt" | "createdAt" | "updatedAt" | "ownerId" | "categoryId" | "subCategoryId" | "locationId", ExtArgs["result"]["listing"]>
+export type ListingOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "price" | "priceUnit" | "quantity" | "isSold" | "soldAt" | "contactMethod" | "contactEmail" | "contactPhone" | "isActive" | "archivedAt" | "deletedAt" | "createdAt" | "updatedAt" | "ownerId" | "categoryId" | "subCategoryId" | "locationId", ExtArgs["result"]["listing"]>
 export type ListingInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   owner?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
@@ -2228,6 +2540,7 @@ export type ListingInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs
   conversations?: boolean | Prisma.Listing$conversationsArgs<ExtArgs>
   bookmarks?: boolean | Prisma.Listing$bookmarksArgs<ExtArgs>
   notifications?: boolean | Prisma.Listing$notificationsArgs<ExtArgs>
+  review?: boolean | Prisma.Listing$reviewArgs<ExtArgs>
   _count?: boolean | Prisma.ListingCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ListingIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2254,6 +2567,7 @@ export type $ListingPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     conversations: Prisma.$ConversationPayload<ExtArgs>[]
     bookmarks: Prisma.$BookmarkPayload<ExtArgs>[]
     notifications: Prisma.$NotificationPayload<ExtArgs>[]
+    review: Prisma.$ReviewPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2262,6 +2576,8 @@ export type $ListingPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     price: number
     priceUnit: $Enums.PriceUnit
     quantity: number | null
+    isSold: boolean
+    soldAt: Date | null
     contactMethod: $Enums.ContactMethod
     contactEmail: string | null
     contactPhone: string | null
@@ -2676,6 +2992,7 @@ export interface Prisma__ListingClient<T, Null = never, ExtArgs extends runtime.
   conversations<T extends Prisma.Listing$conversationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Listing$conversationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ConversationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   bookmarks<T extends Prisma.Listing$bookmarksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Listing$bookmarksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BookmarkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   notifications<T extends Prisma.Listing$notificationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Listing$notificationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  review<T extends Prisma.Listing$reviewArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Listing$reviewArgs<ExtArgs>>): Prisma.Prisma__ReviewClient<runtime.Types.Result.GetResult<Prisma.$ReviewPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2711,6 +3028,8 @@ export interface ListingFieldRefs {
   readonly price: Prisma.FieldRef<"Listing", 'Float'>
   readonly priceUnit: Prisma.FieldRef<"Listing", 'PriceUnit'>
   readonly quantity: Prisma.FieldRef<"Listing", 'Int'>
+  readonly isSold: Prisma.FieldRef<"Listing", 'Boolean'>
+  readonly soldAt: Prisma.FieldRef<"Listing", 'DateTime'>
   readonly contactMethod: Prisma.FieldRef<"Listing", 'ContactMethod'>
   readonly contactEmail: Prisma.FieldRef<"Listing", 'String'>
   readonly contactPhone: Prisma.FieldRef<"Listing", 'String'>
@@ -3212,6 +3531,25 @@ export type Listing$notificationsArgs<ExtArgs extends runtime.Types.Extensions.I
   take?: number
   skip?: number
   distinct?: Prisma.NotificationScalarFieldEnum | Prisma.NotificationScalarFieldEnum[]
+}
+
+/**
+ * Listing.review
+ */
+export type Listing$reviewArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Review
+   */
+  select?: Prisma.ReviewSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Review
+   */
+  omit?: Prisma.ReviewOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ReviewInclude<ExtArgs> | null
+  where?: Prisma.ReviewWhereInput
 }
 
 /**

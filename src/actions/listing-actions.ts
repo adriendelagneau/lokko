@@ -70,24 +70,26 @@ export async function createListing(
     }
 
     // Create listing
-    const newListing = await prisma.listing.create({
-      data: {
-        title,
-        description,
-        price: price.value,
-        priceUnit: price.unit,
-        ownerId: user.id,
-        categoryId,
-        subCategoryId,
-        locationId: locationData.id,
-        contactMethod,
-        contactEmail: contact?.email,
-        contactPhone: contact?.phone,
-        images: {
-          create: images.map((url) => ({ url })),
-        },
-      },
-    });
+  // Create listing
+const newListing = await prisma.listing.create({
+  data: {
+    title,
+    description,
+    price: price.value,
+    priceUnit: price.unit,
+    ownerId: user.id,
+    categoryId,
+    subCategoryId,
+    locationId: locationData.id,
+    contactMethod,
+    contactEmail: contact?.email,
+    contactPhone: contact?.phone,
+    images: {
+      create: images?.filter((url): url is string => !!url).map((url) => ({ url })) ?? [],
+    },
+  },
+});
+
 
     return { success: true, listingId: newListing.id };
   } catch (error) {

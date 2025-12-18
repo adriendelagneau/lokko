@@ -4,6 +4,7 @@ import "./globals.css";
 import { Toaster } from "sonner";
 
 import { AuthModal } from "@/components/modals/auth/AuthModal";
+import { TanstackProvider } from "@/components/providers/tanstackprovider";
 import { ThemeProvider } from "@/components/providers/themes-provider";
 
 const noticaText = Noticia_Text({
@@ -43,9 +44,11 @@ export default function RootLayout({
         >
           <Toaster />
           <AuthModal />
-          <div className="font-notica">
-            <div className="font-notica min-h-screen">{children}</div>
-          </div>
+          <TanstackProvider>
+            <div className="font-notica">
+              <div className="font-notica min-h-screen">{children}</div>
+            </div>
+          </TanstackProvider>
         </ThemeProvider>
       </body>
     </html>

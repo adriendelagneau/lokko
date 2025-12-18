@@ -1,5 +1,7 @@
 "use client";
 
+import { useFormContext } from "react-hook-form";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -9,7 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useListingWizard } from "@/lib/store/listingWizard.store";
+import { ListingDraft } from "@/lib/schemas/listing.schema";
 
 const UNITS = [
   { value: "UNIT", label: "Par unité" },
@@ -17,45 +19,65 @@ const UNITS = [
   { value: "L", label: "Par litre" },
 ] as const;
 
-export default function StepPrice() {
-  const { data, update, next, prev, errors } = useListingWizard();
+type PriceUnit = (typeof UNITS)[number]["value"];
 
-  const price = data.price ?? {
-    value: undefined,
-    unit: "UNIT",
+type StepPriceProps = {
+  onNext: () => void;
+  onPrev: () => void;
+};
+
+export default function StepPrice({ onNext, onPrev }: StepPriceProps) {
+  const {
+    watch,
+    setValue,
+    trigger,
+    formState: { errors },
+    clearErrors,
+  } = useFormContext<ListingDraft>();
+
+  const price = watch("price") ?? { value: 0, unit: "UNIT" as PriceUnit };
+
+  // auto-clear errors
+  if (errors.price && price.value > 0) {
+    clearErrors("price");
+  }
+
+  const handleNext = async () => {
+    const valid = await trigger("price");
+    if (valid) onNext();
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       <h2 className="text-xl font-semibold">Quel est le prix ?</h2>
+      <p className="text-muted-foreground text-sm">
+        Indiquez un prix et son unité.
+      </p>
 
       <div className="flex gap-3">
         <Input
           type="number"
-          min="0"
+          min={0}
           step="0.01"
           placeholder="Ex : 2.50"
-          value={price.value ?? ""}
+          value={price.value || ""}
           onChange={(e) =>
-            update({
-              price: {
-                ...price,
-                value:
-                  e.target.value === "" ? undefined : Number(e.target.value),
-              },
-            })
+            setValue(
+              "price",
+              { ...price, value: Number(e.target.value) },
+              { shouldValidate: true }
+            )
           }
         />
 
         <Select
           value={price.unit}
           onValueChange={(unit) =>
-            update({
-              price: {
-                ...price,
-                unit: unit as "UNIT" | "KG" | "L",
-              },
-            })
+            setValue(
+              "price",
+              { ...price, unit: unit as PriceUnit },
+              { shouldValidate: true }
+            )
           }
         >
           <SelectTrigger className="w-40">
@@ -72,14 +94,18 @@ export default function StepPrice() {
       </div>
 
       {errors.price && (
-        <p className="text-destructive text-sm">{errors.price[0]}</p>
+        <p className="text-destructive text-sm">
+          {errors.price?.message?.toString()}
+        </p>
       )}
 
       <div className="flex justify-between">
-        <Button variant="ghost" onClick={prev}>
+        <Button variant="ghost" onClick={onPrev}>
           Retour
         </Button>
-        <Button onClick={next}>Continuer</Button>
+        <Button onClick={handleNext} disabled={price.value <= 0}>
+          Continuer
+        </Button>
       </div>
     </div>
   );

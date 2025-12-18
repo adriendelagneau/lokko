@@ -1,11 +1,30 @@
 "use client";
 
+import { useFormContext } from "react-hook-form";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useListingWizard } from "@/lib/store/listingWizard.store";
+import { ListingDraft } from "@/lib/schemas/listing.schema";
 
-export default function StepTitle() {
-  const { data, update, next, prev, errors, step } = useListingWizard();
+type StepTitleProps = {
+  onNext: () => void;
+  onPrev: () => void;
+};
+
+export default function StepTitle({ onNext, onPrev }: StepTitleProps) {
+  const {
+    register,
+    trigger,
+    watch,
+    formState: { errors },
+  } = useFormContext<ListingDraft>();
+
+  const titleValue = watch("title"); // permet de re-render automatiquement si la valeur change
+
+  const handleNext = async () => {
+    const valid = await trigger("title"); // valide uniquement au clic
+    if (valid) onNext();
+  };
 
   return (
     <div className="space-y-6">
@@ -15,32 +34,20 @@ export default function StepTitle() {
 
       <Input
         placeholder="Ex : Pommes bio du verger"
-        value={data.title ?? ""}
-        onChange={(e) => update({ title: e.target.value })}
-        onKeyDown={(e) => {
-          if (e.key === "Enter") next();
-        }}
+        {...register("title")}
+        onKeyDown={(e) => e.key === "Enter" && handleNext()}
         autoFocus
       />
 
       {errors.title && (
-        <p className="text-destructive text-sm">
-          {errors.title[0]}
-        </p>
+        <p className="text-destructive text-sm">{errors.title.message}</p>
       )}
 
       <div className="flex justify-between">
-        <Button
-          variant="ghost"
-          onClick={prev}
-          disabled={step === 0}
-        >
+        <Button variant="ghost" onClick={onPrev}>
           Retour
         </Button>
-
-        <Button onClick={next}>
-          Continuer
-        </Button>
+        <Button onClick={handleNext}>Continuer</Button>
       </div>
     </div>
   );

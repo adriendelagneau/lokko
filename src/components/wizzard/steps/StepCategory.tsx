@@ -1,5 +1,7 @@
 "use client";
 
+import { useFormContext } from "react-hook-form";
+
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -8,25 +10,45 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useListingWizard } from "@/lib/store/listingWizard.store";
+import { ListingDraft } from "@/lib/schemas/listing.schema";
 
-type Category = {
+type CategoryType = {
   id: string;
   name: string;
-  subcategories: {
-    id: string;
-    name: string;
-  }[];
+  subcategories: { id: string; name: string }[];
 };
 
 type StepCategoryProps = {
-  categories: Category[];
+  categories: CategoryType[];
+  onNext: () => void;
+  onPrev: () => void;
 };
 
-export default function StepCategory({ categories }: StepCategoryProps) {
-  const { data, update, next, prev, errors } = useListingWizard();
+export default function StepCategory({
+  categories,
+  onNext,
+  onPrev,
+}: StepCategoryProps) {
+  const { register, watch, setValue, trigger, formState, clearErrors } =
+    useFormContext<ListingDraft>();
 
-  const selectedCategory = categories.find((c) => c.id === data.categoryId);
+  const categoryId = watch("categoryId");
+  const subCategoryId = watch("subCategoryId");
+
+  const selectedCategory = categories.find((c) => c.id === categoryId);
+
+  // Clear errors automatically when values become valid
+  if (formState.errors.categoryId && categoryId) {
+    clearErrors("categoryId");
+  }
+  if (formState.errors.subCategoryId && subCategoryId) {
+    clearErrors("subCategoryId");
+  }
+
+  const handleNext = async () => {
+    const valid = await trigger(["categoryId", "subCategoryId"]);
+    if (valid) onNext();
+  };
 
   return (
     <div className="space-y-6">
@@ -34,12 +56,10 @@ export default function StepCategory({ categories }: StepCategoryProps) {
 
       {/* Category */}
       <Select
-        value={data.categoryId}
+        value={categoryId}
         onValueChange={(value) => {
-          update({
-            categoryId: value,
-            subCategoryId: undefined, // 🔥 reset subcat
-          });
+          setValue("categoryId", value);
+          setValue("subCategoryId", ""); // reset subcategory
         }}
       >
         <SelectTrigger>
@@ -53,15 +73,16 @@ export default function StepCategory({ categories }: StepCategoryProps) {
           ))}
         </SelectContent>
       </Select>
-
-      {errors.categoryId && (
-        <p className="text-destructive text-sm">{errors.categoryId[0]}</p>
+      {formState.errors.categoryId && (
+        <p className="text-destructive text-sm">
+          {formState.errors.categoryId.message}
+        </p>
       )}
 
       {/* SubCategory */}
       <Select
-        value={data.subCategoryId}
-        onValueChange={(value) => update({ subCategoryId: value })}
+        value={subCategoryId}
+        onValueChange={(value) => setValue("subCategoryId", value)}
         disabled={!selectedCategory}
       >
         <SelectTrigger>
@@ -75,16 +96,17 @@ export default function StepCategory({ categories }: StepCategoryProps) {
           ))}
         </SelectContent>
       </Select>
-
-      {errors.subCategoryId && (
-        <p className="text-destructive text-sm">{errors.subCategoryId[0]}</p>
+      {formState.errors.subCategoryId && (
+        <p className="text-destructive text-sm">
+          {formState.errors.subCategoryId.message}
+        </p>
       )}
 
       <div className="flex justify-between">
-        <Button variant="ghost" onClick={prev}>
+        <Button variant="ghost" onClick={onPrev}>
           Retour
         </Button>
-        <Button onClick={next}>Continuer</Button>
+        <Button onClick={handleNext}>Continuer</Button>
       </div>
     </div>
   );

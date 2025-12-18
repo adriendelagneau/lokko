@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useFormContext } from "react-hook-form";
 
 import FormError from "@/components/modals/auth/form-error";
 import { Button } from "@/components/ui/button";
@@ -8,58 +9,59 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { authClient } from "@/lib/auth/auth-client";
-import { useListingWizard } from "@/lib/store/listingWizard.store";
+import { ListingDraft } from "@/lib/schemas/listing.schema";
 
-export default function StepContact() {
-  const { data, update, next, prev, errors } = useListingWizard();
+type StepContactProps = {
+  onNext: () => void;
+  onPrev: () => void;
+};
+
+export default function StepContact({ onNext, onPrev }: StepContactProps) {
+  const {
+    watch,
+    setValue,
+    trigger,
+    formState: { errors },
+  } = useFormContext<ListingDraft>();
+
+  const contact = watch("contact") ?? {};
   const { data: session } = authClient.useSession();
 
   const [useEmail, setUseEmail] = useState(false);
   const [usePhone, setUsePhone] = useState(false);
 
   useEffect(() => {
-    const contactEmail = data.contact?.email;
-    const contactPhone = data.contact?.phone;
+    if (contact.email || session?.user?.email) setUseEmail(true);
+    if (contact.phone) setUsePhone(true);
 
-    if (contactEmail) {
-      setUseEmail(true);
-    } else if (session?.user?.email) {
-      // Pre-select email if user is logged in and hasn't made a choice
-      setUseEmail(true);
-      update({
-        contact: { ...data.contact, email: session.user.email },
-      });
+    if (!contact.email && session?.user?.email) {
+      setValue("contact.email", session.user.email, { shouldValidate: true });
     }
-
-    if (contactPhone) {
-      setUsePhone(true);
-    }
-  }, [session, data.contact, update]);
+  }, [contact.email, contact.phone, session?.user?.email, setValue]);
 
   const handleEmailToggle = (checked: boolean) => {
     setUseEmail(checked);
     if (checked && session?.user?.email) {
-      update({
-        contact: { ...data.contact, email: session.user.email },
-      });
+      setValue("contact.email", session.user.email, { shouldValidate: true });
     } else {
-      const { email, ...rest } = data.contact || {};
-      update({ contact: rest });
+      setValue("contact.email", undefined, { shouldValidate: true });
     }
   };
 
   const handlePhoneToggle = (checked: boolean) => {
     setUsePhone(checked);
     if (!checked) {
-      const { phone, ...rest } = data.contact || {};
-      update({ contact: rest });
+      setValue("contact.phone", undefined, { shouldValidate: true });
     }
   };
 
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    update({
-      contact: { ...data.contact, phone: e.target.value },
-    });
+    setValue("contact.phone", e.target.value, { shouldValidate: true });
+  };
+
+  const handleNext = async () => {
+    const valid = await trigger("contact");
+    if (valid) onNext();
   };
 
   return (
@@ -85,7 +87,7 @@ export default function StepContact() {
         </div>
         {useEmail && (
           <Input
-            value={data.contact?.email ?? ""}
+            value={contact.email ?? ""}
             readOnly
             disabled
             placeholder="Votre email de compte"
@@ -105,19 +107,21 @@ export default function StepContact() {
         {usePhone && (
           <Input
             placeholder="Votre numéro de téléphone"
-            value={data.contact?.phone ?? ""}
+            value={contact.phone ?? ""}
             onChange={handlePhoneChange}
           />
         )}
       </div>
 
-      {errors.contact && <FormError message={errors.contact[0]} />}
+      {errors.contact && (
+        <FormError message={errors.contact?.message?.toString()} />
+      )}
 
       <div className="flex justify-between">
-        <Button variant="ghost" onClick={prev}>
+        <Button variant="ghost" onClick={onPrev}>
           Retour
         </Button>
-        <Button onClick={next}>Continuer</Button>
+        <Button onClick={handleNext}>Continuer</Button>
       </div>
     </div>
   );

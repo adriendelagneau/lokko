@@ -109,3 +109,8 @@ export type Notification = Prisma.NotificationModel
  * 
  */
 export type SavedSearch = Prisma.SavedSearchModel
+/**
+ * Model Review
+ * 
+ */
+export type Review = Prisma.ReviewModel

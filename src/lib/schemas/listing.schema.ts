@@ -19,7 +19,7 @@ location: z.object({
 
 
   price: z.object({
-    value: z.coerce.number().positive("Prix invalide"),
+    value: z.number().positive("Prix invalide"),
     unit: z.enum(["UNIT", "KG", "L"]),
   }),
 

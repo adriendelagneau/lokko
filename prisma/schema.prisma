@@ -35,21 +35,28 @@ enum ContactMethod {
   BOTH
 }
 
-
 //
 // AUTH & USERS
 //
 
 model User {
-  id            String   @id @default(uuid())
-  email         String   @unique
+  id            String  @id @default(uuid())
+  email         String  @unique
   name          String?
   password      String?
-  role          Role     @default(USER)
-  emailVerified Boolean  @default(false)
+  role          Role    @default(USER)
+  emailVerified Boolean @default(false)
   image         String?
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+
+  // ⭐ Reputation
+  ratingAverage Float @default(0)
+  ratingCount   Int   @default(0)
+  ratingSum     Int   @default(0)
+
+  salesCount Int @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   sessions Session[]
   accounts Account[]
@@ -63,6 +70,9 @@ model User {
   bookmarks     Bookmark[]
   notifications Notification[]
   savedSearches SavedSearch[]
+
+  receivedReviews Review[] @relation("SellerReviews")
+  writtenReviews  Review[] @relation("AuthorReviews")
 
   @@map("user")
 }
@@ -158,20 +168,23 @@ model Location {
   @@map("location")
 }
 
-
 model Listing {
   id String @id @default(uuid())
 
   title       String
   description String
 
-  price       Float
-  priceUnit   PriceUnit
-  quantity    Int?
-  
-  contactMethod ContactMethod @default(NONE) // Nouveau champ
-  contactEmail  String?               // Optionnel
-  contactPhone  String?               // Optionnel
+  price     Float
+  priceUnit PriceUnit
+  quantity  Int?
+
+  // Vente
+  isSold Boolean   @default(false)
+  soldAt DateTime?
+
+  contactMethod ContactMethod @default(NONE)
+  contactEmail  String?
+  contactPhone  String?
 
   isActive   Boolean   @default(true)
   archivedAt DateTime?
@@ -180,11 +193,13 @@ model Listing {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  // 🔗 Foreign keys
   ownerId       String
   categoryId    String
   subCategoryId String
   locationId    String
 
+  // 🔗 Relations
   owner       User     @relation(fields: [ownerId], references: [id])
   category    Category @relation("ListingCategory", fields: [categoryId], references: [id])
   subCategory Category @relation("ListingSubCategory", fields: [subCategoryId], references: [id])
@@ -194,8 +209,14 @@ model Listing {
   conversations Conversation[]
   bookmarks     Bookmark[]
   notifications Notification[]
-}
 
+  review Review?
+
+  @@index([ownerId])
+  @@index([categoryId])
+  @@index([subCategoryId])
+  @@map("listing")
+}
 
 model ListingImage {
   id        String   @id @default(uuid())
@@ -318,3 +339,27 @@ model SavedSearch {
   @@index([lastChecked])
   @@map("saved_search")
 }
+
+model Review {
+  id String @id @default(uuid())
+
+  rating  Int // 1–5
+  comment String?
+
+  sellerId  String
+  authorId  String
+  listingId String @unique
+
+  seller  User    @relation("SellerReviews", fields: [sellerId], references: [id])
+  author  User    @relation("AuthorReviews", fields: [authorId], references: [id])
+  listing Listing @relation(fields: [listingId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([authorId, listingId]) // 1 review per buyer per listing
+  @@index([sellerId])
+  @@map("review")
+}
+
+

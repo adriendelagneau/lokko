@@ -2,9 +2,10 @@
 
 import debounce from "lodash.debounce";
 import { useState, useEffect, useCallback } from "react";
+import { useFormContext } from "react-hook-form";
 
 import { Button } from "@/components/ui/button";
-import { useListingWizard } from "@/lib/store/listingWizard.store";
+import { ListingDraft } from "@/lib/schemas/listing.schema";
 
 /**
  * Type retourné par geo.api.gouv.fr
@@ -25,15 +26,25 @@ type Commune = {
  */
 function getCoordinates(commune: Commune): { lat: number; lng: number } | null {
   if (!commune.centre?.coordinates) return null;
-
   const [lng, lat] = commune.centre.coordinates;
   return { lat, lng };
 }
 
-export default function StepLocation() {
-  const { data, update, next, prev, errors } = useListingWizard();
+type StepLocationProps = {
+  onNext: () => void;
+  onPrev: () => void;
+};
 
-  const location = data.location ?? {
+export default function StepLocation({ onNext, onPrev }: StepLocationProps) {
+  const {
+    watch,
+    setValue,
+    trigger,
+    formState: { errors },
+    clearErrors,
+  } = useFormContext<ListingDraft>();
+
+  const locationFromForm = watch("location") ?? {
     region: "",
     department: "",
     city: "",
@@ -42,10 +53,15 @@ export default function StepLocation() {
     lng: 0,
   };
 
-  const [query, setQuery] = useState(location.city);
+  const [query, setQuery] = useState(locationFromForm.city);
   const [suggestions, setSuggestions] = useState<Commune[]>([]);
   const [loading, setLoading] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
+
+  // auto-clear error if location has valid coordinates
+  if (errors.location && locationFromForm.lat && locationFromForm.lng) {
+    clearErrors("location");
+  }
 
   // -------- Fetch autocomplete
   const fetchCities = async (q: string) => {
@@ -78,20 +94,24 @@ export default function StepLocation() {
     const coords = getCoordinates(commune);
     if (!coords) return;
 
-    update({
-      location: {
-        region: commune.region.nom,
-        department: commune.departement.nom,
-        city: commune.nom,
-        postalCode: commune.codesPostaux[0],
-        lat: coords.lat,
-        lng: coords.lng,
-      },
-    });
+    const newLocation = {
+      region: commune.region.nom,
+      department: commune.departement.nom,
+      city: commune.nom,
+      postalCode: commune.codesPostaux[0],
+      lat: coords.lat,
+      lng: coords.lng,
+    };
 
+    setValue("location", newLocation, { shouldValidate: true });
     setQuery(`${commune.nom} (${commune.codesPostaux[0]})`);
     setSuggestions([]);
     setIsFocused(false);
+  };
+
+  const handleNext = async () => {
+    const valid = await trigger("location");
+    if (valid) onNext();
   };
 
   return (
@@ -139,16 +159,18 @@ export default function StepLocation() {
       </div>
 
       {errors.location && (
-        <p className="text-destructive text-sm">{errors.location[0]}</p>
+        <p className="text-destructive text-sm">
+          {errors.location.message?.toString()}
+        </p>
       )}
 
       <div className="flex justify-between">
-        <Button variant="ghost" onClick={prev}>
+        <Button variant="ghost" onClick={onPrev}>
           Retour
         </Button>
         <Button
-          onClick={next}
-          disabled={!location.lat || !location.lng || loading}
+          onClick={handleNext}
+          disabled={!locationFromForm.lat || !locationFromForm.lng || loading}
         >
           Continuer
         </Button>

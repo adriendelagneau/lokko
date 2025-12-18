@@ -3,23 +3,38 @@
 import { Upload, Trash2 } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import { useFormContext } from "react-hook-form";
 
 import { Button } from "@/components/ui/button";
-import { useListingWizard } from "@/lib/store/listingWizard.store";
+import { ListingDraft } from "@/lib/schemas/listing.schema";
+
+type StepImagesProps = {
+  onNext: () => void;
+  onPrev: () => void;
+};
 
 type ImageState = {
-  url?: string; // uploaded URL
-  file?: File; // local file
+  url?: string;
+  file?: File;
   uploading: boolean;
   error?: string;
 };
 
-export default function StepImages() {
-  const { data, update, next, prev, errors } = useListingWizard();
+export default function StepImages({ onNext, onPrev }: StepImagesProps) {
+  const { watch, setValue, trigger, formState, clearErrors } =
+    useFormContext<ListingDraft>();
+  const images = watch("images") ?? [];
 
   const [imagesState, setImagesState] = useState<ImageState[]>(
-    (data.images ?? []).map((url) => ({ url, uploading: false }))
+    images.map((url) => ({ url, uploading: false }))
   );
+
+  // Auto-clear errors when valid
+  useEffect(() => {
+    if (formState.errors.images && imagesState.every((i) => i.url)) {
+      clearErrors("images");
+    }
+  }, [imagesState, formState.errors.images, clearErrors]);
 
   const handleFiles = async (files: FileList | null) => {
     if (!files) return;
@@ -64,16 +79,22 @@ export default function StepImages() {
 
   const removeImage = (url?: string, file?: File) => {
     setImagesState((prev) =>
-      prev.filter((img) => img.url !== url && img.file !== file)
+      prev.filter((i) => i.url !== url && i.file !== file)
     );
   };
 
-  // Update the store whenever imagesState changes
+  // Sync with RHF
   useEffect(() => {
-    update({
-      images: imagesState.filter((i) => i.url).map((i) => i.url!),
-    });
-  }, [imagesState, update]);
+    setValue(
+      "images",
+      imagesState.filter((i) => i.url).map((i) => i.url!)
+    );
+  }, [imagesState, setValue]);
+
+  const handleNext = async () => {
+    const valid = await trigger("images");
+    if (valid) onNext();
+  };
 
   const isUploading = imagesState.some((i) => i.uploading);
 
@@ -94,8 +115,10 @@ export default function StepImages() {
         />
       </label>
 
-      {errors.images && (
-        <p className="text-destructive text-sm">{errors.images[0]}</p>
+      {formState.errors.images && (
+        <p className="text-destructive text-sm">
+          {formState.errors.images.message}
+        </p>
       )}
 
       {/* Preview */}
@@ -106,41 +129,35 @@ export default function StepImages() {
 
             return (
               <div key={key} className="relative aspect-square">
-                {/* Uploaded image */}
-                {img.url && (
+                {img.url ? (
                   <Image
                     src={img.url}
                     alt=""
                     fill
                     className="rounded-md object-cover"
                   />
-                )}
-
-                {/* Local file preview */}
-                {!img.url && img.file && (
+                ) : img.file ? (
                   <img
                     src={URL.createObjectURL(img.file)}
                     alt=""
                     className="h-full w-full rounded-md object-cover"
                   />
-                )}
+                ) : null}
 
-                {/* Upload overlay */}
                 {img.uploading && (
                   <div className="absolute inset-0 flex items-center justify-center bg-black/30 text-sm text-white">
                     Upload...
                   </div>
                 )}
 
-                {/* Error message */}
                 {img.error && (
                   <p className="text-destructive absolute bottom-1 left-1 text-xs">
                     {img.error}
                   </p>
                 )}
 
-                {/* Remove button */}
                 <button
+                  type="button"
                   onClick={() => removeImage(img.url, img.file)}
                   className="absolute top-1 right-1 rounded-full bg-black/60 p-1 text-white"
                 >
@@ -152,14 +169,15 @@ export default function StepImages() {
         </div>
       )}
 
-      {/* Navigation */}
       <div className="flex justify-between">
-        <Button variant="ghost" onClick={prev}>
+        <Button variant="ghost" onClick={onPrev}>
           Retour
         </Button>
         <Button
-          onClick={next}
-          disabled={isUploading || imagesState.length === 0}
+          onClick={handleNext}
+          disabled={
+            isUploading || imagesState.filter((i) => i.url).length === 0
+          }
         >
           {isUploading ? "Upload en cours..." : "Continuer"}
         </Button>

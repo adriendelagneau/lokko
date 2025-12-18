@@ -1,7 +1,6 @@
 "use client";
 
 import { Category } from "@/actions/category-actions";
-import { useListingWizard } from "@/lib/store/listingWizard.store";
 
 import { WizardProgress } from "./progressBar";
 import StepCategory from "./steps/StepCategory";
@@ -12,9 +11,16 @@ import StepLocation from "./steps/StepLocation";
 import StepPrice from "./steps/StepPrice";
 import StepTitle from "./steps/StepTitle";
 
+type WizardProps = {
+  step: number;
+  onNext: () => void;
+  onPrev: () => void;
+  categories?: Category[];
+};
+
 const steps = [
   StepTitle,
-  StepCategory, 
+  StepCategory,
   StepImages,
   StepLocation,
   StepPrice,
@@ -22,19 +28,13 @@ const steps = [
   StepDescription,
 ];
 
-type WizardProps = {
-  categories: Category[];
-};
-
-
-export const Wizard = ({ categories }: WizardProps) => {
-  const step = useListingWizard((s) => s.step);
-  const Step = steps[step];
+export const Wizard = ({ step, onNext, onPrev, categories }: WizardProps) => {
+  const StepComponent = steps[step];
 
   return (
     <div className="mx-auto max-w-xl p-6">
       <WizardProgress step={step} total={steps.length} />
-      <Step categories={categories} />
+      <StepComponent categories={categories} onNext={onNext} onPrev={onPrev} />
     </div>
   );
 };
