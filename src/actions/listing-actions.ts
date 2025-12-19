@@ -4,6 +4,7 @@ import { z } from "zod";
 
 import { getUser } from "@/lib/auth/auth-session";
 import { ContactMethod } from "@/lib/prisma/generated/prisma/client";
+import { Prisma } from "@/lib/prisma/generated/prisma/client";
 import prisma from "@/lib/prisma/prisma";
 import { listingSchema, ListingDraft } from "@/lib/schemas/listing.schema";
 
@@ -70,25 +71,25 @@ export async function createListing(
     }
 
     // Create listing
-  // Create listing
-const newListing = await prisma.listing.create({
-  data: {
-    title,
-    description,
-    price: price.value,
-    priceUnit: price.unit,
-    ownerId: user.id,
-    categoryId,
-    subCategoryId,
-    locationId: locationData.id,
-    contactMethod,
-    contactEmail: contact?.email,
-    contactPhone: contact?.phone,
-    images: {
-      create: images?.filter((url): url is string => !!url).map((url) => ({ url })) ?? [],
-    },
-  },
-});
+    // Create listing
+    const newListing = await prisma.listing.create({
+      data: {
+        title,
+        description,
+        price: price.value,
+        priceUnit: price.unit,
+        ownerId: user.id,
+        categoryId,
+        subCategoryId,
+        locationId: locationData.id,
+        contactMethod,
+        contactEmail: contact?.email,
+        contactPhone: contact?.phone,
+        images: {
+          create: images?.filter((url): url is string => !!url).map((url) => ({ url })) ?? [],
+        },
+      },
+    });
 
 
     return { success: true, listingId: newListing.id };
@@ -100,3 +101,108 @@ const newListing = await prisma.listing.create({
     };
   }
 }
+
+
+
+
+
+
+
+type GetListingsParams = {
+  query?: string;
+  page?: number;
+  pageSize?: number;
+  categorySlug?: string;
+  orderBy?: "newest" | "priceAsc" | "priceDesc";
+};
+
+export async function getListings({
+  query,
+  page = 1,
+  pageSize = 12,
+  categorySlug,
+  orderBy = "newest",
+}: GetListingsParams) {
+  const skip = (page - 1) * pageSize;
+
+  // 🔎 WHERE
+  const where: Prisma.ListingWhereInput = {
+    isActive: true,
+    deletedAt: null,
+    ...(categorySlug && {
+      category: { slug: categorySlug },
+    }),
+    ...(query && {
+      OR: [
+        { title: { contains: query, mode: "insensitive" } },
+        { description: { contains: query, mode: "insensitive" } },
+      ],
+    }),
+  };
+
+  // 🔃 ORDER BY
+  const orderByClause: Prisma.ListingOrderByWithRelationInput =
+    orderBy === "priceAsc"
+      ? { price: "asc" }
+      : orderBy === "priceDesc"
+        ? { price: "desc" }
+        : { createdAt: "desc" };
+
+  const [listings, total] = await Promise.all([
+    prisma.listing.findMany({
+      where,
+      skip,
+      take: pageSize,
+      orderBy: orderByClause,
+      select: {
+        id: true,
+        title: true,
+        price: true,
+        priceUnit: true,
+        createdAt: true,
+
+        images: {
+          take: 1,
+          select: {
+            url: true,
+            altText: true,
+          },
+        },
+
+        location: {
+          select: {
+            city: true,
+            postalCode: true,
+          },
+        },
+
+        owner: {
+          select: {
+            id: true,
+            name: true,
+            image: true,
+            ratingAverage: true,
+            ratingCount: true,
+            _count: {
+              select: {
+                listings: true,
+              },
+            },
+          },
+        },
+      },
+    }),
+    prisma.listing.count({ where }),
+  ]);
+
+  return {
+    listings,
+    hasMore: skip + listings.length < total,
+  };
+}
+
+export type GetListingsResult = Awaited<
+  ReturnType<typeof getListings>
+>;
+
+export type ListingCard = GetListingsResult["listings"][number];

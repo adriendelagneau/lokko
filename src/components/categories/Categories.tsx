@@ -53,7 +53,7 @@ const Categories = ({ categories }: CategoriesProps) => {
       {/* Dropdown */}
       {activeCategory && (
         <div
-          className="absolute top-14 z-0 mt-px flex h-96 w-full shadow-lg"
+          className="absolute top-14 z-10 mt-px flex h-96 w-full shadow-lg"
           onMouseEnter={() =>
             timeoutRef.current && clearTimeout(timeoutRef.current)
           }
