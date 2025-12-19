@@ -108,11 +108,13 @@ export async function createListing(
 
 
 
-type GetListingsParams = {
+
+export type GetListingsParams = {
   query?: string;
   page?: number;
   pageSize?: number;
   categorySlug?: string;
+  subCategorySlug?: string;
   orderBy?: "newest" | "priceAsc" | "priceDesc";
 };
 
@@ -121,6 +123,7 @@ export async function getListings({
   page = 1,
   pageSize = 12,
   categorySlug,
+  subCategorySlug,
   orderBy = "newest",
 }: GetListingsParams) {
   const skip = (page - 1) * pageSize;
@@ -129,9 +132,15 @@ export async function getListings({
   const where: Prisma.ListingWhereInput = {
     isActive: true,
     deletedAt: null,
+
     ...(categorySlug && {
-      category: { slug: categorySlug },
+      category: { is: { slug: categorySlug } }, // ✅ relational filter
     }),
+
+    ...(subCategorySlug && {
+      subCategory: { is: { slug: subCategorySlug } }, // ✅ relational filter
+    }),
+
     ...(query && {
       OR: [
         { title: { contains: query, mode: "insensitive" } },
@@ -145,8 +154,8 @@ export async function getListings({
     orderBy === "priceAsc"
       ? { price: "asc" }
       : orderBy === "priceDesc"
-        ? { price: "desc" }
-        : { createdAt: "desc" };
+      ? { price: "desc" }
+      : { createdAt: "desc" };
 
   const [listings, total] = await Promise.all([
     prisma.listing.findMany({
@@ -157,10 +166,15 @@ export async function getListings({
       select: {
         id: true,
         title: true,
+        category: {
+          select: { slug: true }, // ✅ select slug only
+        },
+        subCategory: {
+          select: { slug: true }, // ✅ select slug only
+        },
         price: true,
         priceUnit: true,
         createdAt: true,
-
         images: {
           take: 1,
           select: {
@@ -168,14 +182,12 @@ export async function getListings({
             altText: true,
           },
         },
-
         location: {
           select: {
             city: true,
             postalCode: true,
           },
         },
-
         owner: {
           select: {
             id: true,
@@ -201,8 +213,5 @@ export async function getListings({
   };
 }
 
-export type GetListingsResult = Awaited<
-  ReturnType<typeof getListings>
->;
-
+export type GetListingsResult = Awaited<ReturnType<typeof getListings>>;
 export type ListingCard = GetListingsResult["listings"][number];

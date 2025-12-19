@@ -50,11 +50,11 @@ export function ListingCarousel({ listings }: ListingCarouselProps) {
         opts={{ align: "start", dragFree: true }}
         className="w-full px-10"
       >
-        <CarouselContent className="-ml-4">
+        <CarouselContent>
           {listings.map((listing) => (
             <CarouselItem
               key={listing.id}
-              className="basis-[80%] pl-4 sm:basis-[45%] md:basis-[30%] lg:basis-[25%]"
+              className="w-[220px] shrink-0 basis-auto pl-4"
             >
               <ListingCarouselCard listing={listing} />
             </CarouselItem>
