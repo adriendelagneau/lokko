@@ -11,7 +11,15 @@ export default async function Home() {
     categorySlug: "boissons"
   });
 
-  console.log(fruits)
+  const bakery = await getListings({
+    categorySlug: "boulangerie-cereales"
+  });
+
+    const eggs = await getListings({
+    subCategorySlug: "oeufs"
+  });
+
+
   return (
     <div className="mx-auto min-h-screen w-full max-w-7xl gap-4">
       <Categories categories={categories} />
@@ -19,9 +27,19 @@ export default async function Home() {
 
       <Pub />
       <ListingsSection
-        title="Produits laitiers"
+        title="Boissons"
         listings={fruits.listings}
-        href="/search?category=produits-laitiers"
+        href="/search?category=boissons"
+      />
+            <ListingsSection
+        title="Boulangerie-cereales"
+        listings={bakery.listings}
+        href="/search?category=boulangerie-cereales"
+      />
+                  <ListingsSection
+        title="Oeufs"
+        listings={eggs.listings}
+        href="/search?subcategory=oeufs"
       />
     </div>
   );

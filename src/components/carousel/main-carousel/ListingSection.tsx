@@ -15,13 +15,13 @@ export function ListingsSection({ title, listings, href }: Props) {
   if (!listings.length) return null;
 
   return (
-    <section className="space-y-3">
+    <section className="space-y-3 max-w-5xl mx-auto my-12">
       {/* Header */}
       <div className="flex items-center justify-between px-1">
         <h2 className="text-xl font-semibold">{title}</h2>
 
-        <Button asChild variant="ghost" className="text-sm">
-          <Link href={href}>Voir tout</Link>
+        <Button asChild variant="link" className="text-sm">
+          <Link href={href}>Voir plus d&apos;annonce</Link>
         </Button>
       </div>
 

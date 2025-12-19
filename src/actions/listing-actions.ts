@@ -106,15 +106,15 @@ export async function createListing(
 
 
 
-
-
-
 export type GetListingsParams = {
   query?: string;
   page?: number;
   pageSize?: number;
   categorySlug?: string;
   subCategorySlug?: string;
+  locationCity?: string;
+  locationDepartment?: string;
+  locationRegion?: string;
   orderBy?: "newest" | "priceAsc" | "priceDesc";
 };
 
@@ -124,22 +124,23 @@ export async function getListings({
   pageSize = 12,
   categorySlug,
   subCategorySlug,
+  locationCity,
+  locationDepartment,
+  locationRegion,
   orderBy = "newest",
 }: GetListingsParams) {
   const skip = (page - 1) * pageSize;
 
-  // 🔎 WHERE
   const where: Prisma.ListingWhereInput = {
     isActive: true,
     deletedAt: null,
 
-    ...(categorySlug && {
-      category: { is: { slug: categorySlug } }, // ✅ relational filter
-    }),
+    ...(categorySlug && { category: { is: { slug: categorySlug } } }),
+    ...(subCategorySlug && { subCategory: { is: { slug: subCategorySlug } } }),
 
-    ...(subCategorySlug && {
-      subCategory: { is: { slug: subCategorySlug } }, // ✅ relational filter
-    }),
+    ...(locationCity && { location: { city: { equals: locationCity, mode: "insensitive" } } }),
+    ...(locationDepartment && { location: { department: { equals: locationDepartment, mode: "insensitive" } } }),
+    ...(locationRegion && { location: { region: { equals: locationRegion, mode: "insensitive" } } }),
 
     ...(query && {
       OR: [
@@ -149,7 +150,6 @@ export async function getListings({
     }),
   };
 
-  // 🔃 ORDER BY
   const orderByClause: Prisma.ListingOrderByWithRelationInput =
     orderBy === "priceAsc"
       ? { price: "asc" }
@@ -166,28 +166,13 @@ export async function getListings({
       select: {
         id: true,
         title: true,
-        category: {
-          select: { slug: true }, // ✅ select slug only
-        },
-        subCategory: {
-          select: { slug: true }, // ✅ select slug only
-        },
+        category: { select: { slug: true } },
+        subCategory: { select: { slug: true } },
         price: true,
         priceUnit: true,
         createdAt: true,
-        images: {
-          take: 1,
-          select: {
-            url: true,
-            altText: true,
-          },
-        },
-        location: {
-          select: {
-            city: true,
-            postalCode: true,
-          },
-        },
+        images: { take: 1, select: { url: true, altText: true } },
+        location: { select: { city: true, postalCode: true, department: true, region: true } },
         owner: {
           select: {
             id: true,
@@ -195,11 +180,7 @@ export async function getListings({
             image: true,
             ratingAverage: true,
             ratingCount: true,
-            _count: {
-              select: {
-                listings: true,
-              },
-            },
+            _count: { select: { listings: true } },
           },
         },
       },
@@ -213,5 +194,48 @@ export async function getListings({
   };
 }
 
+
 export type GetListingsResult = Awaited<ReturnType<typeof getListings>>;
 export type ListingCard = GetListingsResult["listings"][number];
+
+
+export async function getListingById(id: string) {
+  return prisma.listing.findUnique({
+    where: { id },
+    select: {
+      id: true,
+      title: true,
+
+      category: {
+        select: {
+          name: true,
+          slug: true,
+        },
+      },
+
+      subCategory: {
+        select: {
+          name: true,
+          slug: true,
+        },
+      },
+
+      location: {
+        select: {
+          region: true,
+          department: true,
+          city: true,
+          postalCode: true,
+        },
+      },
+    },
+  });
+}
+
+// actions/listing-actions.ts
+
+export type GetListingByIdResult = Awaited<
+  ReturnType<typeof getListingById>
+>;
+
+export type ListingSingle = NonNullable<GetListingByIdResult>;
