@@ -32,7 +32,7 @@ const Categories = ({ categories }: CategoriesProps) => {
     <div className="bg-background relative mx-auto hidden max-w-5xl lg:block">
       {/* Top categories */}
       <ul
-        className="relative z-10 flex items-center justify-center py-4"
+        className="relative z-10 flex items-center justify-between py-4"
         onMouseLeave={handleLeave}
       >
         {categories.map((cat) => (

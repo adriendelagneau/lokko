@@ -226,6 +226,8 @@ export async function getListingById(id: string) {
           department: true,
           city: true,
           postalCode: true,
+          lat: true,
+          lng: true,
         },
       },
     },
