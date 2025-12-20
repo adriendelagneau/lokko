@@ -3,7 +3,9 @@
 import { MapContainer, TileLayer, Marker } from "react-leaflet";
 
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+
 import "leaflet/dist/leaflet.css";
+import { useEffect, useState } from "react";
 
 type Props = {
   open: boolean;
@@ -12,7 +14,8 @@ type Props = {
   lng: number;
 };
 
-export function MapModal({ open, onOpenChange, lat, lng }: Props) {
+export default function MapModal({ open, onOpenChange, lat, lng }: Props) {
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="h-[80vh] max-w-4xl p-0">

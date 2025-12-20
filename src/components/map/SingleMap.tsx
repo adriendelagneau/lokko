@@ -1,16 +1,16 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import React, { useState } from "react";
 
 import { ListingSingle } from "@/actions/listing-actions";
 
-import { MapModal } from "./MapModal";
-import { MiniMap } from "./Minimap";
+const MiniMap = dynamic(() => import("./Minimap"), { ssr: false });
+const MapModal = dynamic(() => import("./MapModal"), { ssr: false });
 
 type SingleMapProps = {
   listing: Pick<ListingSingle, "location">;
 };
-
 
 const SingleMap = ({ listing }: SingleMapProps) => {
   const [open, setOpen] = useState(false);

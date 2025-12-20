@@ -46,7 +46,7 @@ export default async function ListingPage({ params }: Props) {
       <CategoryCarousel categories={categories} />
       <BreadcrumbSingle items={breadcrumbItems} />
 
-      <h1 className="text-2xl font-semibold">{listing.title}</h1>
+      <h1 className="text-2xl font-semibold mb-92">{listing.title}</h1>
 
       {/* le reste de la single */}
 
