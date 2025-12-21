@@ -231,6 +231,17 @@ export async function getListingById(id: string) {
           lng: true,
         },
       },
+
+        owner: {
+        select: {
+          id: true,
+          name: true,
+          image: true,
+          ratingAverage: true,
+          ratingCount: true,
+        },
+      },
+        
     },
   });
 }

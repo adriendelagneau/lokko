@@ -1,34 +1,24 @@
-import { List } from "lucide-react";
-
 import { getCategories } from "@/actions/category-actions";
-import { getListingById } from "@/actions/listing-actions";
+import { getListingById, ListingSingle } from "@/actions/listing-actions";
 import { BreadcrumbSingle } from "@/components/bread-crump/BreadCrumpSingle";
 import { CategoryCarousel } from "@/components/carousel/category-carousel";
 import Categories from "@/components/categories/Categories";
 import SingleMap from "@/components/map/SingleMap";
 
-import {
-  HeaderImageModal,
-  ListingHeaderCarousel,
-} from "./components/ListingHeaderCourousel.tsx";
-import ListingImages from "./components/ListingImages";
+import { ImagesModal } from "./components/ImagesModal";
+import { ListingHeaderCarousel } from "./components/ListingHeaderCourousel.tsx";
+import { ListingImagesDesktop } from "./components/ListingImageDesktop";
+import { ListingInfo } from "./components/ListingInfos";
 
 type Props = {
   params: { id: string };
 };
 
 export default async function ListingPage({ params }: Props) {
-  const listing = await getListingById(params.id);
+  const listing: ListingSingle | null = await getListingById(params.id);
   const categories = await getCategories();
 
-  const images = listing.images.map((img) => ({
-    url: img.url,
-    altText: img.altText ?? undefined,
-  }));
-
-  if (!listing) {
-    return <div>Annonce introuvable</div>;
-  }
+  if (!listing) return <div>Annonce introuvable</div>;
 
   const breadcrumbItems = [
     { label: "Accueil", href: "/" },
@@ -55,26 +45,39 @@ export default async function ListingPage({ params }: Props) {
   ];
 
   return (
-    <div className="mx-auto w-full max-w-5xl">
-      <div className="hidden lg:inline-block">
+    <div className="mx-auto w-full max-w-7xl px-4">
+      {/* Top categories + carousel + breadcrumb (desktop only) */}
+      <div className="hidden lg:block">
         <Categories categories={categories} />
         <CategoryCarousel categories={categories} />
         <BreadcrumbSingle items={breadcrumbItems} />
       </div>
 
-      <div className="mb-12">
-        <ListingHeaderCarousel
-          images={images}
-  
-        />
+      {/* Mobile view: single column */}
+      <div className="flex flex-col gap-6 lg:hidden">
+        <ListingHeaderCarousel images={listing.images} />
+        <SingleMap listing={listing} />
+        <ListingInfo listing={listing} />
       </div>
 
-      <div className="flex">
-        <div className="mx-auto w-full max-w-3xl lg:mx-0">
+      {/* Desktop view: two-column layout */}
+      <div className="mt-6 hidden lg:grid lg:grid-cols-[2fr_1fr] lg:gap-8">
+        {/* Left column: images + map */}
+        <div className="flex flex-col gap-6">
+          {/** Desktop only */}
+          <div className="hidden lg:block">
+            <ListingImagesDesktop images={listing.images} />
+            <ImagesModal images={listing.images} />
+          </div>
+          <ListingHeaderCarousel images={listing.images} />
           <SingleMap listing={listing} />
         </div>
+
+        {/* Right column: info / seller */}
+        <div className="flex flex-col gap-6">
+          <ListingInfo listing={listing} />
+        </div>
       </div>
-      {/* le reste de la single */}
     </div>
   );
 }

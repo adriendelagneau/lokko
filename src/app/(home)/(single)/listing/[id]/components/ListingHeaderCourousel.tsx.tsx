@@ -1,40 +1,45 @@
 "use client";
 
-import { ArrowLeft, CameraIcon, HeartIcon, ImageIcon, Share2 } from "lucide-react";
+import { ArrowLeft, Heart, Share2, ImageIcon } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
   Carousel,
-  CarouselApi,
   CarouselContent,
   CarouselItem,
+  CarouselApi,
 } from "@/components/ui/carousel";
+import { useImageModal } from "@/lib/store/useImageViewer";
+import { cn } from "@/lib/utils";
+import Link from "next/link";
 
-import type { ImageItem } from "./types";
+export type ImageItem = {
+  url: string;
+  altText?: string;
+};
 
-type ListingHeaderProps = {
+type Props = {
   images: ImageItem[];
-  onBack?: () => void;
-  onShare?: () => void;
+
+  likeCount?: number;
 };
 
 export function ListingHeaderCarousel({
   images,
-  onBack,
-  onShare,
-}: ListingHeaderProps) {
+
+  likeCount = 0,
+}: Props) {
+  const openModal = useImageModal((s) => s.open);
+
   const [api, setApi] = useState<CarouselApi | null>(null);
   const [current, setCurrent] = useState(1);
-  const total = images.length;
 
   useEffect(() => {
     if (!api) return;
 
-    // init
     setCurrent(api.selectedScrollSnap() + 1);
-
     api.on("select", () => {
       setCurrent(api.selectedScrollSnap() + 1);
     });
@@ -43,43 +48,45 @@ export function ListingHeaderCarousel({
   return (
     <div className="relative w-full overflow-hidden">
       {/* 🔙 Back */}
+      <Link href="/">
       <Button
         variant="secondary"
         size="icon"
         className="absolute top-4 left-4 z-10 rounded-full"
-        onClick={onBack}
-      >
+        onClick={() => {}}
+        >
         <ArrowLeft />
       </Button>
+        </Link>
 
-      <div className="absolute top-4 right-4 z-10 flex gap-2">
-        {/* ❤️ Like */}
-        <Button
-          variant="secondary"
-          size="icon"
-          className="rounded-full"
-          onClick={() => {}}
-        >
-          <HeartIcon />
-        </Button>
+      {/* ❤️ Like */}
+      <Button
+        variant="secondary"
+        size="icon"
+        className="absolute top-4 right-14 z-10 rounded-full"
+      >
+        <Heart />
+      </Button>
 
-        {/* 🔗 Share */}
-        <Button
-          variant="secondary"
-          size="icon"
-          className="rounded-full"
-          onClick={onShare}
-        >
-          <Share2 />
-        </Button>
-      </div>
+      {/* 🔗 Share */}
+      <Button
+        variant="secondary"
+        size="icon"
+        className="absolute top-4 right-4 z-10 rounded-full"
+        onClick={() => {}}
+      >
+        <Share2 />
+      </Button>
 
-   {/* 📸 Carousel */}
+      {/* 📸 Carousel */}
       <Carousel setApi={setApi}>
         <CarouselContent>
           {images.map((img, index) => (
             <CarouselItem key={index} className="basis-full">
-              <div className="relative h-[40vh] w-full">
+              <button
+                onClick={() => openModal(index)}
+                className="relative h-[45vh] w-full"
+              >
                 <Image
                   src={img.url}
                   alt={img.altText ?? "Image de l'annonce"}
@@ -87,21 +94,17 @@ export function ListingHeaderCarousel({
                   priority={index === 0}
                   className="object-cover"
                 />
-              </div>
+              </button>
             </CarouselItem>
           ))}
         </CarouselContent>
       </Carousel>
 
-      {/* 🧮 Image counter */}
-      {total > 1 && (
-        <div className="absolute bottom-4 right-4 z-10 flex items-center gap-1 rounded-full bg-black/60 px-2 py-1 text-xs text-white">
-          <CameraIcon className="h-4 w-4" />
-          <span>
-            {current} /  {total}
-          </span>
-        </div>
-      )}
+      {/* 📊 Counter */}
+      <div className="absolute right-4 bottom-4 z-10 flex items-center gap-1 rounded-full bg-black/60 px-2 py-1 text-xs text-white">
+        <ImageIcon className="h-4 w-4" />
+        {current}/{images.length}
+      </div>
     </div>
   );
 }
