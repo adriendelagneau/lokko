@@ -205,6 +205,7 @@ export async function getListingById(id: string) {
     select: {
       id: true,
       title: true,
+      images: true,
 
       category: {
         select: {

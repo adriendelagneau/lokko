@@ -15,7 +15,7 @@ type SingleMapProps = {
 const SingleMap = ({ listing }: SingleMapProps) => {
   const [open, setOpen] = useState(false);
   return (
-    <div>
+    <div className="my-12">
       <MiniMap
         lat={listing.location.lat}
         lng={listing.location.lng}

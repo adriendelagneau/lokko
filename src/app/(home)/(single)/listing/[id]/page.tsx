@@ -1,9 +1,17 @@
+import { List } from "lucide-react";
+
 import { getCategories } from "@/actions/category-actions";
 import { getListingById } from "@/actions/listing-actions";
 import { BreadcrumbSingle } from "@/components/bread-crump/BreadCrumpSingle";
 import { CategoryCarousel } from "@/components/carousel/category-carousel";
 import Categories from "@/components/categories/Categories";
 import SingleMap from "@/components/map/SingleMap";
+
+import {
+  HeaderImageModal,
+  ListingHeaderCarousel,
+} from "./components/ListingHeaderCourousel.tsx";
+import ListingImages from "./components/ListingImages";
 
 type Props = {
   params: { id: string };
@@ -12,6 +20,12 @@ type Props = {
 export default async function ListingPage({ params }: Props) {
   const listing = await getListingById(params.id);
   const categories = await getCategories();
+
+  const images = listing.images.map((img) => ({
+    url: img.url,
+    altText: img.altText ?? undefined,
+  }));
+
   if (!listing) {
     return <div>Annonce introuvable</div>;
   }
@@ -42,15 +56,25 @@ export default async function ListingPage({ params }: Props) {
 
   return (
     <div className="mx-auto w-full max-w-5xl">
-      <Categories categories={categories} />
-      <CategoryCarousel categories={categories} />
-      <BreadcrumbSingle items={breadcrumbItems} />
+      <div className="hidden lg:inline-block">
+        <Categories categories={categories} />
+        <CategoryCarousel categories={categories} />
+        <BreadcrumbSingle items={breadcrumbItems} />
+      </div>
 
-      <h1 className="text-2xl font-semibold mb-92">{listing.title}</h1>
+      <div className="mb-12">
+        <ListingHeaderCarousel
+          images={images}
+  
+        />
+      </div>
 
+      <div className="flex">
+        <div className="mx-auto w-full max-w-3xl lg:mx-0">
+          <SingleMap listing={listing} />
+        </div>
+      </div>
       {/* le reste de la single */}
-
-      <SingleMap listing={listing} />
     </div>
   );
 }

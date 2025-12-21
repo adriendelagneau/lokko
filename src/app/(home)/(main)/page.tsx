@@ -12,7 +12,7 @@ export default async function Home() {
   });
 
   const bakery = await getListings({
-    categorySlug: "boulangerie-cereales"
+    categorySlug: "jardin-plants"
   });
 
     const eggs = await getListings({

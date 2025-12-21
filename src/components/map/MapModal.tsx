@@ -22,7 +22,7 @@ export default function MapModal({ open, onOpenChange, lat, lng }: Props) {
         <DialogTitle className="hidden"></DialogTitle>
         <MapContainer
           center={[lat, lng]}
-          zoom={14}
+          zoom={13}
           className="h-full w-full rounded-lg"
         >
           <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />

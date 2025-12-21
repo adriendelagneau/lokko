@@ -16,11 +16,11 @@ export default function MiniMap({ lat, lng, onClick }: Props) {
   return (
     <div
       onClick={onClick}
-      className="relative z-40 h-56 w-full cursor-pointer overflow-hidden rounded-lg"
+      className="relative z-40 h-92 w-full cursor-pointer overflow-hidden rounded-lg"
     >
       <MapContainer
         center={center}
-        zoom={14}
+        zoom={12}
         dragging={false}
         scrollWheelZoom={false}
         doubleClickZoom={false}
