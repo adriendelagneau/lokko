@@ -12,7 +12,7 @@ type Props = {
   images: ImageItem[];
 };
 
-export default function ImageModal({ images }: Props) {
+export default function ImageModalMobile({ images }: Props) {
   const { isOpen, close, startIndex } = useImageModal();
 
   if (!isOpen) return null;

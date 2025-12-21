@@ -2,6 +2,7 @@
 
 import { ArrowLeft, Heart, Share2, ImageIcon } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -12,8 +13,6 @@ import {
   CarouselApi,
 } from "@/components/ui/carousel";
 import { useImageModal } from "@/lib/store/useImageViewer";
-import { cn } from "@/lib/utils";
-import Link from "next/link";
 
 export type ImageItem = {
   url: string;
@@ -26,11 +25,7 @@ type Props = {
   likeCount?: number;
 };
 
-export function ListingHeaderCarousel({
-  images,
-
-  likeCount = 0,
-}: Props) {
+export function ListingHeaderCarousel({ images }: Props) {
   const openModal = useImageModal((s) => s.open);
 
   const [api, setApi] = useState<CarouselApi | null>(null);
@@ -46,18 +41,18 @@ export function ListingHeaderCarousel({
   }, [api]);
 
   return (
-    <div className="relative w-full overflow-hidden">
+    <div className="relative w-full overflow-hidden lg:hidden">
       {/* 🔙 Back */}
       <Link href="/">
-      <Button
-        variant="secondary"
-        size="icon"
-        className="absolute top-4 left-4 z-10 rounded-full"
-        onClick={() => {}}
+        <Button
+          variant="secondary"
+          size="icon"
+          className="absolute top-4 left-4 z-10 rounded-full"
+          onClick={() => {}}
         >
-        <ArrowLeft />
-      </Button>
-        </Link>
+          <ArrowLeft />
+        </Button>
+      </Link>
 
       {/* ❤️ Like */}
       <Button

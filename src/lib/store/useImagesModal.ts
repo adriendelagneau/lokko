@@ -1,4 +1,4 @@
-// components/listing-images/useImageModal.ts
+// useImagesModal.ts
 import { create } from "zustand";
 
 type ImageModalState = {
@@ -6,6 +6,7 @@ type ImageModalState = {
   index: number;
   openAt: (index: number) => void;
   close: () => void;
+  setIndex: (index: number) => void;
 };
 
 export const useImageModal = create<ImageModalState>((set) => ({
@@ -13,4 +14,5 @@ export const useImageModal = create<ImageModalState>((set) => ({
   index: 0,
   openAt: (index) => set({ open: true, index }),
   close: () => set({ open: false }),
+  setIndex: (index) => set({ index }),
 }));

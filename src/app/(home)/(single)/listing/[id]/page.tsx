@@ -5,6 +5,7 @@ import { CategoryCarousel } from "@/components/carousel/category-carousel";
 import Categories from "@/components/categories/Categories";
 import SingleMap from "@/components/map/SingleMap";
 
+import ImageModalMobile from "./components/ImageMobileModal";
 import { ImagesModal } from "./components/ImagesModal";
 import { ListingHeaderCarousel } from "./components/ListingHeaderCourousel.tsx";
 import { ListingImagesDesktop } from "./components/ListingImageDesktop";
@@ -15,7 +16,8 @@ type Props = {
 };
 
 export default async function ListingPage({ params }: Props) {
-  const listing: ListingSingle | null = await getListingById(params.id);
+  const { id } = await params;
+  const listing: ListingSingle | null = await getListingById(id);
   const categories = await getCategories();
 
   if (!listing) return <div>Annonce introuvable</div>;
@@ -56,6 +58,7 @@ export default async function ListingPage({ params }: Props) {
       {/* Mobile view: single column */}
       <div className="flex flex-col gap-6 lg:hidden">
         <ListingHeaderCarousel images={listing.images} />
+        <ImageModalMobile images={listing.images} />
         <SingleMap listing={listing} />
         <ListingInfo listing={listing} />
       </div>
