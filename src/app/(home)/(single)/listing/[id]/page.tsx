@@ -6,7 +6,7 @@ import Categories from "@/components/categories/Categories";
 import SingleMap from "@/components/map/SingleMap";
 
 import ImageModalMobile from "./components/ImageMobileModal";
-import { ImagesModal } from "./components/ImagesModal";
+import {  ImagesModalDesktop } from "./components/ImagesModal";
 import { ListingHeaderCarousel } from "./components/ListingHeaderCourousel.tsx";
 import { ListingImagesDesktop } from "./components/ListingImageDesktop";
 import { ListingInfo } from "./components/ListingInfos";
@@ -70,7 +70,7 @@ export default async function ListingPage({ params }: Props) {
           {/** Desktop only */}
           <div className="hidden lg:block">
             <ListingImagesDesktop images={listing.images} />
-            <ImagesModal images={listing.images} />
+            <ImagesModalDesktop images={listing.images} />
           </div>
           <ListingHeaderCarousel images={listing.images} />
           <SingleMap listing={listing} />
