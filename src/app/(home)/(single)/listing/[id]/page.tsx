@@ -47,7 +47,7 @@ export default async function ListingPage({ params }: Props) {
   ];
 
   return (
-    <div className="mx-auto w-full max-w-7xl px-4">
+    <div className="mx-auto w-full max-w-6xl px-4">
       {/* Top categories + carousel + breadcrumb (desktop only) */}
       <div className="hidden lg:block">
         <Categories categories={categories} />
@@ -64,7 +64,7 @@ export default async function ListingPage({ params }: Props) {
       </div>
 
       {/* Desktop view: two-column layout */}
-      <div className="mt-6 hidden lg:grid lg:grid-cols-[2fr_1fr] lg:gap-8">
+      <div className="mt-6 hidden lg:grid lg:grid-cols-[6fr_2fr] lg:gap-8">
         {/* Left column: images + map */}
         <div className="flex flex-col gap-6">
           {/** Desktop only */}

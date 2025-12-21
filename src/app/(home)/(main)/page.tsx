@@ -8,7 +8,7 @@ import Pub from "@/components/Pub";
 export default async function Home() {
   const categories = await getCategories();
   const fruits = await getListings({
-    categorySlug: "boissons"
+    categorySlug: "fruits-legumes"
   });
 
   const bakery = await getListings({

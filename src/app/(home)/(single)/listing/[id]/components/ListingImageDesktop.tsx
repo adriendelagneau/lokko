@@ -1,16 +1,28 @@
 "use client";
 
+import { Heart, Share2, ImageIcon } from "lucide-react";
 import Image from "next/image";
 
+import { Button } from "@/components/ui/button";
 import { useImageModal } from "@/lib/store/useImagesModal";
 
-import { ImageItem } from "./type";
+import type { ImageItem } from "./type";
 
 type Props = {
   images: ImageItem[];
+  likesCount?: number;
+  isLiked?: boolean;
+  onLike?: () => void;
+  onShare?: () => void;
 };
 
-export function ListingImagesDesktop({ images }: Props) {
+export function ListingImagesDesktop({
+  images,
+  likesCount = 0,
+  isLiked = false,
+  onLike,
+  onShare,
+}: Props) {
   const openAt = useImageModal((s) => s.openAt);
 
   if (images.length === 0) return null;
@@ -18,29 +30,41 @@ export function ListingImagesDesktop({ images }: Props) {
   const displayImages = images.slice(0, 3);
 
   return (
-    <div className="grid h-[420px] grid-cols-2 gap-2 overflow-hidden rounded-xl">
-      {/* Left big image */}
-      <div
-        className={`relative cursor-pointer ${
-          images.length === 1 ? "col-span-2" : "row-span-2"
-        }`}
-        onClick={() => openAt(0)}
-      >
-        <Image
-          src={displayImages[0].url}
-          alt={displayImages[0].altText ?? ""}
-          fill
-          className="object-cover"
-          priority
-        />
+    <div className="relative overflow-hidden rounded-xl">
+      {/* 🔝 Top actions */}
+      <div className="absolute top-4 right-4 z-10 flex gap-2">
+        {/* Like */}
+        <Button
+          size="icon"
+          variant="secondary"
+          className="rounded-full"
+          onClick={onLike}
+        >
+          <Heart
+            className={`h-5 w-5 ${isLiked ? "fill-red-500 text-red-500" : ""}`}
+          />
+        </Button>
+
+        {likesCount > 0 && (
+          <span className="self-center text-sm font-medium text-white drop-shadow">
+            {likesCount}
+          </span>
+        )}
+
+        {/* Share */}
+        <Button
+          size="icon"
+          variant="secondary"
+          className="rounded-full"
+          onClick={onShare}
+        >
+          <Share2 className="h-5 w-5" />
+        </Button>
       </div>
 
-      {/* Right images */}
-      {displayImages.slice(1).map((img, i) => {
-        const index = i + 1;
-        const isLast = index === 2 && images.length > 3;
-
-        return (
+      {/* 🖼️ Images */}
+      <div className="grid h-[420px] grid-cols-3 gap-2">
+        {displayImages.map((img, index) => (
           <div
             key={index}
             className="relative cursor-pointer"
@@ -51,16 +75,20 @@ export function ListingImagesDesktop({ images }: Props) {
               alt={img.altText ?? ""}
               fill
               className="object-cover"
+              priority={index === 0}
             />
-
-            {isLast && (
-              <div className="absolute inset-0 flex items-center justify-center bg-black/50 text-lg font-semibold text-white">
-                +{images.length - 2} photos
-              </div>
-            )}
           </div>
-        );
-      })}
+        ))}
+      </div>
+
+      {/* 📸 Bottom action */}
+      <button
+        onClick={() => openAt(0)}
+        className="absolute bottom-4 right-4 z-10 flex  items-center gap-2 rounded-full bg-black/70 px-4 py-2 text-sm font-medium text-white backdrop-blur"
+      >
+        <ImageIcon size={18} />
+        Voir les {images.length} photos
+      </button>
     </div>
   );
 }
