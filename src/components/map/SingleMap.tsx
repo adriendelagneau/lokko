@@ -16,6 +16,7 @@ const SingleMap = ({ listing }: SingleMapProps) => {
   const [open, setOpen] = useState(false);
   return (
     <div className="my-12">
+      <h2 className="mb-3 text-xl font-semibold">Localisation : { listing.location.city}</h2>
       <MiniMap
         lat={listing.location.lat}
         lng={listing.location.lng}

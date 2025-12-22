@@ -89,6 +89,7 @@ export default async function ListingPage({ params }: Props) {
           likes={123}
         />
 
+        <div className="bg-primary h-0.5 w-full" />
         {/* Details */}
         <ListingDetails description={listing.description} />
 
@@ -131,16 +132,21 @@ export default async function ListingPage({ params }: Props) {
             likes={123}
           />
 
+          <div className="bg-border h-px w-full" />
           {/* Details */}
           <ListingDetails description={listing.description} />
 
+          <div className="bg-border h-px w-full" />
           {/* Map */}
           <SingleMap listing={listing} />
+          <div className="bg-border h-px w-full" />
           <ListingsSection
             title="Boissons"
             listings={fruits.listings}
             href="/search?category=boissons"
           />
+          <div className="bg-border h-px w-full" />
+
           <ListingsSection
             title="Oeufs"
             listings={eggs.listings}
