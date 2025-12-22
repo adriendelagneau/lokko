@@ -11,11 +11,11 @@ type Props = {
 };
 
 export function ListingUserInfo({ listing }: Props) {
-  const { owner} = listing;
+  const { owner } = listing;
 
   return (
-    <div className="flex flex-col gap-4 rounded-lg border bg-white p-4 shadow-sm">
-      {/* Seller Info */}
+    <div className="flex items-center justify-between gap-4 rounded-lg border bg-white p-4 shadow-sm lg:flex-col lg:items-start">
+      {/* LEFT – Seller info */}
       <div className="flex items-center gap-4">
         <div className="relative h-12 w-12 overflow-hidden rounded-full bg-gray-200">
           {owner.image ? (
@@ -31,6 +31,7 @@ export function ListingUserInfo({ listing }: Props) {
             </span>
           )}
         </div>
+
         <div className="flex flex-col">
           <span className="font-medium">{owner.name}</span>
           <span className="flex items-center gap-1 text-sm text-gray-500">
@@ -40,11 +41,12 @@ export function ListingUserInfo({ listing }: Props) {
         </div>
       </div>
 
-    
-
-      {/* Contact Button */}
-      <Button variant="default" className="w-full">
-        Contacter le vendeur
+      {/* RIGHT – Button */}
+      <Button
+        variant="default"
+        className="h-9 px-3 text-sm lg:h-10 lg:w-full lg:text-base"
+      >
+        Contacter
       </Button>
     </div>
   );

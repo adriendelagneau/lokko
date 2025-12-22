@@ -1,17 +1,22 @@
 import { getCategories } from "@/actions/category-actions";
-import { getListingById, ListingSingle } from "@/actions/listing-actions";
+import {
+  getListingById,
+  getListings,
+  ListingSingle,
+} from "@/actions/listing-actions";
 import { BreadcrumbSingle } from "@/components/bread-crump/BreadCrumpSingle";
 import { CategoryCarousel } from "@/components/carousel/category-carousel";
+import { ListingsSection } from "@/components/carousel/main-carousel/ListingSection";
 import Categories from "@/components/categories/Categories";
 import SingleMap from "@/components/map/SingleMap";
 
 import ImageModalMobile from "./components/ImageMobileModal";
 import { ImagesModalDesktop } from "./components/ImagesModal";
+import { ListingDetails } from "./components/ListingDescription";
 import { ListingHeaderCarousel } from "./components/ListingHeaderCourousel.tsx";
 import { ListingImagesDesktop } from "./components/ListingImageDesktop";
 import { ListingInfos } from "./components/ListingInfos";
 import { ListingUserInfo } from "./components/ListingUserInfos";
-import { ListingDetails } from "./components/ListingDescription";
 
 type Props = {
   params: { id: string };
@@ -24,7 +29,13 @@ export default async function ListingPage({ params }: Props) {
 
   if (!listing) return <div>Annonce introuvable</div>;
 
-  console.log(listing);
+  const fruits = await getListings({
+    categorySlug: "fruits-legumes",
+  });
+
+  const eggs = await getListings({
+    subCategorySlug: "oeufs",
+  });
 
   const breadcrumbItems = [
     { label: "Accueil", href: "/" },
@@ -78,7 +89,6 @@ export default async function ListingPage({ params }: Props) {
           likes={123}
         />
 
-
         {/* Details */}
         <ListingDetails description={listing.description} />
 
@@ -87,6 +97,16 @@ export default async function ListingPage({ params }: Props) {
 
         {/* Seller */}
         <ListingUserInfo listing={listing} />
+        <ListingsSection
+          title="Boissons"
+          listings={fruits.listings}
+          href="/search?category=boissons"
+        />
+        <ListingsSection
+          title="Oeufs"
+          listings={eggs.listings}
+          href="/search?subcategory=oeufs"
+        />
       </div>
 
       {/* ================= DESKTOP ================= */}
@@ -116,6 +136,16 @@ export default async function ListingPage({ params }: Props) {
 
           {/* Map */}
           <SingleMap listing={listing} />
+          <ListingsSection
+            title="Boissons"
+            listings={fruits.listings}
+            href="/search?category=boissons"
+          />
+          <ListingsSection
+            title="Oeufs"
+            listings={eggs.listings}
+            href="/search?subcategory=oeufs"
+          />
         </div>
 
         {/* RIGHT */}
