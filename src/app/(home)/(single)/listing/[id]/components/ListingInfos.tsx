@@ -1,51 +1,55 @@
 "use client";
 
-import { Star } from "lucide-react";
-import Image from "next/image";
+import { Heart } from "lucide-react";
+import React from "react";
 
-import type { ListingSingle } from "@/actions/listing-actions";
 import { Button } from "@/components/ui/button";
 
 type Props = {
-  listing: ListingSingle;
+  title: string;
+  price: string;
+  unit?: number;
+  date: string;
+  city: string;
+  likes?: number;
 };
 
-export function ListingInfo({ listing }: Props) {
-  const { owner} = listing;
-
+export const ListingInfos = ({
+  title,
+  price,
+  unit,
+  date,
+  city,
+  likes = 0,
+}: Props) => {
   return (
-    <div className="flex flex-col gap-4 rounded-lg border bg-white p-4 shadow-sm">
-      {/* Seller Info */}
-      <div className="flex items-center gap-4">
-        <div className="relative h-12 w-12 overflow-hidden rounded-full bg-gray-200">
-          {owner.image ? (
-            <Image
-              src={owner.image}
-              alt={owner.name}
-              fill
-              className="object-cover"
-            />
-          ) : (
-            <span className="flex h-full w-full items-center justify-center text-gray-500">
-              {owner.name[0]}
-            </span>
-          )}
+    <div className="relative -top-12 mx-auto flex w-full max-w-[95%] flex-col gap-4 rounded-xl bg-white p-4 shadow-md">
+      {/* Left: Title + Price */}
+      <div className="flex flex-col gap-2">
+        <div className="flex items-center justify-between ">
+          <div className="text-2xl font-semibold capitalize">{title}</div>
+          <div className="flex items-center gap-1">
+            <Heart className="h-4 w-4 text-red-500" />
+            <span>{likes}</span>
+          </div>
         </div>
-        <div className="flex flex-col">
-          <span className="font-medium">{owner.name}</span>
-          <span className="flex items-center gap-1 text-sm text-gray-500">
-            <Star className="h-4 w-4 text-yellow-500" />
-            {owner.ratingAverage?.toFixed(1)} ({owner.ratingCount})
-          </span>
+        <div className="flex items-center gap-2 text-xl font-medium">
+          <span>{price}</span>
+          {unit && <span className="">/ {unit}</span>}
         </div>
       </div>
 
-    
+      {/* Middle: Date + Likes */}
+      <div className="text-muted-foreground flex items-center gap-4 ">
+        <span>{date}</span>
+      </div>
 
-      {/* Contact Button */}
-      <Button variant="default" className="w-full">
-        Contacter le vendeur
-      </Button>
+      {/* Right: City / Contact */}
+      <div className="">
+        <Button variant="secondary" className="text-base">
+          {city}
+        </Button>
+      </div>
     </div>
   );
-}
+};

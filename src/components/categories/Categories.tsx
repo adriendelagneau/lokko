@@ -29,7 +29,7 @@ const Categories = ({ categories }: CategoriesProps) => {
   };
 
   return (
-    <div className="bg-background relative z-20 mx-auto hidden max-w-5xl lg:block">
+    <div className="bg-background relative z-20 mx-auto hidden max-w-6xl lg:block">
       {/* Top categories */}
       <ul
         className="relative z-50 flex items-center justify-between py-4"

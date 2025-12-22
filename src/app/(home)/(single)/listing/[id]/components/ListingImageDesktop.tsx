@@ -84,7 +84,7 @@ export function ListingImagesDesktop({
       {/* 📸 Bottom action */}
       <button
         onClick={() => openAt(0)}
-        className="absolute bottom-4 right-4 z-10 flex  items-center gap-2 rounded-full bg-black/70 px-4 py-2 text-sm font-medium text-white backdrop-blur"
+        className="absolute bottom-10 right-4 z-10 flex  items-center gap-2 rounded-full bg-black/70 px-4 py-2 text-sm font-medium text-white backdrop-blur"
       >
         <ImageIcon size={18} />
         Voir les {images.length} photos

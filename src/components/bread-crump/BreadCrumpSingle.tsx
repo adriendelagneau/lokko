@@ -14,7 +14,7 @@ type BreadcrumbSingleProps = {
 
 export function BreadcrumbSingle({ items }: BreadcrumbSingleProps) {
   return (
-    <nav aria-label="Breadcrumb" className="mb-4 max-w-5xl mx-auto mt-12">
+    <nav aria-label="Breadcrumb" className="mb-4 max-w-6xl mx-auto mt-12">
       <ol className="text-muted-foreground flex flex-wrap items-center gap-1 text-md">
         {items.map((item, index) => {
 

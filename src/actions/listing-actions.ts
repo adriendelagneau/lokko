@@ -206,6 +206,9 @@ export async function getListingById(id: string) {
       id: true,
       title: true,
       images: true,
+       price: true,       // <-- ajouté
+      priceUnit: true,        // <-- ajouté
+      createdAt: true,   // <-- ajouté
 
       category: {
         select: {

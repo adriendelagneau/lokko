@@ -6,10 +6,12 @@ import Categories from "@/components/categories/Categories";
 import SingleMap from "@/components/map/SingleMap";
 
 import ImageModalMobile from "./components/ImageMobileModal";
-import {  ImagesModalDesktop } from "./components/ImagesModal";
+import { ImagesModalDesktop } from "./components/ImagesModal";
 import { ListingHeaderCarousel } from "./components/ListingHeaderCourousel.tsx";
 import { ListingImagesDesktop } from "./components/ListingImageDesktop";
-import { ListingInfo } from "./components/ListingInfos";
+
+import { ListingUserInfo } from "./components/ListingUserInfos";
+import { ListingInfos } from "./components/ListingInfos";
 
 type Props = {
   params: { id: string };
@@ -21,6 +23,8 @@ export default async function ListingPage({ params }: Props) {
   const categories = await getCategories();
 
   if (!listing) return <div>Annonce introuvable</div>;
+
+  console.log(listing)
 
   const breadcrumbItems = [
     { label: "Accueil", href: "/" },
@@ -51,7 +55,7 @@ export default async function ListingPage({ params }: Props) {
       {/* Top categories + carousel + breadcrumb (desktop only) */}
       <div className="hidden lg:block">
         <Categories categories={categories} />
-        <CategoryCarousel categories={categories} />
+        {/* <CategoryCarousel categories={categories} /> */}
         <BreadcrumbSingle items={breadcrumbItems} />
       </div>
 
@@ -60,7 +64,7 @@ export default async function ListingPage({ params }: Props) {
         <ListingHeaderCarousel images={listing.images} />
         <ImageModalMobile images={listing.images} />
         <SingleMap listing={listing} />
-        <ListingInfo listing={listing} />
+        {/* <ListingInfo listing={listing} /> */}
       </div>
 
       {/* Desktop view: two-column layout */}
@@ -73,12 +77,25 @@ export default async function ListingPage({ params }: Props) {
             <ImagesModalDesktop images={listing.images} />
           </div>
           <ListingHeaderCarousel images={listing.images} />
+          <ListingInfos
+            title={listing.title}
+            price={listing.price}
+            unit={listing.priceUnit}
+            date={listing.createdAt.toLocaleDateString("fr-FR", {
+              day: "2-digit",
+              month: "2-digit",
+              year: "numeric",
+            })}
+            city={listing.location.city}
+            likes={123} // nombre de likes ou sauvegardes
+          />
+
           <SingleMap listing={listing} />
         </div>
 
         {/* Right column: info / seller */}
         <div className="flex flex-col gap-6">
-          <ListingInfo listing={listing} />
+          <ListingUserInfo listing={listing} />
         </div>
       </div>
     </div>

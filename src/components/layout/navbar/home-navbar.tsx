@@ -13,6 +13,7 @@ import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import { SidebarTrigger } from "@/components/ui/sidebar";
+
 import { AuthButton } from "./auth-button";
 
 // import { ThemeToggleCircle } from "@/components/providers/ThemeToggleWrapper";
@@ -20,7 +21,7 @@ import { AuthButton } from "./auth-button";
 export const HomeNavbar = () => {
   return (
     <div className="bg-background fixed top-0 left-0 z-50 h-10 w-full px-4 py-10">
-      <div className="relative mx-auto flex h-full w-full max-w-5xl items-center lg:justify-between">
+      <div className="relative mx-auto flex h-full w-full max-w-6xl items-center lg:justify-between">
         <SidebarTrigger className="lg:hidden" />
         {/* Title */}
         <Link href={"/"}>
