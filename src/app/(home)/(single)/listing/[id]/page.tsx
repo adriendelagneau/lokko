@@ -111,7 +111,7 @@ export default async function ListingPage({ params }: Props) {
       </div>
 
       {/* ================= DESKTOP ================= */}
-      <div className="mt-6 hidden gap-8 lg:grid lg:grid-cols-[6fr_2fr]">
+      <div className="mt-6  hidden gap-8 lg:grid lg:grid-cols-[6fr_2fr]">
         {/* LEFT */}
         <div className="flex flex-col gap-6">
           {/* Images */}
@@ -155,8 +155,10 @@ export default async function ListingPage({ params }: Props) {
         </div>
 
         {/* RIGHT */}
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-6 relative">
+          <div className="sticky top-22">
           <ListingUserInfo listing={listing} />
+          </div>
         </div>
       </div>
     </div>
