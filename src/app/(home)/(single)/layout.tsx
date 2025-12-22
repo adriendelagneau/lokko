@@ -16,6 +16,8 @@ export default async function HomeLayout({
   const defaultOpen = cookieStore.get("sidebar_state")?.value === "false";
 
   return (
+
+
     <SidebarProvider defaultOpen={defaultOpen}>
       <div className="w-full">
         <HomeNavbar />
@@ -28,5 +30,6 @@ export default async function HomeLayout({
         <Footer />
       </div>
     </SidebarProvider>
+  
   );
 }

@@ -9,9 +9,9 @@ import ImageModalMobile from "./components/ImageMobileModal";
 import { ImagesModalDesktop } from "./components/ImagesModal";
 import { ListingHeaderCarousel } from "./components/ListingHeaderCourousel.tsx";
 import { ListingImagesDesktop } from "./components/ListingImageDesktop";
-
-import { ListingUserInfo } from "./components/ListingUserInfos";
 import { ListingInfos } from "./components/ListingInfos";
+import { ListingUserInfo } from "./components/ListingUserInfos";
+import { ListingDetails } from "./components/ListingDescription";
 
 type Props = {
   params: { id: string };
@@ -24,7 +24,7 @@ export default async function ListingPage({ params }: Props) {
 
   if (!listing) return <div>Annonce introuvable</div>;
 
-  console.log(listing)
+  console.log(listing);
 
   const breadcrumbItems = [
     { label: "Accueil", href: "/" },
@@ -52,31 +52,52 @@ export default async function ListingPage({ params }: Props) {
 
   return (
     <div className="mx-auto w-full max-w-6xl px-4">
-      {/* Top categories + carousel + breadcrumb (desktop only) */}
+      {/* ================= DESKTOP TOP ================= */}
       <div className="hidden lg:block">
         <Categories categories={categories} />
-        {/* <CategoryCarousel categories={categories} /> */}
         <BreadcrumbSingle items={breadcrumbItems} />
       </div>
 
-      {/* Mobile view: single column */}
+      {/* ================= MOBILE ================= */}
       <div className="flex flex-col gap-6 lg:hidden">
+        {/* Images */}
         <ListingHeaderCarousel images={listing.images} />
         <ImageModalMobile images={listing.images} />
+
+        {/* Infos */}
+        <ListingInfos
+          title={listing.title}
+          price={listing.price}
+          unit={listing.priceUnit}
+          date={listing.createdAt.toLocaleDateString("fr-FR", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+          })}
+          city={listing.location.city}
+          likes={123}
+        />
+
+
+        {/* Details */}
+        <ListingDetails description={listing.description} />
+
+        {/* Map */}
         <SingleMap listing={listing} />
-        {/* <ListingInfo listing={listing} /> */}
+
+        {/* Seller */}
+        <ListingUserInfo listing={listing} />
       </div>
 
-      {/* Desktop view: two-column layout */}
-      <div className="mt-6 hidden lg:grid lg:grid-cols-[6fr_2fr] lg:gap-8">
-        {/* Left column: images + map */}
+      {/* ================= DESKTOP ================= */}
+      <div className="mt-6 hidden gap-8 lg:grid lg:grid-cols-[6fr_2fr]">
+        {/* LEFT */}
         <div className="flex flex-col gap-6">
-          {/** Desktop only */}
-          <div className="hidden lg:block">
-            <ListingImagesDesktop images={listing.images} />
-            <ImagesModalDesktop images={listing.images} />
-          </div>
-          <ListingHeaderCarousel images={listing.images} />
+          {/* Images */}
+          <ListingImagesDesktop images={listing.images} />
+          <ImagesModalDesktop images={listing.images} />
+
+          {/* Infos */}
           <ListingInfos
             title={listing.title}
             price={listing.price}
@@ -87,13 +108,17 @@ export default async function ListingPage({ params }: Props) {
               year: "numeric",
             })}
             city={listing.location.city}
-            likes={123} // nombre de likes ou sauvegardes
+            likes={123}
           />
 
+          {/* Details */}
+          <ListingDetails description={listing.description} />
+
+          {/* Map */}
           <SingleMap listing={listing} />
         </div>
 
-        {/* Right column: info / seller */}
+        {/* RIGHT */}
         <div className="flex flex-col gap-6">
           <ListingUserInfo listing={listing} />
         </div>

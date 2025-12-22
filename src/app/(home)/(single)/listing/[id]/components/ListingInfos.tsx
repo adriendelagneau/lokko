@@ -7,8 +7,8 @@ import { Button } from "@/components/ui/button";
 
 type Props = {
   title: string;
-  price: string;
-  unit?: number;
+  price: number;
+  unit?: string;
   date: string;
   city: string;
   likes?: number;

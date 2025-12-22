@@ -154,8 +154,8 @@ export async function getListings({
     orderBy === "priceAsc"
       ? { price: "asc" }
       : orderBy === "priceDesc"
-      ? { price: "desc" }
-      : { createdAt: "desc" };
+        ? { price: "desc" }
+        : { createdAt: "desc" };
 
   const [listings, total] = await Promise.all([
     prisma.listing.findMany({
@@ -205,10 +205,11 @@ export async function getListingById(id: string) {
     select: {
       id: true,
       title: true,
+      description: true,
       images: true,
-       price: true,       // <-- ajouté
-      priceUnit: true,        // <-- ajouté
-      createdAt: true,   // <-- ajouté
+      price: true,
+      priceUnit: true,
+      createdAt: true,
 
       category: {
         select: {
@@ -235,7 +236,7 @@ export async function getListingById(id: string) {
         },
       },
 
-        owner: {
+      owner: {
         select: {
           id: true,
           name: true,
@@ -244,7 +245,7 @@ export async function getListingById(id: string) {
           ratingCount: true,
         },
       },
-        
+
     },
   });
 }
