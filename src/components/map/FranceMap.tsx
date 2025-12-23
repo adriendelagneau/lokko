@@ -1,43 +1,55 @@
 "use client";
 
+import { geoCentroid } from "d3-geo";
 import { useRouter } from "next/navigation";
-import React, { useState, useMemo } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { ComposableMap, Geographies, Geography } from "react-simple-maps";
 
-// Fichiers topojson / geojson
-const REGIONS_GEO_URL = "/france-regions.geojson"; // régions + DOM-TOM
-const DEPARTMENTS_GEO_URL = "/france-departments.geojson"; // départements
+// GeoJSON URLs
+const REGIONS_GEO_URL = "/france-regions.geojson"; // regions + DOM-TOM
+const DEPARTMENTS_GEO_URL = "/france-departments.geojson"; // departments
 
 export default function FranceMap() {
-  const [selectedRegion, setSelectedRegion] = useState<string | null>(null);
   const router = useRouter();
 
-  const handleRegionClick = (regionCode: string) => {
-    setSelectedRegion(regionCode);
-    router.push(`/search?region=${regionCode}`);
+  const [selectedRegion, setSelectedRegion] = useState<string | null>(null);
+  const [regionsGeo, setRegionsGeo] = useState<any[]>([]);
+  const [departmentsGeo, setDepartmentsGeo] = useState<any[]>([]);
+
+  // Load regions
+  useEffect(() => {
+    fetch(REGIONS_GEO_URL)
+      .then((res) => res.json())
+      .then((data) => setRegionsGeo(data.features));
+  }, []);
+
+  // Load departments
+  useEffect(() => {
+    fetch(DEPARTMENTS_GEO_URL)
+      .then((res) => res.json())
+      .then((data) => setDepartmentsGeo(data.features));
+  }, []);
+
+  const handleRegionClick = (regionName: string) => {
+    setSelectedRegion(regionName);
+    router.push(`/search?region=${regionName}`);
   };
 
   const handleDepartmentClick = (deptCode: string) => {
     router.push(`/search?department=${deptCode}`);
   };
 
-  // Zoom / center pour la région sélectionnée
+  // Compute projection dynamically for zoom
   const projectionConfig = useMemo(() => {
-    if (!selectedRegion)
-      return { scale: 1000, center: [2.5, 46.5] as [number, number] }; // France entière
+    if (!selectedRegion) return { scale: 1000, center: [2.5, 46.5] };
 
-    // Coordonnées approximatives des centres de région
-    const centers: Record<string, [number, number]> = {
-      "Île-de-France": [2.35, 48.85],
-      Bretagne: [-2.93, 48.1],
-      // ... ajouter toutes les régions
-    };
+    const regionGeo = regionsGeo.find(
+      (g) => g.properties.nom === selectedRegion
+    );
+    const center = regionGeo ? geoCentroid(regionGeo) : [2.5, 46.5];
 
-    return {
-      scale: 2000,
-      center: centers[selectedRegion] || ([2.5, 46.5] as [number, number]),
-    };
-  }, [selectedRegion]);
+    return { scale: 2500, center }; // bigger scale = zoom
+  }, [selectedRegion, regionsGeo]);
 
   return (
     <ComposableMap
@@ -46,25 +58,36 @@ export default function FranceMap() {
       width={800}
       height={600}
     >
-      {/* Régions */}
+      {/* Regions */}
       <Geographies geography={REGIONS_GEO_URL}>
         {({ geographies }) =>
-          geographies.map((geo) => (
-            <Geography
-              key={geo.rsmKey}
-              geography={geo}
-              onClick={() => handleRegionClick(geo.properties.nom)}
-              style={{
-                default: { fill: "#EAEAEC", stroke: "#333", strokeWidth: 0.5 },
-                hover: { fill: "#F53", cursor: "pointer" },
-                pressed: { fill: "#E42", cursor: "pointer" },
-              }}
-            />
-          ))
+          geographies
+            .filter(
+              (geo) => !selectedRegion || geo.properties.nom === selectedRegion
+            ) // show only selected region when zoomed
+            .map((geo) => (
+              <Geography
+                key={geo.rsmKey}
+                geography={geo}
+                onClick={() => handleRegionClick(geo.properties.nom)}
+                style={{
+                  default: {
+                    fill:
+                      geo.properties.nom === selectedRegion
+                        ? "#F0F0F0"
+                        : "#EAEAEC",
+                    stroke: "#333",
+                    strokeWidth: 0.5,
+                  },
+                  hover: { fill: "#F53", cursor: "pointer" },
+                  pressed: { fill: "#E42", cursor: "pointer" },
+                }}
+              />
+            ))
         }
       </Geographies>
 
-      {/* Départements (uniquement si une région est sélectionnée) */}
+      {/* Departments (if a region is selected) */}
       {selectedRegion && (
         <Geographies geography={DEPARTMENTS_GEO_URL}>
           {({ geographies }) =>
