@@ -107,6 +107,7 @@ export default function FranceMap() {
       projectionConfig={projectionConfig}
       width={800}
       height={600}
+
     >
       {/* Regions */}
       <Geographies geography={regionsGeo}>
