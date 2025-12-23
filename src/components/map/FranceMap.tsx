@@ -42,7 +42,7 @@ export default function FranceMap() {
   // Compute projection dynamically for zoom
   const projectionConfig = useMemo(() => {
     if (!selectedRegion)
-      return { scale: 1500, center: [2.5, 46.5] as [number, number] };
+      return { scale: 1800, center: [2.5, 46.5] as [number, number] };
 
     const regionGeo = regionsGeo.find(
       (g) => g.properties.nom === selectedRegion
@@ -51,7 +51,7 @@ export default function FranceMap() {
       ? (geoCentroid(regionGeo) as [number, number])
       : ([2.5, 46.5] as [number, number]);
 
-    return { scale: 4500, center };
+    return { scale: 6300, center };
   }, [selectedRegion, regionsGeo]);
 
   return (
