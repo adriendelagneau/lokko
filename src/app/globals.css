@@ -203,3 +203,7 @@
     height: auto;
   }
 }
+
+.rsm-geography:focus {
+  outline: none;
+}

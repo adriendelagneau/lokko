@@ -10,6 +10,22 @@ import { DEPT_TO_REGION } from "@/data/dptToRegion";
 const REGIONS_GEO_URL = "/france-regions.geojson";
 const DEPARTMENTS_GEO_URL = "/france-departments.geojson";
 
+const DEFAULT_STYLE = {
+  default: {
+    fill: "#EAEAEC",
+    stroke: "#333",
+    strokeWidth: 0.5,
+  },
+  hover: {
+    fill: "#F53",
+    cursor: "pointer",
+  },
+  pressed: {
+    fill: "#E42",
+  },
+};
+
+
 export default function FranceMap() {
   const [regionsGeo, setRegionsGeo] = useState<any | null>(null);
   const [departmentsGeo, setDepartmentsGeo] = useState<any | null>(null);
@@ -143,14 +159,7 @@ export default function FranceMap() {
                   key={geo.rsmKey}
                   geography={geo}
                   onClick={() => handleDepartmentClick(geo)}
-                  style={{
-                    default: {
-                      fill: "#D1E8FF",
-                      stroke: "#555",
-                      strokeWidth: 0.3,
-                    },
-                    hover: { fill: "#00BFFF", cursor: "pointer" },
-                  }}
+                   style={DEFAULT_STYLE}
                 />
               ))
           }
