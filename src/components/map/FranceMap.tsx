@@ -41,14 +41,17 @@ export default function FranceMap() {
 
   // Compute projection dynamically for zoom
   const projectionConfig = useMemo(() => {
-    if (!selectedRegion) return { scale: 1000, center: [2.5, 46.5] };
+    if (!selectedRegion)
+      return { scale: 1500, center: [2.5, 46.5] as [number, number] };
 
     const regionGeo = regionsGeo.find(
       (g) => g.properties.nom === selectedRegion
     );
-    const center = regionGeo ? geoCentroid(regionGeo) : [2.5, 46.5];
+    const center = regionGeo
+      ? (geoCentroid(regionGeo) as [number, number])
+      : ([2.5, 46.5] as [number, number]);
 
-    return { scale: 2500, center }; // bigger scale = zoom
+    return { scale: 4500, center };
   }, [selectedRegion, regionsGeo]);
 
   return (
