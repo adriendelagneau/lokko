@@ -1,13 +1,15 @@
 "use client";
 
-import { geoCentroid } from "d3-geo";
 import React, { useEffect, useMemo, useState } from "react";
+import { geoCentroid, geoContains } from "d3-geo";
 import { ComposableMap, Geographies, Geography } from "react-simple-maps";
 
 import { DEPT_TO_REGION } from "@/data/dptToRegion";
 
 const REGIONS_URL = "/france-regions.geojson";
 const DEPTS_URL = "/france-departments.geojson";
+const CANTONS_URL = "/france-cantons/{dep}.geojson";
+const COMMUNES_URL = "/france-communes-enriched/{dep}.geojson";
 
 const STYLE = {
   default: { fill: "#EAEAEC", stroke: "#333", strokeWidth: 0.5 },
@@ -24,22 +26,21 @@ export default function FranceMap() {
   const [communes, setCommunes] = useState<any>(null);
 
   const [level, setLevel] = useState<Level>("region");
-
   const [selectedRegion, setSelectedRegion] = useState<any>(null);
   const [selectedDept, setSelectedDept] = useState<any>(null);
   const [selectedCanton, setSelectedCanton] = useState<any>(null);
 
-  /* LOAD BASE FILES */
+  /* =======================
+     LOAD BASE DATA
+  ======================= */
   useEffect(() => {
-    fetch(REGIONS_URL)
-      .then((r) => r.json())
-      .then(setRegions);
-    fetch(DEPTS_URL)
-      .then((r) => r.json())
-      .then(setDepartments);
+    fetch(REGIONS_URL).then(r => r.json()).then(setRegions);
+    fetch(DEPTS_URL).then(r => r.json()).then(setDepartments);
   }, []);
 
-  /* PROJECTION */
+  /* =======================
+     PROJECTION (SAFE)
+  ======================= */
   const projectionConfig = useMemo(() => {
     const focus =
       level === "region"
@@ -50,19 +51,29 @@ export default function FranceMap() {
             ? selectedDept
             : selectedCanton;
 
-    if (!focus) {
-      return { scale: 1800, center: [2.5, 46.5] as [number, number] };
+    if (!focus?.geometry) {
+      return {
+        scale: 1800,
+        center: [2.5, 46.5] as [number, number],
+      };
     }
 
     return {
       scale: level === "commune" ? 13000 : 6500,
-      center: geoCentroid(focus) as [number, number],
+      center: geoCentroid({
+        type: "Feature",
+        geometry: focus.geometry,
+        properties: {},
+      }) as [number, number],
     };
   }, [level, selectedRegion, selectedDept, selectedCanton]);
 
   if (!regions || !departments) return <div>Loading…</div>;
 
-  /* HANDLERS */
+  /* =======================
+     HANDLERS
+  ======================= */
+
   const onRegionClick = (geo: any) => {
     setSelectedRegion(geo);
     setSelectedDept(null);
@@ -79,8 +90,8 @@ export default function FranceMap() {
     setLevel("canton");
 
     const data = await fetch(
-      `/france-cantons/${geo.properties.code}.geojson`
-    ).then((r) => r.json());
+      CANTONS_URL.replace("{dep}", geo.properties.code)
+    ).then(r => r.json());
 
     setCantons(data);
   };
@@ -89,13 +100,29 @@ export default function FranceMap() {
     setSelectedCanton(geo);
     setLevel("commune");
 
-    // Charger toutes les communes du département
-    const deptCode = selectedDept.properties.code;
-    const data = await fetch(`/france-communes/${deptCode}.geojson`).then((r) =>
-      r.json()
-    );
+    const data = await fetch(
+      COMMUNES_URL.replace("{dep}", selectedDept.properties.code)
+    ).then(r => r.json());
 
-    setCommunes(data); // NE PAS FILTRER ici si pas de canton_code
+    // 🔑 Canton as GeoJSON Feature
+    const cantonFeature = {
+      type: "Feature",
+      geometry: geo.geometry,
+      properties: {},
+    };
+
+    // 🔑 Keep only communes whose centroid is inside the canton
+    const filtered = data.features.filter((commune: any) => {
+      const centroid = geoCentroid(commune);
+      return geoContains(cantonFeature, centroid);
+    });
+
+    console.log("🏘 Communes in selected canton:", filtered.length);
+
+    setCommunes({
+      ...data,
+      features: filtered,
+    });
   };
 
   const back = () => {
@@ -103,6 +130,10 @@ export default function FranceMap() {
     else if (level === "canton") setLevel("department");
     else if (level === "department") setLevel("region");
   };
+
+  /* =======================
+     RENDER
+  ======================= */
 
   return (
     <div>
@@ -120,7 +151,7 @@ export default function FranceMap() {
         {level === "region" && (
           <Geographies geography={regions}>
             {({ geographies }) =>
-              geographies.map((g) => (
+              geographies.map(g => (
                 <Geography
                   key={g.rsmKey}
                   geography={g}
@@ -138,11 +169,11 @@ export default function FranceMap() {
             {({ geographies }) =>
               geographies
                 .filter(
-                  (g) =>
+                  g =>
                     DEPT_TO_REGION[g.properties.code] ===
                     selectedRegion.properties.code
                 )
-                .map((g) => (
+                .map(g => (
                   <Geography
                     key={g.rsmKey}
                     geography={g}
@@ -158,7 +189,7 @@ export default function FranceMap() {
         {level === "canton" && cantons && (
           <Geographies geography={cantons}>
             {({ geographies }) =>
-              geographies.map((g) => (
+              geographies.map(g => (
                 <Geography
                   key={g.rsmKey}
                   geography={g}
@@ -170,12 +201,20 @@ export default function FranceMap() {
           </Geographies>
         )}
 
-        {/* COMMUNES */}
-        {level === "commune" && communes && selectedCanton && (
+        {/* COMMUNES (ONLY IN SELECTED CANTON) */}
+        {level === "commune" && communes && (
           <Geographies geography={communes}>
             {({ geographies }) =>
-              geographies.map((g) => (
-                <Geography key={g.rsmKey} geography={g} style={STYLE} />
+              geographies.map(g => (
+                <Geography
+                  key={g.rsmKey}
+                  geography={g}
+                  style={{
+                    default: { fill: "#9ecae1", stroke: "#333", strokeWidth: 0.3 },
+                    hover: { fill: "#3182bd" },
+                    pressed: { fill: "#08519c" },
+                  }}
+                />
               ))
             }
           </Geographies>
