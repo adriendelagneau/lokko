@@ -29,11 +29,22 @@ const FitBoundsCircle = ({
 }) => {
   const map = useMap();
 
-  useEffect(() => {
-    const point = L.latLng(center.lat, center.lng);
-    const bounds = point.toBounds(radius * 1000); // rayon en mètres
-    map.fitBounds(bounds, { padding: [20, 20] });
-  }, [center, radius, map]);
+useEffect(() => {
+  if (!map) return;
+
+  const point = L.latLng(center.lat, center.lng);
+
+  // Crée un rectangle correspondant au rayon
+  const bounds = point.toBounds(radius * 1000); // rayon en mètres
+
+  // Zoom maximal pour que le rectangle tienne dans 80% de la map
+  const mapSize = map.getSize();
+  const zoom = map.getBoundsZoom(bounds, false); // false = pas de padding
+  const adjustedZoom = zoom - 0.8; // ajustement pour ~80% de la map
+
+  map.setView([center.lat, center.lng], adjustedZoom);
+}, [center, radius, map]);
+
 
   return null;
 };
@@ -45,6 +56,7 @@ const LeafletMap = ({ center, radius }: LeafletMapProps) => {
       zoom={13}
       scrollWheelZoom={true}
       className="h-full w-full"
+       zoomControl={false} 
     >
       <TileLayer
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

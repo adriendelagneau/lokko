@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
+import { getListings, GetListingsParams } from "@/actions/listing-actions";
+
 
 interface UserCoords {
   lat: number;
@@ -21,6 +23,8 @@ const GeoSearch = () => {
   const [userCoords, setUserCoords] = useState<UserCoords | null>(null);
   const [city, setCity] = useState("");
   const [radius, setRadius] = useState(10); // km
+  const [listings, setListings] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
 
   const handleGeoLocate = () => {
     if (!navigator.geolocation) {
@@ -29,10 +33,29 @@ const GeoSearch = () => {
     }
 
     navigator.geolocation.getCurrentPosition(
-      (position) => {
+      async (position) => {
         const { latitude, longitude } = position.coords;
         setUserCoords({ lat: latitude, lng: longitude });
         setIsGeoLocated(true);
+
+        // ✅ Appel server action pour tester le filtrage par geo/rayon
+        setLoading(true);
+        try {
+          const params: GetListingsParams = {
+            page: 1,
+            pageSize: 10,
+            geoLat: latitude,
+            geoLng: longitude,
+            geoRadiusKm: radius,
+          } as any; // si tu n’as pas encore ajouté geoLat/geoLng/geoRadiusKm dans le type
+          
+          const result = await getListings(params);
+          setListings(result.listings);
+          console.log("Listings trouvés:", result.listings);
+        } catch (err) {
+          console.error("Erreur fetch listings:", err);
+        }
+        setLoading(false);
       },
       (error) => {
         console.error("Erreur géolocalisation:", error);
@@ -48,6 +71,7 @@ const GeoSearch = () => {
 
   return (
     <div className="space-y-4 rounded-lg border bg-white p-4 shadow-sm">
+      {/* Ville input */}
       <div>
         <Label htmlFor="city">Votre ville</Label>
         <Input
@@ -58,8 +82,11 @@ const GeoSearch = () => {
         />
       </div>
 
+      {/* Géolocalisation */}
       <div>
-        <Button onClick={handleGeoLocate}>Me géolocaliser</Button>
+        <Button onClick={handleGeoLocate} disabled={loading}>
+          {loading ? "Chargement..." : "Me géolocaliser"}
+        </Button>
         {isGeoLocated && userCoords && (
           <div className="mt-2 text-sm text-gray-700">
             Position détectée : {userCoords.lat.toFixed(5)},{" "}
@@ -68,6 +95,7 @@ const GeoSearch = () => {
         )}
       </div>
 
+      {/* Rayon */}
       {isGeoLocated && (
         <div>
           <Label htmlFor="radius">
@@ -83,11 +111,28 @@ const GeoSearch = () => {
         </div>
       )}
 
+      {/* Mini map */}
       {isGeoLocated && userCoords && (
         <div className="mt-4 h-64 w-full overflow-hidden rounded-lg">
           <LeafletMap center={userCoords} radius={radius} />
         </div>
       )}
+
+      {/* Listings test */}
+      <div className="mt-4">
+        <h3 className="font-semibold">Listings trouvés :</h3>
+        {listings.length === 0 ? (
+          <p>Aucun listing trouvé</p>
+        ) : (
+          <ul className="space-y-1">
+            {listings.map((l) => (
+              <li key={l.id}>
+                {l.title} — {l.location.city}, {l.location.department}
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
     </div>
   );
 };

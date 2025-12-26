@@ -105,7 +105,6 @@ export async function createListing(
 
 
 
-
 export type GetListingsParams = {
   query?: string;
   page?: number;
@@ -116,7 +115,24 @@ export type GetListingsParams = {
   locationDepartment?: string;
   locationRegion?: string;
   orderBy?: "newest" | "priceAsc" | "priceDesc";
+  geoLat?: number;
+  geoLng?: number;
+  geoRadiusKm?: number; // rayon en km
 };
+
+// fonction Haversine
+function distanceKm(lat1: number, lng1: number, lat2: number, lng2: number) {
+  const R = 6371; // km
+  const dLat = ((lat2 - lat1) * Math.PI) / 180;
+  const dLng = ((lng2 - lng1) * Math.PI) / 180;
+  const a =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos((lat1 * Math.PI) / 180) *
+      Math.cos((lat2 * Math.PI) / 180) *
+      Math.sin(dLng / 2) ** 2;
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c;
+}
 
 export async function getListings({
   query,
@@ -128,6 +144,9 @@ export async function getListings({
   locationDepartment,
   locationRegion,
   orderBy = "newest",
+  geoLat,
+  geoLng,
+  geoRadiusKm,
 }: GetListingsParams) {
   const skip = (page - 1) * pageSize;
 
@@ -150,29 +169,22 @@ export async function getListings({
     }),
   };
 
-  const orderByClause: Prisma.ListingOrderByWithRelationInput =
-    orderBy === "priceAsc"
-      ? { price: "asc" }
-      : orderBy === "priceDesc"
-        ? { price: "desc" }
-        : { createdAt: "desc" };
+  // si géoloc définie
+  let listings: ListingCard[] = [];
+  let total = 0;
 
-  const [listings, total] = await Promise.all([
-    prisma.listing.findMany({
+  if (geoLat != null && geoLng != null && geoRadiusKm != null) {
+    // récupérer toutes les annonces qui matchent les autres filtres
+    const allListings = await prisma.listing.findMany({
       where,
-      skip,
-      take: pageSize,
-      orderBy: orderByClause,
       select: {
         id: true,
         title: true,
+        price: true,
+        location: { select: { lat: true, lng: true, city: true, department: true, region: true } },
         category: { select: { slug: true } },
         subCategory: { select: { slug: true } },
-        price: true,
-        priceUnit: true,
-        createdAt: true,
         images: { take: 1, select: { url: true, altText: true } },
-        location: { select: { city: true, postalCode: true, department: true, region: true } },
         owner: {
           select: {
             id: true,
@@ -184,19 +196,57 @@ export async function getListings({
           },
         },
       },
-    }),
-    prisma.listing.count({ where }),
-  ]);
+    });
+
+    // filtrer par rayon
+    const filtered = allListings.filter((l) => {
+      if (!l.location.lat || !l.location.lng) return false;
+      const d = distanceKm(geoLat, geoLng, l.location.lat, l.location.lng);
+      return d <= geoRadiusKm;
+    });
+
+    total = filtered.length;
+    listings = filtered.slice(skip, skip + pageSize);
+  } else {
+    // sans géoloc
+    total = await prisma.listing.count({ where });
+    listings = await prisma.listing.findMany({
+      where,
+      skip,
+      take: pageSize,
+      orderBy:
+        orderBy === "priceAsc"
+          ? { price: "asc" }
+          : orderBy === "priceDesc"
+            ? { price: "desc" }
+            : { createdAt: "desc" },
+      select: {
+        id: true,
+        title: true,
+        price: true,
+        category: { select: { slug: true } },
+        subCategory: { select: { slug: true } },
+        images: { take: 1, select: { url: true, altText: true } },
+        owner: {
+          select: {
+            id: true,
+            name: true,
+            image: true,
+            ratingAverage: true,
+            ratingCount: true,
+            _count: { select: { listings: true } },
+          },
+        },
+        location: { select: { lat: true, lng: true, city: true, department: true, region: true } },
+      },
+    });
+  }
 
   return {
     listings,
     hasMore: skip + listings.length < total,
   };
 }
-
-
-export type GetListingsResult = Awaited<ReturnType<typeof getListings>>;
-export type ListingCard = GetListingsResult["listings"][number];
 
 
 export async function getListingById(id: string) {
