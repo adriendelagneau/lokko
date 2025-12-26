@@ -1,37 +1,48 @@
 "use client";
 
 import React, { useEffect, useMemo, useState } from "react";
-import { geoCentroid, geoContains } from "d3-geo";
+import { geoCentroid } from "d3-geo";
 import { ComposableMap, Geographies, Geography } from "react-simple-maps";
+import { useRouter, useSearchParams } from "next/navigation";
 
 import { DEPT_TO_REGION } from "@/data/dptToRegion";
+import { ArrowLeftIcon } from "lucide-react";
 
+/* =======================
+   DATA URLS
+======================= */
 const REGIONS_URL = "/france-regions.geojson";
 const DEPTS_URL = "/france-departments.geojson";
-const CANTONS_URL = "/france-cantons/{dep}.geojson";
-const COMMUNES_URL = "/france-communes-enriched/{dep}.geojson";
 
-const STYLE = {
-  default: { fill: "#EAEAEC", stroke: "#333", strokeWidth: 0.5 },
-  hover: { fill: "#F53", cursor: "pointer" },
-  pressed: { fill: "#E42" },
+/* =======================
+   TYPES
+======================= */
+type Level = "region" | "department";
+
+/* =======================
+   BASE STYLE
+======================= */
+const BASE_STYLE = {
+  stroke: "#333",
+  strokeWidth: 0.5,
 };
 
-type Level = "region" | "department" | "canton" | "commune";
-
 export default function FranceMap() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  /* =======================
+     STATE
+  ======================= */
   const [regions, setRegions] = useState<any>(null);
   const [departments, setDepartments] = useState<any>(null);
-  const [cantons, setCantons] = useState<any>(null);
-  const [communes, setCommunes] = useState<any>(null);
 
   const [level, setLevel] = useState<Level>("region");
   const [selectedRegion, setSelectedRegion] = useState<any>(null);
-  const [selectedDept, setSelectedDept] = useState<any>(null);
-  const [selectedCanton, setSelectedCanton] = useState<any>(null);
+  const [selectedDeptCode, setSelectedDeptCode] = useState<string | null>(null);
 
   /* =======================
-     LOAD BASE DATA
+     LOAD DATA
   ======================= */
   useEffect(() => {
     fetch(REGIONS_URL).then(r => r.json()).then(setRegions);
@@ -39,19 +50,35 @@ export default function FranceMap() {
   }, []);
 
   /* =======================
-     PROJECTION (SAFE)
+     URL → STATE SYNC
+  ======================= */
+  useEffect(() => {
+    if (!regions) return;
+
+    const regionCode = searchParams.get("region");
+    const deptCode = searchParams.get("dept");
+
+    if (regionCode) {
+      const region = regions.features.find(
+        (r: any) => r.properties.code === regionCode
+      );
+
+      if (region) {
+        setSelectedRegion(region);
+        setLevel("department");
+      }
+    }
+
+    if (deptCode) {
+      setSelectedDeptCode(deptCode);
+    }
+  }, [regions, searchParams]);
+
+  /* =======================
+     PROJECTION
   ======================= */
   const projectionConfig = useMemo(() => {
-    const focus =
-      level === "region"
-        ? null
-        : level === "department"
-          ? selectedRegion
-          : level === "canton"
-            ? selectedDept
-            : selectedCanton;
-
-    if (!focus?.geometry) {
+    if (level === "region" || !selectedRegion?.geometry) {
       return {
         scale: 1800,
         center: [2.5, 46.5] as [number, number],
@@ -59,87 +86,83 @@ export default function FranceMap() {
     }
 
     return {
-      scale: level === "commune" ? 13000 : 6500,
-      center: geoCentroid({
-        type: "Feature",
-        geometry: focus.geometry,
-        properties: {},
-      }) as [number, number],
+      scale: 6500,
+      center: geoCentroid(selectedRegion) as [number, number],
     };
-  }, [level, selectedRegion, selectedDept, selectedCanton]);
+  }, [level, selectedRegion]);
 
   if (!regions || !departments) return <div>Loading…</div>;
 
   /* =======================
      HANDLERS
   ======================= */
-
   const onRegionClick = (geo: any) => {
+    const regionCode = geo.properties.code;
+
     setSelectedRegion(geo);
-    setSelectedDept(null);
-    setSelectedCanton(null);
-    setCantons(null);
-    setCommunes(null);
+    setSelectedDeptCode(null);
     setLevel("department");
+
+    router.push(`?region=${regionCode}`, { scroll: false });
   };
 
-  const onDeptClick = async (geo: any) => {
-    setSelectedDept(geo);
-    setSelectedCanton(null);
-    setCommunes(null);
-    setLevel("canton");
+  const onDepartmentClick = (geo: any) => {
+    const deptCode = geo.properties.code;
+    const regionCode = selectedRegion.properties.code;
 
-    const data = await fetch(
-      CANTONS_URL.replace("{dep}", geo.properties.code)
-    ).then(r => r.json());
+    setSelectedDeptCode(deptCode);
 
-    setCantons(data);
-  };
-
-  const onCantonClick = async (geo: any) => {
-    setSelectedCanton(geo);
-    setLevel("commune");
-
-    const data = await fetch(
-      COMMUNES_URL.replace("{dep}", selectedDept.properties.code)
-    ).then(r => r.json());
-
-    // 🔑 Canton as GeoJSON Feature
-    const cantonFeature = {
-      type: "Feature",
-      geometry: geo.geometry,
-      properties: {},
-    };
-
-    // 🔑 Keep only communes whose centroid is inside the canton
-    const filtered = data.features.filter((commune: any) => {
-      const centroid = geoCentroid(commune);
-      return geoContains(cantonFeature, centroid);
-    });
-
-    console.log("🏘 Communes in selected canton:", filtered.length);
-
-    setCommunes({
-      ...data,
-      features: filtered,
+    router.push(`?region=${regionCode}&dept=${deptCode}`, {
+      scroll: false,
     });
   };
 
   const back = () => {
-    if (level === "commune") setLevel("canton");
-    else if (level === "canton") setLevel("department");
-    else if (level === "department") setLevel("region");
+    setLevel("region");
+    setSelectedRegion(null);
+    setSelectedDeptCode(null);
+
+    router.push("?", { scroll: false });
+  };
+
+  /* =======================
+     STYLE HELPERS
+  ======================= */
+  const getRegionStyle = () => ({
+    default: { fill: "#EAEAEC", ...BASE_STYLE },
+    hover: { fill: "#F53", cursor: "pointer" },
+    pressed: { fill: "#E42" },
+  });
+
+  const getDeptStyle = (deptCode: string) => {
+    const isSelected = deptCode === selectedDeptCode;
+
+    return {
+      default: {
+        fill: isSelected ? "#E42" : "#EAEAEC",
+        ...BASE_STYLE,
+      },
+      hover: {
+        fill: "#F53",
+        cursor: "pointer",
+      },
+      pressed: {
+        fill: "#E42",
+      },
+    };
   };
 
   /* =======================
      RENDER
   ======================= */
-
   return (
     <div>
-      <button onClick={back} disabled={level === "region"}>
-        🔙 Back
-      </button>
+      {level === "department" && (
+        <button onClick={back} className="flex items-center mb-2">
+          <ArrowLeftIcon className="w-4 h-4 mr-2" />
+          Back
+        </button>
+      )}
 
       <ComposableMap
         projection="geoMercator"
@@ -156,7 +179,7 @@ export default function FranceMap() {
                   key={g.rsmKey}
                   geography={g}
                   onClick={() => onRegionClick(g)}
-                  style={STYLE}
+                  style={getRegionStyle()}
                 />
               ))
             }
@@ -164,7 +187,7 @@ export default function FranceMap() {
         )}
 
         {/* DEPARTMENTS */}
-        {level === "department" && (
+        {level === "department" && selectedRegion && (
           <Geographies geography={departments}>
             {({ geographies }) =>
               geographies
@@ -177,45 +200,10 @@ export default function FranceMap() {
                   <Geography
                     key={g.rsmKey}
                     geography={g}
-                    onClick={() => onDeptClick(g)}
-                    style={STYLE}
+                    onClick={() => onDepartmentClick(g)}
+                    style={getDeptStyle(g.properties.code)}
                   />
                 ))
-            }
-          </Geographies>
-        )}
-
-        {/* CANTONS */}
-        {level === "canton" && cantons && (
-          <Geographies geography={cantons}>
-            {({ geographies }) =>
-              geographies.map(g => (
-                <Geography
-                  key={g.rsmKey}
-                  geography={g}
-                  onClick={() => onCantonClick(g)}
-                  style={STYLE}
-                />
-              ))
-            }
-          </Geographies>
-        )}
-
-        {/* COMMUNES (ONLY IN SELECTED CANTON) */}
-        {level === "commune" && communes && (
-          <Geographies geography={communes}>
-            {({ geographies }) =>
-              geographies.map(g => (
-                <Geography
-                  key={g.rsmKey}
-                  geography={g}
-                  style={{
-                    default: { fill: "#9ecae1", stroke: "#333", strokeWidth: 0.3 },
-                    hover: { fill: "#3182bd" },
-                    pressed: { fill: "#08519c" },
-                  }}
-                />
-              ))
             }
           </Geographies>
         )}

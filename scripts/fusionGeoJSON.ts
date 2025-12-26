@@ -5,9 +5,9 @@ import { parse } from "csv-parse/sync";
 
 
 
-const geojsonPath = path.resolve("./public/france-communes/56.geojson"); // GeoJSON d’un département
+const geojsonPath = path.resolve("./public/france-communes/35.geojson"); // GeoJSON d’un département
 const csvPath = path.resolve("./public/cog.csv"); // CSV COG communes
-const outputPath = path.resolve("./public/communes-dept/56_enriched.geojson"); // sortie
+const outputPath = path.resolve("./public/communes-dept/35_enriched.geojson"); // sortie
 
 // 1️⃣ Lire le GeoJSON
 const geojsonRaw = fs.readFileSync(geojsonPath, "utf-8");
