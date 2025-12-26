@@ -93,8 +93,8 @@ export default function GeoSearch() {
       {/* Rayon */}
       {isGeoLocated && (
         <div>
-          <Label htmlFor="radius">
-            Rayon autour de votre position (km): {radius}
+          <Label htmlFor="radius" className="my-4 text-lg">
+            Dans un rayon de : {radius} km
           </Label>
           <Slider
             id="radius"
@@ -104,7 +104,8 @@ export default function GeoSearch() {
               updateUrl({ geoRadiusKm: val[0].toString() });
             }}
             max={100}
-            step={1}
+                      step={5}
+                      className="w-64"
           />
         </div>
       )}
