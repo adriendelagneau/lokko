@@ -169,10 +169,10 @@ export default function GeoSearch() {
   /* ---------------- Render ---------------- */
 
   return (
-    <div className="space-y-4 rounded-lg border bg-white p-4 shadow-sm">
+    <div className="space-y-4 rounded-lg border p-4 shadow-sm">
       {/* Commune */}
       <div className="relative">
-        <Label>Commune</Label>
+        <Label className="mb-2 text-lg">Une Commune :</Label>
         <Input
           placeholder="Commencez à taper une commune..."
           value={query}
@@ -180,6 +180,7 @@ export default function GeoSearch() {
           onChange={(e) => setQuery(e.target.value)}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setTimeout(() => setIsFocused(false), 150)}
+          className="w-64"
         />
 
         {isFocused && loading && (
@@ -211,6 +212,7 @@ export default function GeoSearch() {
       </div>
 
       {/* Actions */}
+      <div className="text-lg">Me Geolocaliser :</div>
       <div className="flex gap-2">
         <Button onClick={handleGeoLocate}>Me géolocaliser</Button>
         {isGeoLocated && (

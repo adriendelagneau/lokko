@@ -6,8 +6,7 @@ const page = () => {
   return (
     <div>
       <div className="flex">
-        <div className="w-2/3">
-          <div className="text-center text-4xl font-medium uppercase">ou ?</div>
+        <div className="w-1/2">
           <GeoSearch />
           {/* <FranceMap /> */}
         </div>
