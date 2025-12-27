@@ -1,6 +1,7 @@
 "use client";
 
 import debounce from "lodash.debounce";
+import { MapPinIcon } from "lucide-react";
 import dynamic from "next/dynamic";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useEffect, useCallback } from "react";
@@ -219,7 +220,7 @@ export default function GeoSearch() {
                   className={`px-3 py-2 ${
                     hasCoords
                       ? "cursor-pointer hover:bg-gray-100"
-                      : "cursor-not-allowed text-muted-foreground"
+                      : "text-muted-foreground cursor-not-allowed"
                   }`}
                   onMouseDown={() => hasCoords && handleSelectCity(commune)}
                 >
@@ -240,10 +241,9 @@ export default function GeoSearch() {
             {isLocating ? (
               <span className="flex items-center gap-2">
                 <span className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
-                Localisation…
               </span>
             ) : (
-              "Me géolocaliser"
+              <MapPinIcon className="h-5 w-5" aria-hidden="true" />
             )}
           </Button>
 
