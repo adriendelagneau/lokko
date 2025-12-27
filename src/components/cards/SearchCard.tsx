@@ -11,7 +11,7 @@ const SearchCard = ({ listing }: SearchCardProps) => {
   const image = listing.images?.[0];
 
   return (
-    <div className="group w-full max-w-2xl rounded-lg border p-4">
+    <div className="group w-full max-w-2xl rounded-md border shadow-lg p-4">
       <div className="flex gap-4">
         {/* Image */}
         {image?.url ? (
@@ -38,7 +38,7 @@ const SearchCard = ({ listing }: SearchCardProps) => {
             </h3>
 
             {listing.price != null && (
-              <p className=" ">
+              <p className="text-sm mt-2 ">
                 {listing.price} / {listing.priceUnit}
               </p>
             )}

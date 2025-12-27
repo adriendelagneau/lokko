@@ -6,6 +6,7 @@ import { useState, useEffect, useRef } from "react";
 import { getListings, ListingFromGetListings } from "@/actions/listing-actions";
 
 import SearchCard from "../cards/SearchCard";
+import { SearchCardSkeleton } from "../cards/SearchCardSkeleton";
 
 export default function ListingsClient() {
   const searchParams = useSearchParams();
@@ -58,9 +59,15 @@ export default function ListingsClient() {
 
   return (
     <div className="space-y-4">
-      {pages.flat().map((listing) => (
-        <SearchCard key={listing.id} listing={listing} />
-      ))}
+      {loading
+        ? Array.from({ length: 6 }).map((_, i) => (
+            <SearchCardSkeleton key={i} />
+          ))
+        : pages
+            .flat()
+            .map((listing) => (
+              <SearchCard key={listing.id} listing={listing} />
+            ))}
 
       <div ref={loadMoreRef} className="h-6">
         {loading && <div>Chargement...</div>}
