@@ -118,6 +118,9 @@ export type GetListingsParams = {
   geoLat?: number;
   geoLng?: number;
   geoRadiusKm?: number; // rayon en km
+
+  priceMin?: number;
+  priceMax?: number;
 };
 
 // fonction Haversine
@@ -147,6 +150,8 @@ export async function getListings({
   geoLat,
   geoLng,
   geoRadiusKm,
+  priceMin,
+  priceMax,
 }: GetListingsParams) {
   const skip = (page - 1) * pageSize;
 
@@ -167,7 +172,17 @@ export async function getListings({
         { description: { contains: query, mode: "insensitive" } },
       ],
     }),
+
+    ...(priceMin != null || priceMax != null
+      ? {
+        price: {
+          ...(priceMin != null ? { gte: priceMin } : {}),
+          ...(priceMax != null ? { lte: priceMax } : {}),
+        },
+      }
+      : {}),
   };
+
 
   // si géoloc définie
   let listings: ListingCard[] = [];

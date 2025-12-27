@@ -4,6 +4,7 @@ import { useSearchParams } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
 
 import { getListings, ListingFromGetListings } from "@/actions/listing-actions";
+import { parseSearchParams } from "@/utils/parseSearchParams";
 
 import SearchCard from "../cards/SearchCard";
 import { SearchCardSkeleton } from "../cards/SearchCardSkeleton";
@@ -22,7 +23,13 @@ export default function ListingsClient() {
 
   const fetchPage = async (pageNum: number, reset = false) => {
     setLoading(true);
-    const result = await getListings({ ...params, page: pageNum });
+    const params = parseSearchParams(searchParams);
+
+    const result = await getListings({
+      ...params,
+      page: pageNum,
+    });
+
     setPages((prev) =>
       reset ? [result.listings] : [...prev, result.listings]
     );
