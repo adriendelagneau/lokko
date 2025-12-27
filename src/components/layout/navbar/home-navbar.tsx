@@ -19,7 +19,7 @@ import { AuthButton } from "./auth-button";
 // import { ThemeToggleCircle } from "@/components/providers/ThemeToggleWrapper";
 
 export const HomeNavbar = () => {
-  const { openSidebar } = useSidebarStore();
+  // const { openSidebar } = useSidebarStore();
   return (
     <div className="bg-background fixed top-0 left-0 z-50 h-10 w-full px-4 py-10">
       <div className="relative mx-auto flex h-full w-full max-w-6xl items-center lg:justify-between">
@@ -32,8 +32,8 @@ export const HomeNavbar = () => {
         </Link>
 
 
-        <button onClick={() => openSidebar("home")}>Home</button>
-        <button onClick={() => openSidebar("search")}>Search</button>
+        {/* <button onClick={() => openSidebar("home")}>Home</button> */}
+  
       
         {/* Create Listing */}
         <Link href={"/create-listing"}>

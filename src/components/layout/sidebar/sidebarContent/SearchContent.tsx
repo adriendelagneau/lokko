@@ -1,9 +1,11 @@
 import React from "react";
 
+import GeoSearch from "@/components/geo/GeoSearch";
+
 const SearchContent = () => {
   return (
     <div>
-      Search content
+      <GeoSearch />
     </div>
   );
 };

@@ -128,8 +128,8 @@ function distanceKm(lat1: number, lng1: number, lat2: number, lng2: number) {
   const a =
     Math.sin(dLat / 2) ** 2 +
     Math.cos((lat1 * Math.PI) / 180) *
-      Math.cos((lat2 * Math.PI) / 180) *
-      Math.sin(dLng / 2) ** 2;
+    Math.cos((lat2 * Math.PI) / 180) *
+    Math.sin(dLng / 2) ** 2;
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   return R * c;
 }
@@ -225,7 +225,7 @@ export async function getListings({
         id: true,
         title: true,
         price: true,
-            priceUnit: true,
+        priceUnit: true,
         category: { select: { slug: true } },
         subCategory: { select: { slug: true } },
         images: { take: 1, select: { url: true, altText: true } },
@@ -249,6 +249,15 @@ export async function getListings({
     hasMore: skip + listings.length < total,
   };
 }
+
+
+export type GetListingsResult = Awaited<
+  ReturnType<typeof getListings>
+>;
+
+export type ListingFromGetListings =
+  GetListingsResult["listings"][number];
+
 
 
 export async function getListingById(id: string) {

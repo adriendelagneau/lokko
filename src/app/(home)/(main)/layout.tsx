@@ -15,7 +15,7 @@ export default async function HomeLayout({
       <HomeNavbar />
       <div className="flex">
         <AppSidebar />
-        <main className="mx-auto min-h-screen w-full max-w-screen-xl flex-1 pt-20">
+        <main className="mx-auto min-h-screen w-full max-w-6xl flex-1 pt-20">
           {children}
         </main>
       </div>

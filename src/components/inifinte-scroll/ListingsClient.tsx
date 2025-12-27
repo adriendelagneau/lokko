@@ -3,11 +3,13 @@
 import { useSearchParams } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
 
-import { getListings } from "@/actions/listing-actions";
+import { getListings, ListingFromGetListings } from "@/actions/listing-actions";
+
+import SearchCard from "../cards/SearchCard";
 
 export default function ListingsClient() {
   const searchParams = useSearchParams();
-  const [pages, setPages] = useState<any[]>([]);
+  const [pages, setPages] = useState<ListingFromGetListings[][]>([]);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [loading, setLoading] = useState(false);
@@ -57,7 +59,7 @@ export default function ListingsClient() {
   return (
     <div className="space-y-4">
       {pages.flat().map((listing) => (
-        <div key={listing.id}>{listing.title}</div>
+        <SearchCard key={listing.id} listing={listing} />
       ))}
 
       <div ref={loadMoreRef} className="h-6">
