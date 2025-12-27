@@ -22,7 +22,7 @@ export default async function HomeLayout({
       <div className="w-full">
         <HomeNavbar />
         <div className="flex">
-          <HomeSidebar />
+      
           <main className="mx-auto min-h-screen w-full max-w-screen-xl flex-1 pt-20">
             {children}
           </main>
