@@ -23,9 +23,9 @@ export function SidebarNav() {
   const pathname = usePathname();
 
   return (
-    <aside className="w-64 border-r p-4">
-      <h2 className="mb-4 text-lg font-semibold">Mon compte</h2>
-      <nav className="flex flex-col gap-2">
+    <aside className=" p-4">
+      <h2 className="my-8 text-xl font-semibold">Mon compte</h2>
+      <nav className="flex  gap-2">
         {navItems.map((item) => {
           const isActive = pathname.startsWith(item.href);
           return (
