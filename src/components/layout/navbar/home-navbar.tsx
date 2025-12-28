@@ -19,22 +19,22 @@ import { AuthButton } from "./auth-button";
 // import { ThemeToggleCircle } from "@/components/providers/ThemeToggleWrapper";
 
 export const HomeNavbar = () => {
-  // const { openSidebar } = useSidebarStore();
+  const { openSidebar } = useSidebarStore();
   return (
-    <div className="bg-background fixed top-0 left-0 z-50 h-10 w-full px-4 py-10">
+    <div className="bg-background flex-row-center fixed top-0 left-0 z-30 h-10 w-full items-center border-b px-4 py-10 shadow-sm lg:h-16 lg:px-8">
       <div className="relative mx-auto flex h-full w-full max-w-6xl items-center lg:justify-between">
         {/* <SidebarTrigger className="lg:hidden" /> */}
         {/* Title */}
         <Link href={"/"}>
-          <h1 className="text-primary font-poppins absolute left-1/2 -translate-x-1/2 text-3xl font-semibold lg:static lg:mx-0 lg:translate-x-0">
+          <h1 className="text-primary font-poppins top-1/2 -translate-y-1/2 absolute left-1/2 -translate-x-1/2 text-3xl font-semibold lg:static lg:mx-0 lg:translate-x-0 lg:top-0 lg:translate-y-0">
             Lokko
           </h1>
         </Link>
 
+        <button onClick={() => openSidebar("home")}>
+          <MenuIcon size={24} className="lg:hidden" />
+        </button>
 
-        {/* <button onClick={() => openSidebar("home")}>Home</button> */}
-  
-      
         {/* Create Listing */}
         <Link href={"/create-listing"}>
           <Button className="hidden lg:flex" size={"lg"}>

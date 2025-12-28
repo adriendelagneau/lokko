@@ -1,5 +1,7 @@
 "use client";
 
+import { XIcon } from "lucide-react";
+
 import { useSidebarStore } from "@/lib/store/useSidebarStore";
 
 import { CustomSidebar } from "./CustomSidebar";
@@ -14,8 +16,12 @@ export function AppSidebar() {
       <div className="flex h-full flex-col">
         {/* Header */}
         <div className="flex items-center justify-between border-b p-4">
-          <h2 className="font-semibold capitalize">{view}</h2>
-          <button onClick={closeSidebar}>✕</button>
+          <h2 className="font-poppins text-primary text-2xl font-semibold capitalize">
+            Lokko
+          </h2>
+          <button onClick={closeSidebar}>
+            <XIcon size={24} />
+          </button>
         </div>
 
         {/* Content */}

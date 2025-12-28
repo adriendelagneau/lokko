@@ -109,23 +109,27 @@ export type GetListingsParams = {
   query?: string;
   page?: number;
   pageSize?: number;
-  categorySlug?: string;
-  subCategorySlug?: string;
+
+  category?: string;
+  subCategory?: string;
+
   locationCity?: string;
   locationDepartment?: string;
   locationRegion?: string;
+
   orderBy?: "newest" | "priceAsc" | "priceDesc";
+
   geoLat?: number;
   geoLng?: number;
-  geoRadiusKm?: number; // rayon en km
+  geoRadiusKm?: number;
 
   priceMin?: number;
   priceMax?: number;
 };
 
-// fonction Haversine
+// Haversine
 function distanceKm(lat1: number, lng1: number, lat2: number, lng2: number) {
-  const R = 6371; // km
+  const R = 6371;
   const dLat = ((lat2 - lat1) * Math.PI) / 180;
   const dLng = ((lng2 - lng1) * Math.PI) / 180;
   const a =
@@ -141,11 +145,14 @@ export async function getListings({
   query,
   page = 1,
   pageSize = 12,
-  categorySlug,
-  subCategorySlug,
+
+  category,
+  subCategory,
+
   locationCity,
   locationDepartment,
   locationRegion,
+
   orderBy = "newest",
   geoLat,
   geoLng,
@@ -159,12 +166,13 @@ export async function getListings({
     isActive: true,
     deletedAt: null,
 
-    ...(categorySlug && { category: { is: { slug: categorySlug } } }),
-    ...(subCategorySlug && { subCategory: { is: { slug: subCategorySlug } } }),
+    ...(category && {
+      category: { is: { slug: category } },
+    }),
 
-    ...(locationCity && { location: { city: { equals: locationCity, mode: "insensitive" } } }),
-    ...(locationDepartment && { location: { department: { equals: locationDepartment, mode: "insensitive" } } }),
-    ...(locationRegion && { location: { region: { equals: locationRegion, mode: "insensitive" } } }),
+    ...(subCategory && {
+      subCategory: { is: { slug: subCategory } },
+    }),
 
     ...(query && {
       OR: [
@@ -183,13 +191,11 @@ export async function getListings({
       : {}),
   };
 
-
-  // si géoloc définie
   let listings: ListingCard[] = [];
   let total = 0;
 
+  // 🌍 GEO MODE
   if (geoLat != null && geoLng != null && geoRadiusKm != null) {
-    // récupérer toutes les annonces qui matchent les autres filtres
     const allListings = await prisma.listing.findMany({
       where,
       select: {
@@ -197,7 +203,10 @@ export async function getListings({
         title: true,
         price: true,
         priceUnit: true,
-        location: { select: { lat: true, lng: true, city: true, department: true, region: true } },
+        createdAt: true,
+        location: {
+          select: { lat: true, lng: true, city: true, department: true, region: true },
+        },
         category: { select: { slug: true } },
         subCategory: { select: { slug: true } },
         images: { take: 1, select: { url: true, altText: true } },
@@ -214,18 +223,22 @@ export async function getListings({
       },
     });
 
-    // filtrer par rayon
-    const filtered = allListings.filter((l) => {
-      if (!l.location.lat || !l.location.lng) return false;
-      const d = distanceKm(geoLat, geoLng, l.location.lat, l.location.lng);
-      return d <= geoRadiusKm;
-    });
+    const filtered = allListings
+      .map((l) => {
+        if (!l.location.lat || !l.location.lng) return null;
+        const d = distanceKm(geoLat, geoLng, l.location.lat, l.location.lng);
+        if (d > geoRadiusKm) return null;
+        return { ...l, distance: d };
+      })
+      .filter(Boolean)
+      .sort((a, b) => a!.distance! - b!.distance!);
 
     total = filtered.length;
     listings = filtered.slice(skip, skip + pageSize);
   } else {
-    // sans géoloc
+    // 📦 NORMAL MODE
     total = await prisma.listing.count({ where });
+
     listings = await prisma.listing.findMany({
       where,
       skip,
@@ -241,6 +254,9 @@ export async function getListings({
         title: true,
         price: true,
         priceUnit: true,
+        location: {
+          select: { lat: true, lng: true, city: true, department: true, region: true },
+        },
         category: { select: { slug: true } },
         subCategory: { select: { slug: true } },
         images: { take: 1, select: { url: true, altText: true } },
@@ -254,7 +270,6 @@ export async function getListings({
             _count: { select: { listings: true } },
           },
         },
-        location: { select: { lat: true, lng: true, city: true, department: true, region: true } },
       },
     });
   }
@@ -265,13 +280,10 @@ export async function getListings({
   };
 }
 
-
-export type GetListingsResult = Awaited<
-  ReturnType<typeof getListings>
->;
-
+export type GetListingsResult = Awaited<ReturnType<typeof getListings>>;
 export type ListingFromGetListings =
   GetListingsResult["listings"][number];
+
 
 
 

@@ -1,5 +1,6 @@
 import React from "react";
 
+import { CategoryFilter } from "@/components/categories/CategoryFilter";
 import GeoSearch from "@/components/geo/GeoSearch";
 
 import { PriceRangeFilter } from "./PriceFilter";
@@ -9,6 +10,7 @@ const SearchContent = () => {
     <div>
       <GeoSearch />
       <PriceRangeFilter />
+      <CategoryFilter />
     </div>
   );
 };
