@@ -126,7 +126,7 @@ export function NavSearchbar() {
   return (
     <div
       ref={containerRef}
-      className="relative w-full max-w-xl lg:max-w-2xl"
+      className="relative w-full max-w-xl "
     >
       {/* Search icon */}
       <SearchIcon className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
