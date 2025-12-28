@@ -1,11 +1,10 @@
 "use client";
 
-import { SearchIcon } from "lucide-react";
+import { SearchIcon, XIcon } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { getListings } from "@/actions/listing-actions";
-import { cn } from "@/lib/utils";
 
 type Suggestion = {
   id: string;
@@ -34,7 +33,7 @@ export function NavSearchbar() {
     }
   }, [searchParams, isSearchPage]);
 
-  /* ------------------ SEARCH PAGE MODE ------------------ */
+  /* ------------------ SEARCH PAGE MODE (debounce) ------------------ */
   useEffect(() => {
     if (!isSearchPage) return;
 
@@ -55,7 +54,7 @@ export function NavSearchbar() {
     }, 400);
 
     return () => clearTimeout(t);
-  }, [value, isSearchPage]);
+  }, [value, isSearchPage, searchParams, router]);
 
   /* ------------------ SUGGESTIONS MODE ------------------ */
   useEffect(() => {
@@ -95,22 +94,44 @@ export function NavSearchbar() {
         setOpen(false);
       }
     };
+
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
-  /* ------------------ SUBMIT ------------------ */
+  /* ------------------ ACTIONS ------------------ */
   const submitSearch = (q: string) => {
     if (!q.trim()) return;
     router.push(`/search?query=${encodeURIComponent(q.trim())}`);
     setOpen(false);
   };
 
+  const resetSearch = () => {
+    setValue("");
+    setSuggestions([]);
+    setOpen(false);
+
+    if (isSearchPage) {
+      const params = new URLSearchParams(searchParams.toString());
+      params.delete("query");
+      params.delete("page");
+
+      router.push(`/search?${params.toString()}`, {
+        scroll: false,
+      });
+    }
+  };
+
   /* ------------------ UI ------------------ */
   return (
-    <div ref={containerRef} className="relative w-full max-w-md">
+    <div
+      ref={containerRef}
+      className="relative w-full max-w-xl lg:max-w-2xl"
+    >
+      {/* Search icon */}
       <SearchIcon className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
 
+      {/* Input */}
       <input
         value={value}
         onChange={(e) => {
@@ -124,8 +145,19 @@ export function NavSearchbar() {
           }
         }}
         placeholder="Rechercher sur Lokko"
-        className="bg-background focus:ring-primary h-11 w-full rounded-md border pr-3 pl-9 text-sm focus:ring-2 focus:outline-none"
+        className="bg-background focus:ring-primary h-11 w-full rounded-md border pr-10 pl-9 text-sm focus:ring-2 focus:outline-none"
       />
+
+      {/* Reset button */}
+      {value && (
+        <button
+          type="button"
+          onClick={resetSearch}
+          className="text-muted-foreground hover:text-foreground absolute top-1/2 right-3 -translate-y-1/2"
+        >
+          <XIcon className="h-4 w-4" />
+        </button>
+      )}
 
       {/* ------------------ SUGGESTIONS ------------------ */}
       {!isSearchPage && open && (

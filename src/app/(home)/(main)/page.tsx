@@ -8,15 +8,15 @@ import Pub from "@/components/Pub";
 export default async function Home() {
   const categories = await getCategories();
   const fruits = await getListings({
-    categorySlug: "fruits-legumes"
+    category: "fruits-legumes"
   });
 
   const bakery = await getListings({
-    categorySlug: "jardin-plants"
+    category: "jardin-plants"
   });
 
     const eggs = await getListings({
-    subCategorySlug: "oeufs"
+    subCategory: "oeufs"
   });
 
 
