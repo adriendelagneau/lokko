@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { useSidebarStore } from "@/lib/store/useSidebarStore";
 
 import { AuthButton } from "./auth-button";
+import { NavSearchbar } from "./NavSearchbar";
 
 // import { ThemeToggleCircle } from "@/components/providers/ThemeToggleWrapper";
 
@@ -26,7 +27,7 @@ export const HomeNavbar = () => {
         {/* <SidebarTrigger className="lg:hidden" /> */}
         {/* Title */}
         <Link href={"/"}>
-          <h1 className="text-primary font-poppins top-1/2 -translate-y-1/2 absolute left-1/2 -translate-x-1/2 text-3xl font-semibold lg:static lg:mx-0 lg:translate-x-0 lg:top-0 lg:translate-y-0">
+          <h1 className="text-primary font-poppins absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-3xl font-semibold lg:static lg:top-0 lg:mx-0 lg:translate-x-0 lg:translate-y-0">
             Lokko
           </h1>
         </Link>
@@ -45,12 +46,13 @@ export const HomeNavbar = () => {
 
         {/* Search Bar */}
         <div className="relative hidden items-center lg:flex">
-          <SearchCheckIcon className="text-muted-foreground absolute left-3 h-5 w-5" />
+          <NavSearchbar />
+          {/* <SearchCheckIcon className="text-muted-foreground absolute left-3 h-5 w-5" />
           <input
             type="search"
             placeholder="Rechercher sur Lokko"
             className="bg-background focus:ring-primary h-11 w-96 rounded-md border pr-4 pl-10 text-sm focus:ring-2 focus:outline-none"
-          />
+          /> */}
         </div>
 
         {/* Icons */}
