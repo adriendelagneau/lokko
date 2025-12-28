@@ -135,8 +135,8 @@ function distanceKm(lat1: number, lng1: number, lat2: number, lng2: number) {
   const a =
     Math.sin(dLat / 2) ** 2 +
     Math.cos((lat1 * Math.PI) / 180) *
-    Math.cos((lat2 * Math.PI) / 180) *
-    Math.sin(dLng / 2) ** 2;
+      Math.cos((lat2 * Math.PI) / 180) *
+      Math.sin(dLng / 2) ** 2;
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   return R * c;
 }
@@ -183,11 +183,11 @@ export async function getListings({
 
     ...(priceMin != null || priceMax != null
       ? {
-        price: {
-          ...(priceMin != null ? { gte: priceMin } : {}),
-          ...(priceMax != null ? { lte: priceMax } : {}),
-        },
-      }
+          price: {
+            ...(priceMin != null ? { gte: priceMin } : {}),
+            ...(priceMax != null ? { lte: priceMax } : {}),
+          },
+        }
       : {}),
   };
 
@@ -247,8 +247,8 @@ export async function getListings({
         orderBy === "priceAsc"
           ? { price: "asc" }
           : orderBy === "priceDesc"
-            ? { price: "desc" }
-            : { createdAt: "desc" },
+          ? { price: "desc" }
+          : { createdAt: "desc" },
       select: {
         id: true,
         title: true,

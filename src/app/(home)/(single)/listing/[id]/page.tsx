@@ -30,11 +30,11 @@ export default async function ListingPage({ params }: Props) {
   if (!listing) return <div>Annonce introuvable</div>;
 
   const fruits = await getListings({
-    categorySlug: "fruits-legumes",
+    category: "fruits-legumes",
   });
 
   const eggs = await getListings({
-    subCategorySlug: "oeufs",
+    subCategory: "oeufs",
   });
 
   const breadcrumbItems = [

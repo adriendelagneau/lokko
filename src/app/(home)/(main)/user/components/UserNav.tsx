@@ -23,8 +23,8 @@ export function SidebarNav() {
   const pathname = usePathname();
 
   return (
-    <aside className=" p-4">
-      <h2 className="my-8 text-xl font-semibold">Mon compte</h2>
+    <aside className=" p-4 flex items-center gap-4">
+      <h2 className="my-8 text-xl font-semibold">Mon compte :</h2>
       <nav className="flex  gap-2">
         {navItems.map((item) => {
           const isActive = pathname.startsWith(item.href);
@@ -33,7 +33,7 @@ export function SidebarNav() {
               <Button
                 variant={isActive ? "default" : "ghost"}
                 className={cn(
-                  "w-full justify-start",
+                  "w-full justify-start text-md",
                   isActive && "bg-primary text-background"
                 )}
               >

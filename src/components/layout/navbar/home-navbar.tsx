@@ -57,19 +57,25 @@ export const HomeNavbar = () => {
 
         {/* Icons */}
         <div className="hidden text-sm lg:flex lg:gap-5">
-          <div className="hover:text-primary flex cursor-pointer flex-col items-center justify-center transition-colors">
-            <BellRingIcon size={20} />
-            <p>Recherches</p>
-          </div>
+          <Link href={"/user/search"}>
+            <div className="hover:text-primary flex cursor-pointer flex-col items-center justify-center transition-colors">
+              <BellRingIcon size={20} />
+              <p>Recherches</p>
+            </div>
+          </Link>
+          <Link href={"/user/bookmark"}>
           <div className="hover:text-primary flex cursor-pointer flex-col items-center justify-center transition-colors">
             <HeartIcon size={20} />
             <p>Favoris</p>
           </div>
-          <div className="hover:text-primary relative flex cursor-pointer flex-col items-center justify-center transition-colors">
-            <MessageCircleIcon size={20} />
-            <p>Messages</p>
-            <div className="bg-primary absolute -top-1 right-5 h-3 w-3 rounded-full"></div>
-          </div>
+          </Link>
+          <Link href={"/user/conversation"}>
+            <div className="hover:text-primary relative flex cursor-pointer flex-col items-center justify-center transition-colors">
+              <MessageCircleIcon size={20} />
+              <p>Messages</p>
+              <div className="bg-primary absolute -top-1 right-5 h-3 w-3 rounded-full"></div>
+            </div>
+          </Link>
           {/* <div className="hover:text-primary flex cursor-pointer flex-col items-center justify-center transition-colors">
             <UserIcon size={20} />
             <p>User</p>

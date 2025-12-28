@@ -33,9 +33,6 @@ export async function getUserRole() {
 export async function getUsers() {
     try {
         const users = await prisma.user.findMany({
-            where: {
-                author: null, // only users who aren't already authors
-            },
             select: {
                 id: true,
                 email: true,
@@ -48,4 +45,69 @@ export async function getUsers() {
         console.error("Error fetching users:", error);
         return [];
     }
+}
+
+/******************* */
+
+
+export async function getUserConversations() {
+
+    const user = await getUser();
+    if (!user) {
+        throw new Error("Unauthorized");
+    }
+    
+    const userId = user.id;
+    const conversations = await prisma.conversation.findMany({
+        where: {
+            OR: [
+                { contactUserId: userId },
+                { participants: { some: { userId } } },
+            ],
+        },
+        include: {
+            listing: {
+                select: {
+                    id: true,
+                    title: true,
+                    price: true,
+                    images: { take: 1, select: { url: true, altText: true } },
+                },
+            },
+            contactUser: {
+                select: {
+                    id: true,
+                    name: true,
+                    image: true,
+                },
+            },
+            participants: {
+                where: { userId: { not: userId } }, // get the other participant
+                select: {
+                    user: {
+                        select: {
+                            id: true,
+                            name: true,
+                            image: true,
+                        },
+                    },
+                },
+            },
+            messages: {
+                orderBy: { createdAt: "desc" },
+                take: 1, // last message
+                select: {
+                    id: true,
+                    content: true,
+                    createdAt: true,
+                    senderId: true,
+                },
+            },
+        },
+        orderBy: {
+            updatedAt: "desc",
+        },
+    });
+
+    return conversations;
 }
