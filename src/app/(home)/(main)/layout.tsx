@@ -1,5 +1,6 @@
 import { AppSidebar } from "@/components/layout/sidebar/AppSidebar";
 
+
 import { Footer } from "../../../components/layout/footer/footer";
 import { HomeNavbar } from "../../../components/layout/navbar/home-navbar";
 
@@ -15,6 +16,7 @@ export default async function HomeLayout({
       <HomeNavbar />
       <div className="flex">
         <AppSidebar />
+
         <main className="mx-auto min-h-screen w-full max-w-6xl flex-1 pt-20">
           {children}
         </main>

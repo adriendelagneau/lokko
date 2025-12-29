@@ -21,6 +21,8 @@ export function ListingUserInfo({ listing }: Props) {
   const { open } = useModalStore();
   const [loading, setLoading] = useState(false);
 
+  const { openModal } = useModalStore();
+
   const {
     data: session,
     isPending, //loading state
@@ -29,27 +31,14 @@ export function ListingUserInfo({ listing }: Props) {
   } = authClient.useSession();
 
   const currentUserId = session?.user?.id || "";
+  
   const handleContactClick = async () => {
-    setLoading(true);
-    try {
-      const data = await getContactModalData(listing.id);
+    const data = await getContactModalData(listing.id);
 
-      open(
-        <ContactSellerModal
-          data={data}
-          currentUserId={currentUserId}
-          onSend={async (message) => {
-            // Here call your sendMessage server action
-            // await sendMessage({ listingId: listing.id, content: message });
-          }}
-          open={true}
-          onOpenChange={() => {}}
-        />,
-        { title: "Contacter le vendeur", size: "md" }
-      );
-    } finally {
-      setLoading(false);
-    }
+    openModal("contact-seller", {
+      data,
+      listingId: listing.id,
+    });
   };
 
   return (

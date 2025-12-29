@@ -1,22 +1,29 @@
+// lib/store/useModalStore.ts
 import { create } from "zustand";
 
-interface ModalOptions {
-  title?: string;             // Optional title for modal header
-  size?: "sm" | "md" | "lg";  // Optional modal size
-}
+export type ModalView =
+  | null
+  | "contact-seller"
+  | "login"
+  | "confirm";
 
-interface ModalState {
-  isOpen: boolean;
-  content: React.ReactNode | null;
-  options?: ModalOptions;
-  open: (content: React.ReactNode, options?: ModalOptions) => void;
-  close: () => void;
-}
+type ModalState = {
+  open: boolean;
+  view: ModalView;
+  data?: unknown;
+
+  openModal: (view: ModalView, data?: unknown) => void;
+  closeModal: () => void;
+};
 
 export const useModalStore = create<ModalState>((set) => ({
-  isOpen: false,
-  content: null,
-  options: undefined,
-  open: (content, options) => set({ isOpen: true, content, options }),
-  close: () => set({ isOpen: false, content: null, options: undefined }),
+  open: false,
+  view: null,
+  data: undefined,
+
+  openModal: (view, data) =>
+    set({ open: true, view, data }),
+
+  closeModal: () =>
+    set({ open: false, view: null, data: undefined }),
 }));
