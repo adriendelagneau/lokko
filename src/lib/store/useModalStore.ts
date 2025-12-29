@@ -1,29 +1,51 @@
 // lib/store/useModalStore.ts
+"use client";
+
 import { create } from "zustand";
 
+import type { GetContactModalDataResult } from "@/actions/messages-actioons";
+
 export type ModalView =
-  | null
   | "contact-seller"
   | "login"
   | "confirm";
 
+export type ModalDataMap = {
+  "contact-seller": {
+    listingId: string;
+    data: GetContactModalDataResult;
+  };
+  "login": {
+    redirectTo?: string;
+  };
+  "confirm": {
+    title: string;
+    description?: string;
+    onConfirm: () => void;
+  };
+};
+
 type ModalState = {
   open: boolean;
-  view: ModalView;
-  data?: unknown;
+  view: ModalView | null;
+  data: ModalDataMap[ModalView] | null;
 
-  openModal: (view: ModalView, data?: unknown) => void;
+  openModal: <T extends ModalView>(
+    view: T,
+    data: ModalDataMap[T]
+  ) => void;
+
   closeModal: () => void;
 };
 
 export const useModalStore = create<ModalState>((set) => ({
   open: false,
   view: null,
-  data: undefined,
+  data: null,
 
   openModal: (view, data) =>
     set({ open: true, view, data }),
 
   closeModal: () =>
-    set({ open: false, view: null, data: undefined }),
+    set({ open: false, view: null, data: null }),
 }));

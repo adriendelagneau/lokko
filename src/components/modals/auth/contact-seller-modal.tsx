@@ -1,6 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Dialog } from "@radix-ui/react-dialog";
 import { formatDistanceToNow } from "date-fns";
 import { useTransition } from "react";
 import { useForm } from "react-hook-form";
@@ -9,49 +10,41 @@ import type {
   GetContactModalDataResult,
   ContactModalMessage,
 } from "@/actions/messages-actioons";
+import { sendMessage } from "@/actions/messages-actioons"; // ✅ server action
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { DialogTitle } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import {
   sendMessageSchema,
   SendMessageInput,
 } from "@/lib/schemas/messsagesSchemas";
+import { useModalStore } from "@/lib/store/useModalStore";
 
 /* ============================================================
    PROPS
 ============================================================ */
 
 type Props = {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
   data: GetContactModalDataResult;
-  onSend: (content: string) => Promise<void>;
 };
 
 /* ============================================================
-   COMPONENT
+COMPONENT
 ============================================================ */
 
-export function ContactSellerModal({
-  open,
-  onOpenChange,
-  data,
-  onSend,
-}: Props) {
+type SendMessageInputForForm = Omit<SendMessageInput, "listingId">;
+
+export function ContactSellerModal({ data }: Props) {
+  const { closeModal } = useModalStore();
   const [isPending, startTransition] = useTransition();
 
-  const form = useForm<SendMessageInput>({
-    resolver: zodResolver(sendMessageSchema),
-    defaultValues: {
-      content: "",
-    },
-  });
+
+const form = useForm<SendMessageInputForForm>({
+  resolver: zodResolver(sendMessageSchema.pick({ content: true })),
+  defaultValues: { content: "" },
+});
+
 
   const {
     register,
@@ -60,20 +53,24 @@ export function ContactSellerModal({
     formState: { errors },
   } = form;
 
+  console.log(errors);
   const handleSend = handleSubmit((values) => {
     startTransition(async () => {
-      await onSend(values.content);
+      console.log("sending");
+      await sendMessage({
+        listingId: data.listing.id,
+        content: values.content,
+      });
+
       reset();
+      // optional: refresh messages / router.refresh()
     });
   });
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-lg">
-        <DialogHeader>
-          <DialogTitle>Contacter le vendeur</DialogTitle>
-        </DialogHeader>
-
+    <>
+      <DialogTitle>Contacter le vendeur</DialogTitle>
+      <div className="space-y-4 mt-8">
         {/* ---------------- LISTING RECAP ---------------- */}
         <div className="flex gap-3 border-b pb-4">
           {data.listing.image && (
@@ -92,7 +89,7 @@ export function ContactSellerModal({
         </div>
 
         {/* ---------------- SELLER ---------------- */}
-        <div className="flex items-center gap-3 pt-4">
+        <div className="flex items-center gap-3">
           <Avatar>
             <AvatarImage src={data.seller.image ?? undefined} />
             <AvatarFallback>{data.seller.name?.[0] ?? "U"}</AvatarFallback>
@@ -101,8 +98,8 @@ export function ContactSellerModal({
         </div>
 
         {/* ---------------- EXISTING MESSAGES ---------------- */}
-        {data.conversation && data.conversation.messages.length > 0 && (
-          <div className="mt-4 max-h-48 space-y-3 overflow-y-auto rounded-md border p-3">
+        {data.conversation?.messages.length > 0 && (
+          <div className="max-h-48 space-y-3 overflow-y-auto rounded-md border p-3">
             {[...data.conversation.messages]
               .reverse()
               .map((msg: ContactModalMessage) => {
@@ -111,9 +108,7 @@ export function ContactSellerModal({
                 return (
                   <div
                     key={msg.id}
-                    className={`flex ${
-                      isMine ? "justify-end" : "justify-start"
-                    }`}
+                    className={`flex ${isMine ? "justify-end" : "justify-start"}`}
                   >
                     <div
                       className={`max-w-[80%] rounded-lg px-3 py-2 text-sm ${
@@ -136,7 +131,7 @@ export function ContactSellerModal({
         )}
 
         {/* ---------------- FORM ---------------- */}
-        <form onSubmit={handleSend} className="mt-4 space-y-3">
+        <form onSubmit={handleSend} className="space-y-3">
           <Textarea
             placeholder="Écrire un message..."
             {...register("content")}
@@ -147,13 +142,9 @@ export function ContactSellerModal({
           )}
 
           <div className="flex justify-end gap-2">
-            <Button
-              type="button"
-              variant="ghost"
-              onClick={() => onOpenChange(false)}
-            >
+            {/* <Button type="button" variant="ghost" onClick={closeModal}>
               Annuler
-            </Button>
+            </Button> */}
             <Button type="submit" disabled={isPending}>
               Envoyer
             </Button>
@@ -162,7 +153,7 @@ export function ContactSellerModal({
 
         {/* ---------------- CTA FULL CONVERSATION ---------------- */}
         {data.conversation && (
-          <div className="mt-2 text-center">
+          <div className="pt-2 text-center">
             <Button variant="link" asChild>
               <a href={`/user/conversation/${data.conversation.id}`}>
                 Voir toute la conversation →
@@ -170,7 +161,7 @@ export function ContactSellerModal({
             </Button>
           </div>
         )}
-      </DialogContent>
-    </Dialog>
+      </div>
+    </>
   );
 }

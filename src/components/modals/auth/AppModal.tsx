@@ -19,14 +19,8 @@ export function AppModal() {
   return (
     <Dialog open={open} onOpenChange={closeModal}>
       <DialogContent className="max-w-lg">
-        {view === "contact-seller" && (
-          <>
-            <DialogHeader>
-              <DialogTitle>Contacter le vendeur</DialogTitle>
-            </DialogHeader>
-
-            {/* <ContactSellerModal {...(data as any)} /> */}
-          </>
+              {view === "contact-seller" && (
+          <ContactSellerModal {...data!} />
         )}
 
         {view === "login" && <div>Login modal</div>}
