@@ -1,5 +1,5 @@
 "use client";
-
+import { Suspense } from "react";
 import {
   BellRingIcon,
   HeartIcon,
@@ -44,7 +44,9 @@ export const HomeNavbar = () => {
 
         {/* Search Bar */}
         <div className="relative hidden items-center lg:flex">
-          <NavSearchbar />
+          <Suspense fallback={<div></div>}>
+            <NavSearchbar />
+          </Suspense>
         </div>
 
         {/* Icons */}
