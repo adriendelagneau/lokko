@@ -5,11 +5,11 @@ import ListingWizardForm from "@/components/wizzard/listingWizardForm/ListingWiz
 const page = async () => {
   const categories = (await getCategories()) ?? []; // ✅ ensure array
   return (
-    <div>
-      <Suspense fallback={<>...</>}>
+    <Suspense fallback={<>...</>}>
+      <div>
         <ListingWizardForm categories={categories} />
-      </Suspense>
-    </div>
+      </div>
+    </Suspense>
   );
 };
 
