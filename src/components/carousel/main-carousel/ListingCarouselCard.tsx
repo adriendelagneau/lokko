@@ -5,14 +5,18 @@ import Image from "next/image";
 import Link from "next/link";
 import { useTimeAgo } from "next-timeago";
 
-import { ListingCard } from "@/actions/listing-actions";
+import { ListingFromGetListings } from "@/actions/listing-actions";
 import { Badge } from "@/components/ui/badge";
 
-type Props = { listing: ListingCard };
+type Props = { listing: ListingFromGetListings };
 
 export function ListingCarouselCard({ listing }: Props) {
-  const image = listing.images[0];
   const { TimeAgo } = useTimeAgo();
+  if (!listing) {
+    return null;
+  }
+
+  const image = listing.images[0];
 
 
 

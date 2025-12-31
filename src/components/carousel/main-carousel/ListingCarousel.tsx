@@ -2,7 +2,7 @@
 
 import * as React from "react";
 
-import { ListingCard } from "@/actions/listing-actions";
+import { ListingFromGetListings } from "@/actions/listing-actions";
 import {
   Carousel,
   CarouselApi,
@@ -14,7 +14,7 @@ import { cn } from "@/lib/utils";
 import { ListingCarouselCard } from "./ListingCarouselCard";
 
 type ListingCarouselProps = {
-  listings: ListingCard[];
+  listings: ListingFromGetListings[];
 };
 
 export function ListingCarousel({ listings }: ListingCarouselProps) {
@@ -51,7 +51,7 @@ export function ListingCarousel({ listings }: ListingCarouselProps) {
         className="w-full px-10"
       >
         <CarouselContent>
-          {listings.map((listing) => (
+          {listings.map((listing) => listing && (
             <CarouselItem
               key={listing.id}
               className="w-[220px] shrink-0 basis-auto pl-4"

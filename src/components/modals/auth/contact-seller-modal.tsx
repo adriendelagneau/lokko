@@ -1,7 +1,7 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Dialog } from "@radix-ui/react-dialog";
 import { formatDistanceToNow } from "date-fns";
 import { useTransition } from "react";
 import { useForm } from "react-hook-form";
@@ -19,7 +19,7 @@ import {
   sendMessageSchema,
   SendMessageInput,
 } from "@/lib/schemas/messsagesSchemas";
-import { useModalStore } from "@/lib/store/useModalStore";
+
 
 /* ============================================================
    PROPS
@@ -36,15 +36,13 @@ COMPONENT
 type SendMessageInputForForm = Omit<SendMessageInput, "listingId">;
 
 export function ContactSellerModal({ data }: Props) {
-  const { closeModal } = useModalStore();
+
   const [isPending, startTransition] = useTransition();
 
-
-const form = useForm<SendMessageInputForForm>({
-  resolver: zodResolver(sendMessageSchema.pick({ content: true })),
-  defaultValues: { content: "" },
-});
-
+  const form = useForm<SendMessageInputForForm>({
+    resolver: zodResolver(sendMessageSchema.pick({ content: true })),
+    defaultValues: { content: "" },
+  });
 
   const {
     register,
@@ -70,7 +68,7 @@ const form = useForm<SendMessageInputForForm>({
   return (
     <>
       <DialogTitle>Contacter le vendeur</DialogTitle>
-      <div className="space-y-4 mt-8">
+      <div className="mt-8 space-y-4">
         {/* ---------------- LISTING RECAP ---------------- */}
         <div className="flex gap-3 border-b pb-4">
           {data.listing.image && (
@@ -98,7 +96,7 @@ const form = useForm<SendMessageInputForForm>({
         </div>
 
         {/* ---------------- EXISTING MESSAGES ---------------- */}
-        {data.conversation?.messages.length > 0 && (
+        {data.conversation?.messages && data.conversation.messages.length > 0 && (
           <div className="max-h-48 space-y-3 overflow-y-auto rounded-md border p-3">
             {[...data.conversation.messages]
               .reverse()

@@ -21,7 +21,6 @@ export type ImageItem = {
 
 type Props = {
   images: ImageItem[];
-
   likeCount?: number;
 };
 

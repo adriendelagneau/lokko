@@ -19,6 +19,7 @@ export default function ListingsClient() {
   const loadMoreRef = useRef<HTMLDivElement>(null);
 
   // Convertir searchParams en object utilisable par getListings
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const params = Object.fromEntries(searchParams.entries());
 
   const fetchPage = async (pageNum: number, reset = false) => {
@@ -41,12 +42,14 @@ export default function ListingsClient() {
   useEffect(() => {
     setPage(1);
     fetchPage(1, true);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams.toString()]); // attention à stringify pour trigger useEffect
 
   // Quand page change -> fetch page suivante
   useEffect(() => {
     if (page === 1) return; // déjà fetché par le useEffect précédent
     fetchPage(page);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page]);
 
   // Intersection Observer pour infinite scroll
@@ -72,6 +75,7 @@ export default function ListingsClient() {
           ))
         : pages
             .flat()
+            .filter((listing) => listing !== null)
             .map((listing) => (
               <SearchCard key={listing.id} listing={listing} />
             ))}

@@ -83,6 +83,7 @@ export default function StepLocation({ onNext, onPrev }: StepLocationProps) {
     }
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const debouncedFetch = useCallback(debounce(fetchCities, 250), []);
 
   useEffect(() => {

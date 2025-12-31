@@ -1,6 +1,7 @@
 
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
+
 import { ListingDraft } from "@/lib/schemas/listing.schema";
 
 type ListingFormState = {
@@ -18,7 +19,7 @@ export const useListingFormStore = create<ListingFormState>()(
     }),
     {
       name: "listing-form-data",
-      storage: createJSONStorage(() => localStorage), 
+      storage: createJSONStorage(() => localStorage),
     }
   )
 );

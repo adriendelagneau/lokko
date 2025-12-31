@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import L from "leaflet";
+import { useEffect } from "react";
 import { MapContainer, TileLayer, Marker, Circle, useMap } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-import L from "leaflet";
 
 interface LeafletMapProps {
   center: { lat: number; lng: number };
@@ -11,6 +11,7 @@ interface LeafletMapProps {
 }
 
 // Fix des icônes par défaut Leaflet
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 delete (L.Icon.Default as any).prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconRetinaUrl:
@@ -29,22 +30,22 @@ const FitBoundsCircle = ({
 }) => {
   const map = useMap();
 
-useEffect(() => {
-  if (!map) return;
+  useEffect(() => {
+    if (!map) return;
 
-  const point = L.latLng(center.lat, center.lng);
+    const point = L.latLng(center.lat, center.lng);
 
-  // Crée un rectangle correspondant au rayon
-  const bounds = point.toBounds(radius * 1000); // rayon en mètres
+    // Crée un rectangle correspondant au rayon
+    const bounds = point.toBounds(radius * 1000); // rayon en mètres
 
-  // Zoom maximal pour que le rectangle tienne dans 80% de la map
-  const mapSize = map.getSize();
-  const zoom = map.getBoundsZoom(bounds, false); // false = pas de padding
-  const adjustedZoom = zoom - 0.8; // ajustement pour ~80% de la map
+    // Zoom maximal pour que le rectangle tienne dans 80% de la map
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const mapSize = map.getSize();
+    const zoom = map.getBoundsZoom(bounds, false); // false = pas de padding
+    const adjustedZoom = zoom - 0.8; // ajustement pour ~80% de la map
 
-  map.setView([center.lat, center.lng], adjustedZoom);
-}, [center, radius, map]);
-
+    map.setView([center.lat, center.lng], adjustedZoom);
+  }, [center, radius, map]);
 
   return null;
 };
@@ -56,7 +57,7 @@ const LeafletMap = ({ center, radius }: LeafletMapProps) => {
       zoom={13}
       scrollWheelZoom={true}
       className="h-full w-full"
-       zoomControl={false} 
+      zoomControl={false}
     >
       <TileLayer
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

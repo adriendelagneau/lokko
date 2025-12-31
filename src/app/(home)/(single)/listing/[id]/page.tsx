@@ -5,10 +5,10 @@ import {
   ListingSingle,
 } from "@/actions/listing-actions";
 import { BreadcrumbSingle } from "@/components/bread-crump/BreadCrumpSingle";
-import { CategoryCarousel } from "@/components/carousel/category-carousel";
 import { ListingsSection } from "@/components/carousel/main-carousel/ListingSection";
 import Categories from "@/components/categories/Categories";
 import SingleMap from "@/components/map/SingleMap";
+import { getUser } from "@/lib/auth/auth-session";
 
 import ImageModalMobile from "./components/ImageMobileModal";
 import { ImagesModalDesktop } from "./components/ImagesModal";
@@ -19,11 +19,13 @@ import { ListingInfos } from "./components/ListingInfos";
 import { ListingUserInfo } from "./components/ListingUserInfos";
 
 type Props = {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 };
 
 export default async function ListingPage({ params }: Props) {
   const { id } = await params;
+  const user = await getUser();
+  const userId = user?.id || null;
   const listing: ListingSingle | null = await getListingById(id);
   const categories = await getCategories();
 
@@ -72,8 +74,18 @@ export default async function ListingPage({ params }: Props) {
       {/* ================= MOBILE ================= */}
       <div className="flex flex-col gap-6 lg:hidden">
         {/* Images */}
-        <ListingHeaderCarousel images={listing.images} />
-        <ImageModalMobile images={listing.images} />
+        <ListingHeaderCarousel
+          images={listing.images.map((img) => ({
+            ...img,
+            altText: img.altText ?? undefined,
+          }))}
+        />
+        <ImageModalMobile
+          images={listing.images.map((img) => ({
+            ...img,
+            altText: img.altText ?? undefined,
+          }))}
+        />
 
         {/* Infos */}
         <ListingInfos
@@ -97,7 +109,7 @@ export default async function ListingPage({ params }: Props) {
         <SingleMap listing={listing} />
 
         {/* Seller */}
-        <ListingUserInfo listing={listing} />
+        <ListingUserInfo listing={listing} currentUserId={userId || ""} />
         <ListingsSection
           title="Boissons"
           listings={fruits.listings}
@@ -111,12 +123,22 @@ export default async function ListingPage({ params }: Props) {
       </div>
 
       {/* ================= DESKTOP ================= */}
-      <div className="mt-6  hidden gap-8 lg:grid lg:grid-cols-[6fr_2fr]">
+      <div className="mt-6 hidden gap-8 lg:grid lg:grid-cols-[6fr_2fr]">
         {/* LEFT */}
         <div className="flex flex-col gap-6">
           {/* Images */}
-          <ListingImagesDesktop images={listing.images} />
-          <ImagesModalDesktop images={listing.images} />
+          <ListingImagesDesktop
+            images={listing.images.map((img) => ({
+              ...img,
+              altText: img.altText ?? undefined,
+            }))}
+          />
+          <ImagesModalDesktop
+            images={listing.images.map((img) => ({
+              ...img,
+              altText: img.altText ?? undefined,
+            }))}
+          />
 
           {/* Infos */}
           <ListingInfos
@@ -155,9 +177,9 @@ export default async function ListingPage({ params }: Props) {
         </div>
 
         {/* RIGHT */}
-        <div className="flex flex-col gap-6 relative">
+        <div className="relative flex flex-col gap-6">
           <div className="sticky top-22">
-          <ListingUserInfo listing={listing} />
+            <ListingUserInfo listing={listing} currentUserId={userId || ""} />
           </div>
         </div>
       </div>

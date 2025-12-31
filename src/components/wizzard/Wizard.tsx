@@ -34,7 +34,7 @@ export const Wizard = ({ step, onNext, onPrev, categories }: WizardProps) => {
   return (
     <div className="mx-auto max-w-xl p-6">
       <WizardProgress step={step} total={steps.length} />
-      <StepComponent categories={categories} onNext={onNext} onPrev={onPrev} />
+      {categories && <StepComponent categories={categories} onNext={onNext} onPrev={onPrev} />}
     </div>
   );
 };

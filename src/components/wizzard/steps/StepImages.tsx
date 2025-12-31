@@ -137,6 +137,7 @@ export default function StepImages({ onNext, onPrev }: StepImagesProps) {
                     className="rounded-md object-cover"
                   />
                 ) : img.file ? (
+                  // eslint-disable-next-line @next/next/no-img-element
                   <img
                     src={URL.createObjectURL(img.file)}
                     alt=""

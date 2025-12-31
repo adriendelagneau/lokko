@@ -4,6 +4,7 @@ import { nextCookies } from "better-auth/next-js";
 import { magicLink } from "better-auth/plugins";
 
 import { sendEmail } from "@/actions/email-actions";
+
 import prisma from "../prisma/prisma";
 
 
@@ -58,6 +59,7 @@ export const auth = betterAuth({
   user: {
     changeEmail: {
       enabled: true,
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       sendChangeEmailVerification: async ({ user, newEmail, url, token }, request) => {
         try {
           const username = user.email.split("@")[0]; // or user.name if available

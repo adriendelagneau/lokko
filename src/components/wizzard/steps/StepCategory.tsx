@@ -29,7 +29,7 @@ export default function StepCategory({
   onNext,
   onPrev,
 }: StepCategoryProps) {
-  const { register, watch, setValue, trigger, formState, clearErrors } =
+  const {  watch, setValue, trigger, formState, clearErrors } =
     useFormContext<ListingDraft>();
 
   const categoryId = watch("categoryId");

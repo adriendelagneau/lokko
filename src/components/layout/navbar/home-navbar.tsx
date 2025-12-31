@@ -7,19 +7,16 @@ import {
   MessageCircleIcon,
   SearchCheckIcon,
   SquarePlusIcon,
-  UserIcon,
+  UserRoundIcon,
 } from "lucide-react";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
+import { useModalStore } from "@/lib/store/useModalStore";
 import { useSidebarStore } from "@/lib/store/useSidebarStore";
 
-import { AuthButton } from "./auth-button";
-import { NavSearchbar } from "./NavSearchbar";
-
-// import { ThemeToggleCircle } from "@/components/providers/ThemeToggleWrapper";
-
 export const HomeNavbar = () => {
+  const { openModal } = useModalStore();
   const { openSidebar } = useSidebarStore();
   return (
     <div className="bg-background flex-row-center fixed top-0 left-0 z-30 h-10 w-full items-center border-b px-4 py-10 shadow-sm lg:h-16 lg:px-8">
@@ -46,7 +43,15 @@ export const HomeNavbar = () => {
 
         {/* Search Bar */}
         <div className="relative hidden items-center lg:flex">
-          <NavSearchbar />
+          {/* <NavSearchbar /> */}
+          <search className="bg-background focus:ring-primary h-11 w-96 rounded-md border pr-4 pl-10 text-sm focus:ring-2 focus:outline-none flex items-center">
+            <SearchCheckIcon className="text-muted-foreground absolute left-3 h-5 w-5" />
+            <input
+              type="search"
+              placeholder="Rechercher sur Lokko"
+              className="bg-background focus:ring-primary h-11 w-96 rounded-md border pr-4 pl-10 text-sm focus:ring-2 focus:outline-none"
+            />
+          </search>
           {/* <SearchCheckIcon className="text-muted-foreground absolute left-3 h-5 w-5" />
           <input
             type="search"
@@ -64,10 +69,10 @@ export const HomeNavbar = () => {
             </div>
           </Link>
           <Link href={"/user/bookmark"}>
-          <div className="hover:text-primary flex cursor-pointer flex-col items-center justify-center transition-colors">
-            <HeartIcon size={20} />
-            <p>Favoris</p>
-          </div>
+            <div className="hover:text-primary flex cursor-pointer flex-col items-center justify-center transition-colors">
+              <HeartIcon size={20} />
+              <p>Favoris</p>
+            </div>
           </Link>
           <Link href={"/user/conversation"}>
             <div className="hover:text-primary relative flex cursor-pointer flex-col items-center justify-center transition-colors">
@@ -80,7 +85,15 @@ export const HomeNavbar = () => {
             <UserIcon size={20} />
             <p>User</p>
           </div> */}
-          <AuthButton />
+          {/* <AuthButton /> */}
+
+          <button
+            onClick={() => openModal("login")}
+            className="hover:text-primary flex cursor-pointer flex-col items-center justify-center transition-colors"
+          >
+            <UserRoundIcon size={20} />
+            <p>connexion</p>
+          </button>
         </div>
       </div>
     </div>

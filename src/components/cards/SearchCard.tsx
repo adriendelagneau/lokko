@@ -8,6 +8,10 @@ type SearchCardProps = {
 };
 
 const SearchCard = ({ listing }: SearchCardProps) => {
+  if (!listing) {
+    return null;
+  }
+
   const image = listing.images?.[0];
 
   return (

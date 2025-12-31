@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-expressions */
 "use client";
 
 import * as Slider from "@radix-ui/react-slider";
@@ -22,6 +23,7 @@ export const PriceRangeFilter = () => {
   // Sync URL → state (back / forward)
   useEffect(() => {
     setValue([initialMin, initialMax]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams.toString()]);
 
   const commitToUrl = ([min, max]: [number, number]) => {

@@ -14,6 +14,7 @@ export async function POST(req: NextRequest) {
     const buffer = Buffer.from(arrayBuffer);
 
     try {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const result = await cloudinary.uploader.upload_stream(
             { folder: "listings" },
             (error, result) => {

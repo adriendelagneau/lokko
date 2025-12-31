@@ -1,12 +1,13 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import React, { useEffect, useMemo, useState } from "react";
 import { geoCentroid } from "d3-geo";
-import { ComposableMap, Geographies, Geography } from "react-simple-maps";
+import { ArrowLeftIcon } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
+import React, { useEffect, useMemo, useState } from "react";
+import { ComposableMap, Geographies, Geography } from "react-simple-maps";
 
 import { DEPT_TO_REGION } from "@/data/dptToRegion";
-import { ArrowLeftIcon } from "lucide-react";
 
 /* =======================
    DATA URLS
@@ -45,8 +46,12 @@ export default function FranceMap() {
      LOAD DATA
   ======================= */
   useEffect(() => {
-    fetch(REGIONS_URL).then(r => r.json()).then(setRegions);
-    fetch(DEPTS_URL).then(r => r.json()).then(setDepartments);
+    fetch(REGIONS_URL)
+      .then((r) => r.json())
+      .then(setRegions);
+    fetch(DEPTS_URL)
+      .then((r) => r.json())
+      .then(setDepartments);
   }, []);
 
   /* =======================
@@ -158,8 +163,8 @@ export default function FranceMap() {
   return (
     <div>
       {level === "department" && (
-        <button onClick={back} className="flex items-center mb-2">
-          <ArrowLeftIcon className="w-4 h-4 mr-2" />
+        <button onClick={back} className="mb-2 flex items-center">
+          <ArrowLeftIcon className="mr-2 h-4 w-4" />
           Back
         </button>
       )}
@@ -174,7 +179,7 @@ export default function FranceMap() {
         {level === "region" && (
           <Geographies geography={regions}>
             {({ geographies }) =>
-              geographies.map(g => (
+              geographies.map((g) => (
                 <Geography
                   key={g.rsmKey}
                   geography={g}
@@ -192,11 +197,11 @@ export default function FranceMap() {
             {({ geographies }) =>
               geographies
                 .filter(
-                  g =>
+                  (g) =>
                     DEPT_TO_REGION[g.properties.code] ===
                     selectedRegion.properties.code
                 )
-                .map(g => (
+                .map((g) => (
                   <Geography
                     key={g.rsmKey}
                     geography={g}

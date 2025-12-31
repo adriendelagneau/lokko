@@ -3,25 +3,16 @@
 
 import { create } from "zustand";
 
-import type { GetContactModalDataResult } from "@/actions/messages-actioons";
-
-export type ModalView =
-  | "contact-seller"
-  | "login"
-  | "confirm";
+export type ModalView = "login" | "contact-seller";
 
 export type ModalDataMap = {
-  "contact-seller": {
-    listingId: string;
-    data: GetContactModalDataResult;
-  };
-  "login": {
+  login: {
     redirectTo?: string;
   };
-  "confirm": {
-    title: string;
-    description?: string;
-    onConfirm: () => void;
+  "contact-seller": {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    data: any;
+    listingId: string;
   };
 };
 
@@ -32,7 +23,7 @@ type ModalState = {
 
   openModal: <T extends ModalView>(
     view: T,
-    data: ModalDataMap[T]
+    data?: ModalDataMap[T]
   ) => void;
 
   closeModal: () => void;
@@ -44,8 +35,16 @@ export const useModalStore = create<ModalState>((set) => ({
   data: null,
 
   openModal: (view, data) =>
-    set({ open: true, view, data }),
+    set({
+      open: true,
+      view,
+      data: data ?? null,
+    }),
 
   closeModal: () =>
-    set({ open: false, view: null, data: null }),
+    set({
+      open: false,
+      view: null,
+      data: null,
+    }),
 }));

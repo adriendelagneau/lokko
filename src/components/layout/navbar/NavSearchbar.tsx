@@ -74,7 +74,7 @@ export function NavSearchbar() {
         });
 
         setSuggestions(
-          res.listings.map((l) => ({
+          res.listings.filter((l) => l !== null).map((l) => ({
             id: l.id,
             title: l.title,
           }))

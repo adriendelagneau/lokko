@@ -1,14 +1,14 @@
 import { MoveRightIcon } from "lucide-react";
 import Link from "next/link";
 
-import { ListingCard } from "@/actions/listing-actions";
+import { ListingFromGetListings } from "@/actions/listing-actions";
 import { Button } from "@/components/ui/button";
 
 import { ListingCarousel } from "./ListingCarousel";
 
 type Props = {
   title: string;
-  listings: ListingCard[];
+  listings: ListingFromGetListings[];
   href: string;
 };
 

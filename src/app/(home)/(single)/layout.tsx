@@ -4,7 +4,6 @@ import { SidebarProvider } from "@/components/ui/sidebar";
 
 import { Footer } from "../../../components/layout/footer/footer";
 import { HomeNavbar } from "../../../components/layout/navbar/home-navbar";
-import { HomeSidebar } from "../../../components/layout/sidebar/hoeme-sidebar";
 
 export default async function HomeLayout({
   children,

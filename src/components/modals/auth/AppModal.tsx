@@ -4,8 +4,7 @@
 import {
   Dialog,
   DialogContent,
-  DialogHeader,
-  DialogTitle,
+
 } from "@/components/ui/dialog";
 import { useModalStore } from "@/lib/store/useModalStore";
 
@@ -19,8 +18,8 @@ export function AppModal() {
   return (
     <Dialog open={open} onOpenChange={closeModal}>
       <DialogContent className="max-w-lg">
-              {view === "contact-seller" && (
-          <ContactSellerModal {...data!} />
+              {view === "contact-seller" && data && "data" in data && (
+          <ContactSellerModal data={data.data} />
         )}
 
         {view === "login" && <div>Login modal</div>}

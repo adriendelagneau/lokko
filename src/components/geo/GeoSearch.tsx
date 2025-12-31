@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
 import debounce from "lodash.debounce";
@@ -87,6 +88,7 @@ export default function GeoSearch() {
       setIsGeoLocated(true);
       setGeoStatus("success");
     }
+
   }, []);
 
   /* ---------------- Commune autocomplete ---------------- */

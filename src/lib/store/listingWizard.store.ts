@@ -7,6 +7,7 @@ type WizardState = {
   setStep: (step: number) => void;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const useListingWizard = create<WizardState>((set, get) => ({
   step: 0,
   next: () =>

@@ -3,12 +3,10 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { MailIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
-import React from "react";
 import { useForm } from "react-hook-form";
 import { FaGithub } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import { toast } from "sonner";
-import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -21,6 +19,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { authClient } from "@/lib/auth/auth-client";
+import { useModalStore } from "@/lib/store/useModalStore";
 import {
   MagicLinkSignInSchema,
   MagicLinkSignInSchemaType,
@@ -29,14 +28,21 @@ import {
 import FormError from "./form-error";
 import SocialButton from "./social-button";
 
-// Schema
+/* ============================================================
+   COMPONENT
+============================================================ */
 
 export const SignInView = () => {
   const router = useRouter();
+  const { data, closeModal } = useModalStore();
+
+  const redirectTo = (data && "redirectTo" in data && data.redirectTo) || "/";
 
   const form = useForm<MagicLinkSignInSchemaType>({
     resolver: zodResolver(MagicLinkSignInSchema),
-    defaultValues: { email: "" },
+    defaultValues: {
+      email: "",
+    },
   });
 
   const {
@@ -46,60 +52,65 @@ export const SignInView = () => {
     formState: { isSubmitting, errors },
   } = form;
 
-  /**
-   * MAGIC LINK
-   */
+  /* ================= MAGIC LINK ================= */
+
   const onSubmit = async (values: MagicLinkSignInSchemaType) => {
     try {
       await authClient.signIn.magicLink(
         { email: values.email },
         {
           onSuccess: () => {
-            toast("A magic link has been sent to your email.");
+            toast.success("Un lien magique a été envoyé à votre email.");
+            closeModal();
           },
           onError: (ctx) => {
             setError("email", {
-              message: ctx.error.message || "Failed to send magic link.",
+              message: ctx.error?.message || "Échec de l’envoi du lien.",
             });
           },
         }
       );
-    } catch (err) {
+    } catch {
       setError("email", {
-        message: "Unexpected error. Please try again.",
+        message: "Erreur inattendue. Veuillez réessayer.",
       });
     }
   };
 
-  /**
-   * OAUTH PROVIDER SIGN-IN
-   */
-  const handleSignInWithProvider = async (provider: "google" | "github") => {
+  /* ================= OAUTH ================= */
+
+  const handleProviderSignIn = async (provider: "google" | "github") => {
     try {
       await authClient.signIn.social(
         { provider },
         {
           onSuccess: async () => {
-            router.push("/");
+            closeModal();
+            router.push(redirectTo);
             router.refresh();
           },
           onError: (ctx) => {
             setError("root", {
               message:
-                ctx.error?.message || "Something went wrong with social login.",
+                ctx.error?.message || "Erreur lors de la connexion sociale.",
             });
           },
         }
       );
-    } catch (err) {
-      setError("root", { message: "Sign-in failed. Please try again." });
+    } catch {
+      setError("root", {
+        message: "Impossible de se connecter.",
+      });
     }
   };
 
+  /* ================= UI ================= */
+
   return (
-    <Card className="mx-auto w-full max-w-md p-6">
+    <Card className="mx-auto w-full max-w-md border-none p-0 shadow-none">
       <Form {...form}>
-        <form className="space-y-5" onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+          {/* EMAIL */}
           <FormField
             control={control}
             name="email"
@@ -122,32 +133,36 @@ export const SignInView = () => {
             )}
           />
 
-          {/* GLOBAL AUTH ERRORS */}
+          {/* GLOBAL ERROR */}
           <FormError message={errors.root?.message} />
 
-          <Button disabled={isSubmitting} type="submit" className="w-full">
-            Envoyez un mail
+          {/* SUBMIT */}
+          <Button type="submit" disabled={isSubmitting} className="w-full">
+            Envoyer un lien magique
           </Button>
 
-          <div className="text-muted-foreground flex w-full items-center py-5 text-sm">
-            <div className="border-secondary-foreground flex-1 border-t" />
-            <span className="px-3 text-lg">ou</span>
-            <div className="border-secondary-foreground flex-1 border-t" />
+          {/* DIVIDER */}
+          <div className="text-muted-foreground flex items-center py-5 text-sm">
+            <div className="flex-1 border-t" />
+            <span className="px-3">ou</span>
+            <div className="flex-1 border-t" />
           </div>
 
-          <div className="mt-4 space-y-2">
+          {/* SOCIAL */}
+          <div className="space-y-2">
             <SocialButton
               provider="google"
               icon={<FcGoogle size={22} />}
-              label="continuer avec Google"
-              onClick={() => handleSignInWithProvider("google")}
+              label="Continuer avec Google"
+              onClick={() => handleProviderSignIn("google")}
               disabled={isSubmitting}
             />
+
             <SocialButton
               provider="github"
               icon={<FaGithub size={22} />}
-              label="continuer avec GitHub"
-              onClick={() => handleSignInWithProvider("github")}
+              label="Continuer avec GitHub"
+              onClick={() => handleProviderSignIn("github")}
               disabled={isSubmitting}
             />
           </div>

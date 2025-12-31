@@ -19,6 +19,7 @@ export default function StepTitle({ onNext, onPrev }: StepTitleProps) {
     formState: { errors },
   } = useFormContext<ListingDraft>();
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const titleValue = watch("title"); // permet de re-render automatiquement si la valeur change
 
   const handleNext = async () => {

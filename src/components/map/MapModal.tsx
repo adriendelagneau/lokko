@@ -5,7 +5,6 @@ import { MapContainer, TileLayer, Marker } from "react-leaflet";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 
 import "leaflet/dist/leaflet.css";
-import { useEffect, useState } from "react";
 
 type Props = {
   open: boolean;

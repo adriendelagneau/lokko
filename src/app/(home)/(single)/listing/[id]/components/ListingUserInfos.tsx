@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import { Star } from "lucide-react";
@@ -31,7 +32,7 @@ export function ListingUserInfo({ listing }: Props) {
   } = authClient.useSession();
 
   const currentUserId = session?.user?.id || "";
-  
+
   const handleContactClick = async () => {
     const data = await getContactModalData(listing.id);
 
@@ -49,7 +50,7 @@ export function ListingUserInfo({ listing }: Props) {
           {owner.image ? (
             <Image
               src={owner.image}
-              alt={owner.name}
+              alt={owner.name || ""}
               fill
               className="object-cover"
             />
