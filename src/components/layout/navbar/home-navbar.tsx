@@ -5,7 +5,6 @@ import {
   HeartIcon,
   MenuIcon,
   MessageCircleIcon,
-  SearchCheckIcon,
   SquarePlusIcon,
   UserRoundIcon,
 } from "lucide-react";
@@ -14,6 +13,8 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { useModalStore } from "@/lib/store/useModalStore";
 import { useSidebarStore } from "@/lib/store/useSidebarStore";
+
+import { NavSearchbar } from "./NavSearchbar";
 
 export const HomeNavbar = () => {
   const { openModal } = useModalStore();
@@ -43,21 +44,7 @@ export const HomeNavbar = () => {
 
         {/* Search Bar */}
         <div className="relative hidden items-center lg:flex">
-          {/* <NavSearchbar /> */}
-          <search className="bg-background focus:ring-primary h-11 w-96 rounded-md border pr-4 pl-10 text-sm focus:ring-2 focus:outline-none flex items-center">
-            <SearchCheckIcon className="text-muted-foreground absolute left-3 h-5 w-5" />
-            <input
-              type="search"
-              placeholder="Rechercher sur Lokko"
-              className="bg-background focus:ring-primary h-11 w-96 rounded-md border pr-4 pl-10 text-sm focus:ring-2 focus:outline-none"
-            />
-          </search>
-          {/* <SearchCheckIcon className="text-muted-foreground absolute left-3 h-5 w-5" />
-          <input
-            type="search"
-            placeholder="Rechercher sur Lokko"
-            className="bg-background focus:ring-primary h-11 w-96 rounded-md border pr-4 pl-10 text-sm focus:ring-2 focus:outline-none"
-          /> */}
+          <NavSearchbar />
         </div>
 
         {/* Icons */}
