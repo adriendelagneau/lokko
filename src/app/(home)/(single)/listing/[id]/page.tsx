@@ -1,3 +1,5 @@
+import { Suspense } from "react";
+
 import { getCategories } from "@/actions/category-actions";
 import {
   getListingById,
@@ -64,76 +66,24 @@ export default async function ListingPage({ params }: Props) {
   ];
 
   return (
-    <div className="mx-auto w-full max-w-6xl px-4">
-      {/* ================= DESKTOP TOP ================= */}
-      <div className="hidden lg:block">
-        <Categories categories={categories} />
-        <BreadcrumbSingle items={breadcrumbItems} />
-      </div>
+    <Suspense fallback={<>...</>}>
+      <div className="mx-auto w-full max-w-6xl px-4">
+        {/* ================= DESKTOP TOP ================= */}
+        <div className="hidden lg:block">
+          <Categories categories={categories} />
+          <BreadcrumbSingle items={breadcrumbItems} />
+        </div>
 
-      {/* ================= MOBILE ================= */}
-      <div className="flex flex-col gap-6 lg:hidden">
-        {/* Images */}
-        <ListingHeaderCarousel
-          images={listing.images.map((img) => ({
-            ...img,
-            altText: img.altText ?? undefined,
-          }))}
-        />
-        <ImageModalMobile
-          images={listing.images.map((img) => ({
-            ...img,
-            altText: img.altText ?? undefined,
-          }))}
-        />
-
-        {/* Infos */}
-        <ListingInfos
-          title={listing.title}
-          price={listing.price}
-          unit={listing.priceUnit}
-          date={listing.createdAt.toLocaleDateString("fr-FR", {
-            day: "2-digit",
-            month: "2-digit",
-            year: "numeric",
-          })}
-          city={listing.location.city}
-          likes={123}
-        />
-
-        <div className="bg-primary h-0.5 w-full" />
-        {/* Details */}
-        <ListingDetails description={listing.description} />
-
-        {/* Map */}
-        <SingleMap listing={listing} />
-
-        {/* Seller */}
-        <ListingUserInfo listing={listing} currentUserId={userId || ""} />
-        <ListingsSection
-          title="Boissons"
-          listings={fruits.listings}
-          href="/search?category=boissons"
-        />
-        <ListingsSection
-          title="Oeufs"
-          listings={eggs.listings}
-          href="/search?subcategory=oeufs"
-        />
-      </div>
-
-      {/* ================= DESKTOP ================= */}
-      <div className="mt-6 hidden gap-8 lg:grid lg:grid-cols-[6fr_2fr]">
-        {/* LEFT */}
-        <div className="flex flex-col gap-6">
+        {/* ================= MOBILE ================= */}
+        <div className="flex flex-col gap-6 lg:hidden">
           {/* Images */}
-          <ListingImagesDesktop
+          <ListingHeaderCarousel
             images={listing.images.map((img) => ({
               ...img,
               altText: img.altText ?? undefined,
             }))}
           />
-          <ImagesModalDesktop
+          <ImageModalMobile
             images={listing.images.map((img) => ({
               ...img,
               altText: img.altText ?? undefined,
@@ -154,21 +104,20 @@ export default async function ListingPage({ params }: Props) {
             likes={123}
           />
 
-          <div className="bg-border h-px w-full" />
+          <div className="bg-primary h-0.5 w-full" />
           {/* Details */}
           <ListingDetails description={listing.description} />
 
-          <div className="bg-border h-px w-full" />
           {/* Map */}
           <SingleMap listing={listing} />
-          <div className="bg-border h-px w-full" />
+
+          {/* Seller */}
+          <ListingUserInfo listing={listing} currentUserId={userId || ""} />
           <ListingsSection
             title="Boissons"
             listings={fruits.listings}
             href="/search?category=boissons"
           />
-          <div className="bg-border h-px w-full" />
-
           <ListingsSection
             title="Oeufs"
             listings={eggs.listings}
@@ -176,13 +125,68 @@ export default async function ListingPage({ params }: Props) {
           />
         </div>
 
-        {/* RIGHT */}
-        <div className="relative flex flex-col gap-6">
-          <div className="sticky top-22">
-            <ListingUserInfo listing={listing} currentUserId={userId || ""} />
+        {/* ================= DESKTOP ================= */}
+        <div className="mt-6 hidden gap-8 lg:grid lg:grid-cols-[6fr_2fr]">
+          {/* LEFT */}
+          <div className="flex flex-col gap-6">
+            {/* Images */}
+            <ListingImagesDesktop
+              images={listing.images.map((img) => ({
+                ...img,
+                altText: img.altText ?? undefined,
+              }))}
+            />
+            <ImagesModalDesktop
+              images={listing.images.map((img) => ({
+                ...img,
+                altText: img.altText ?? undefined,
+              }))}
+            />
+
+            {/* Infos */}
+            <ListingInfos
+              title={listing.title}
+              price={listing.price}
+              unit={listing.priceUnit}
+              date={listing.createdAt.toLocaleDateString("fr-FR", {
+                day: "2-digit",
+                month: "2-digit",
+                year: "numeric",
+              })}
+              city={listing.location.city}
+              likes={123}
+            />
+
+            <div className="bg-border h-px w-full" />
+            {/* Details */}
+            <ListingDetails description={listing.description} />
+
+            <div className="bg-border h-px w-full" />
+            {/* Map */}
+            <SingleMap listing={listing} />
+            <div className="bg-border h-px w-full" />
+            <ListingsSection
+              title="Boissons"
+              listings={fruits.listings}
+              href="/search?category=boissons"
+            />
+            <div className="bg-border h-px w-full" />
+
+            <ListingsSection
+              title="Oeufs"
+              listings={eggs.listings}
+              href="/search?subcategory=oeufs"
+            />
+          </div>
+
+          {/* RIGHT */}
+          <div className="relative flex flex-col gap-6">
+            <div className="sticky top-22">
+              <ListingUserInfo listing={listing} currentUserId={userId || ""} />
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </Suspense>
   );
 }

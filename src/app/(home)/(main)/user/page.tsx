@@ -1,9 +1,9 @@
-import React from "react";
+import React, { Suspense } from "react";
 
 const page = () => {
   return (
     <div>
-      
+          <Suspense fallback={<>...</>}></Suspense>
     </div>
   );
 };
