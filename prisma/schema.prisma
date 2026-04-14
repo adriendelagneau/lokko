@@ -37,6 +37,19 @@ model User {
 
   sessions Session[]
   accounts Account[]
+
+  listings      Listing[]
+  savedSearches SavedSearch[]
+  bookmarks     Bookmark[]
+  notifications Notification[]
+
+  messages             Message[]      @relation("UserMessages")
+  conversationsAsUser1 Conversation[] @relation("ConversationUser1")
+  conversationsAsUser2 Conversation[] @relation("ConversationUser2")
+
+  notificationPreferences NotificationPreference[]
+
+  @@map("user")
 }
 
 model Session {
@@ -89,4 +102,302 @@ model Verification {
   updatedAt DateTime @updatedAt
 
   @@map("verification")
+}
+
+//
+// ==========================
+// CATEGORIES & PRODUCTS
+// ==========================
+//
+
+model Category {
+  id    String  @id @default(uuid())
+  name  String
+  slug  String
+  image String?
+
+  parentId String?
+  parent   Category?  @relation("CategoryTree", fields: [parentId], references: [id], onDelete: SetNull)
+  children Category[] @relation("CategoryTree")
+
+  products Product[]
+
+  listings    Listing[] @relation("ListingCategory")
+  subListings Listing[] @relation("ListingSubCategory")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([slug, parentId])
+  @@index([parentId])
+  @@map("category")
+}
+
+model Product {
+  id         String    @id @default(uuid())
+  name       String
+  slug       String
+  categoryId String?
+  category   Category? @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  isActive   Boolean @default(true)
+  isFeatured Boolean @default(false)
+
+  listings Listing[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([slug, categoryId])
+  @@index([categoryId])
+  @@map("product")
+}
+
+//
+// ==========================
+// LISTINGS
+// ==========================
+//
+
+enum PriceUnit {
+  UNIT
+  KG
+  L
+}
+
+enum ListingStatus {
+  ACTIVE
+  ARCHIVED
+  VERIFICATION
+  REJECTED
+}
+
+enum ImageStatus {
+  PENDING
+  SAFE
+  NSFW
+}
+
+model Listing {
+  id String @id @default(uuid())
+
+  title       String
+  description String
+
+  price     Float
+  priceUnit PriceUnit
+
+  status          ListingStatus @default(VERIFICATION)
+  rejectionReason String?
+  nsfwResults     Json?
+
+  archivedAt DateTime?
+  deletedAt  DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  ownerId       String
+  categoryId    String
+  subCategoryId String?
+  productId     String?
+  locationId    String
+
+  owner       User      @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  category    Category  @relation("ListingCategory", fields: [categoryId], references: [id])
+  subCategory Category? @relation("ListingSubCategory", fields: [subCategoryId], references: [id])
+  product     Product?  @relation(fields: [productId], references: [id])
+  location    Location  @relation(fields: [locationId], references: [id])
+
+  images        ListingImage[]
+  bookmarks     Bookmark[]
+  conversations Conversation[] @relation("ListingToConversation")
+
+  @@index([categoryId, status])
+  @@index([locationId])
+  @@index([createdAt])
+  @@index([ownerId])
+  @@map("listing")
+}
+
+model Location {
+  id String @id @default(uuid())
+
+  city       String
+  postalCode String
+  lat        Float
+  lng        Float
+  coords     Unsupported("geography(Point, 4326)")?
+
+  listings Listing[]
+
+  createdAt DateTime @default(now())
+
+  @@index([city, postalCode])
+  @@index([lat, lng])
+  @@index([coords], type: Gist)
+  @@map("location")
+}
+
+model ListingImage {
+  id        String  @id @default(uuid())
+  listingId String
+  url       String
+  altText   String?
+
+  index  Int
+  status ImageStatus @default(PENDING)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  listing Listing @relation(fields: [listingId], references: [id], onDelete: Cascade)
+
+  @@unique([listingId, index])
+  @@index([listingId])
+  @@map("listing_image")
+}
+
+model Bookmark {
+  userId    String
+  listingId String
+  createdAt DateTime @default(now())
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  listing Listing @relation(fields: [listingId], references: [id], onDelete: Cascade)
+
+  @@id([userId, listingId])
+  @@map("bookmark")
+}
+
+model SavedSearch {
+  id          String    @id @default(uuid())
+  userId      String
+  title       String?
+  query       Json
+  isActive    Boolean   @default(true)
+  lastChecked DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, isActive])
+  @@index([lastChecked])
+  @@map("saved_search")
+}
+
+//
+// ==========================
+// MESSAGING
+// ==========================
+//
+
+model Conversation {
+  id String @id @default(uuid())
+
+  listingId String
+
+  user1Id String
+  user2Id String
+
+  // READ
+  user1LastReadAt DateTime?
+  user2LastReadAt DateTime?
+
+  // UNREAD
+  user1UnreadCount Int @default(0)
+  user2UnreadCount Int @default(0)
+
+  // DELETE
+  user1DeletedAt DateTime?
+  user2DeletedAt DateTime?
+
+  // LAST MESSAGE
+  lastMessageAt       DateTime?
+  lastMessagePreview  String?
+  lastMessageSenderId String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  listing Listing @relation("ListingToConversation", fields: [listingId], references: [id], onDelete: Cascade)
+
+  user1 User @relation("ConversationUser1", fields: [user1Id], references: [id], onDelete: Cascade)
+  user2 User @relation("ConversationUser2", fields: [user2Id], references: [id], onDelete: Cascade)
+
+  messages Message[]
+
+  // NOTE: Application must enforce user1Id < user2Id ordering to prevent duplicate conversations
+  @@unique([listingId, user1Id, user2Id])
+  @@index([user1Id, lastMessageAt])
+  @@index([user2Id, lastMessageAt])
+  @@map("conversation")
+}
+
+model Message {
+  id String @id @default(uuid())
+
+  content String
+
+  senderId       String
+  conversationId String
+
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  sender       User         @relation("UserMessages", fields: [senderId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([conversationId, createdAt])
+  @@index([senderId])
+  @@map("message")
+}
+
+//
+// ==========================
+// NOTIFICATIONS
+// ==========================
+//
+
+enum NotificationType {
+  NEW_MESSAGE
+  NEW_LISTING
+  LISTING_APPROVED
+  LISTING_REJECTED
+}
+
+enum NotificationChannel {
+  IN_APP
+  EMAIL
+  PUSH
+}
+
+model Notification {
+  id        String           @id @default(uuid())
+  userId    String
+  type      NotificationType
+  payload   Json
+  read      Boolean          @default(false)
+  createdAt DateTime         @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@index([userId, read])
+  @@index([createdAt])
+  @@map("notification")
+}
+
+model NotificationPreference {
+  id        String              @id @default(uuid())
+  userId    String
+  type      NotificationType
+  channel   NotificationChannel @default(IN_APP)
+  enabled   Boolean             @default(true)
+  updatedAt DateTime            @default(now()) @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@unique([userId, type, channel])
+  @@map("notification_preference")
 }

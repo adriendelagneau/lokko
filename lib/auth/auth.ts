@@ -7,9 +7,6 @@ import { sendEmail } from "@/actions/email-actions";
 
 import prisma from "../prisma/prisma";
 
-
-
-
 export const auth = betterAuth({
   database: prismaAdapter(prisma, { provider: "postgresql" }),
 
@@ -17,7 +14,6 @@ export const auth = betterAuth({
     enabled: process.env.NODE_ENV !== "development",
     window: 60,
     max: 100,
-  //  storage: "database", // or "secondary-storage", or implement customStorage
   },
 
   advanced: {
@@ -82,5 +78,3 @@ export const auth = betterAuth({
     },
   },
 });
-
-

@@ -55,7 +55,7 @@ export const EmailTemplate = ({
                 src="https://e5qisws5zl.ufs.sh/f/yLB59fCc10rgKMIkwJzPWzvj05tqHZufhxIiXGCly7bswV21"
                 width="40"
                 height="37"
-                alt="La voie de l'info"
+                alt="Lokko"
                 className="mx-auto my-0"
               />
             </Section>
