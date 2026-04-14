@@ -74,7 +74,7 @@ export const CategoryCarousel = ({
             return (
               <CarouselItem key={category.id} className="basis-auto pl-2">
                 <Button
-                  variant={isActive ? "default" : "secondary"}
+                  variant={"default"}
                   size="sm"
                   onClick={() => onSelect(category.slug)}
                   className={cn(

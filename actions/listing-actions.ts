@@ -5,7 +5,7 @@ import { z } from "zod";
 import { getUser } from "@/lib/auth/auth-session";
 import prisma from "@/lib/prisma/prisma";
 import { listingSchema, ListingDraft } from "@/validations/listing-schemas";
-
+import { Prisma } from "@/lib/prisma/generated/prisma/client";
 
 
 type CreateListingResult = {
@@ -144,3 +144,203 @@ export async function createListing(
 }
 
 
+
+
+export type GetListingsParams = {
+  query?: string;
+  page?: number;
+  pageSize?: number;
+
+  category?: string;
+  subCategory?: string;
+  product?: string;
+
+  locationCity?: string;
+  locationDepartment?: string;
+  locationRegion?: string;
+
+  orderBy?: "newest" | "priceAsc" | "priceDesc";
+
+  geoLat?: number;
+  geoLng?: number;
+  geoRadiusKm?: number;
+
+  priceMin?: number;
+  priceMax?: number;
+};
+
+export async function getListings({
+  query,
+  page = 1,
+  pageSize = 8,
+  category,
+  subCategory,
+  product,
+  orderBy = "newest",
+  geoLat,
+  geoLng,
+  geoRadiusKm,
+  priceMin,
+  priceMax,
+}: GetListingsParams) {
+  const skip = (page - 1) * pageSize;
+
+  const where: Prisma.ListingWhereInput = {
+    status: "ACTIVE",
+    deletedAt: null,
+
+    ...(category && {
+      category: { is: { slug: category } },
+    }),
+
+    ...(subCategory && {
+      subCategory: { is: { slug: subCategory } },
+    }),
+    ...(product && {
+      product: { is: { slug: product } },
+    }),
+
+    ...(query && {
+      OR: [
+        { title: { contains: query, mode: "insensitive" } },
+        { description: { contains: query, mode: "insensitive" } },
+      ],
+    }),
+
+    ...(priceMin != null || priceMax != null
+      ? {
+          price: {
+            ...(priceMin != null ? { gte: priceMin } : {}),
+            ...(priceMax != null ? { lte: priceMax } : {}),
+          },
+        }
+      : {}),
+  };
+
+  let listings: ListingWithDistance[] = [];
+  let total = 0;
+
+  // 🌍 GEO MODE
+  if (geoLat != null && geoLng != null && geoRadiusKm != null) {
+    // We use a raw query to leverage PostGIS index
+    // Note: This requires the where conditions to be handled manually or via a partial Prisma where
+    // For simplicity here, we'll fetch the IDs from Prisma first if where is complex, 
+    // or better, build the raw SQL for the entire query.
+    
+    // To keep it clean, we find IDs that match our basic filters first
+    const matchingListingIds = await prisma.listing.findMany({
+      where,
+      select: { id: true },
+    });
+    
+    const ids: string[] = matchingListingIds.map(l => l.id);
+    if (ids.length === 0) return { listings: [], hasMore: false };
+
+    const rawListings = (await prisma.$queryRaw`
+      SELECT 
+        l.id, l.title, l.price, l."priceUnit", l."createdAt",
+        loc.lat, loc.lng, loc.city, loc."postalCode",
+        ST_Distance(loc.coords, ST_SetSRID(ST_MakePoint(${geoLng}, ${geoLat}), 4326)::geography) / 1000 as distance
+      FROM listing l
+      JOIN location loc ON l."locationId" = loc.id
+      WHERE l.id IN (${Prisma.join(ids)})
+        AND ST_DWithin(loc.coords, ST_SetSRID(ST_MakePoint(${geoLng}, ${geoLat}), 4326)::geography, ${geoRadiusKm * 1000})
+      ORDER BY distance ASC
+      LIMIT ${pageSize} OFFSET ${skip}
+    `) as { id: string; distance: number }[];
+
+    // Calculate total for pagination
+    const totalCount = (await prisma.$queryRaw`
+      SELECT COUNT(*)::int as count
+      FROM listing l
+      JOIN location loc ON l."locationId" = loc.id
+      WHERE l.id IN (${Prisma.join(ids)})
+        AND ST_DWithin(loc.coords, ST_SetSRID(ST_MakePoint(${geoLng}, ${geoLat}), 4326)::geography, ${geoRadiusKm * 1000})
+    `) as { count: number }[];
+    
+    total = totalCount[0]?.count ?? 0;
+
+    // Format the raw results to match the expected structure
+    // We need to fetch the relations separately or refine the raw query
+    // Let's do a findMany for the final results to get all relations cleanly
+    const finalIds = rawListings.map(l => l.id);
+    const enrichedListings = await prisma.listing.findMany({
+      where: { id: { in: finalIds } },
+      select: {
+        id: true,
+        title: true,
+        price: true,
+        priceUnit: true,
+        createdAt: true,
+        location: {
+          select: { lat: true, lng: true, city: true, postalCode: true },
+        },
+        category: { select: { slug: true } },
+        subCategory: { select: { slug: true } },
+        product: { select: { slug: true } },
+        images: {
+          take: 3,
+          orderBy: { index: "desc" },
+          select: { url: true, altText: true },
+        },
+        owner: {
+          select: { id: true, name: true, image: true },
+        },
+      },
+    });
+
+    // Re-sort enriched results by the distance we calculated
+    listings = rawListings.map(rl => {
+      const enriched = enrichedListings.find(el => el.id === rl.id);
+      if (!enriched) return null;
+      return { ...enriched, distance: rl.distance };
+    }).filter((l): l is NonNullable<typeof l> => l !== null);
+    
+  } else {
+    // 📦 NORMAL MODE
+    total = await prisma.listing.count({ where });
+
+    listings = (await prisma.listing.findMany({
+      where,
+      skip,
+      take: pageSize,
+      orderBy:
+        orderBy === "priceAsc"
+          ? { price: "asc" }
+          : orderBy === "priceDesc"
+            ? { price: "desc" }
+            : { createdAt: "desc" },
+      select: {
+        id: true,
+        title: true,
+        price: true,
+        priceUnit: true,
+        createdAt: true,
+        location: {
+          select: { lat: true, lng: true, city: true, postalCode: true },
+        },
+        category: { select: { slug: true } },
+        subCategory: { select: { slug: true } },
+        product: { select: { slug: true } },
+        images: {
+          take: 3,
+          orderBy: { index: "desc" },
+          select: { url: true, altText: true },
+        },
+        owner: {
+          select: { id: true, name: true, image: true },
+        },
+      },
+    })) as ListingWithDistance[];
+  }
+
+  return {
+    listings,
+    hasMore: skip + listings.length < total,
+  };
+}
+
+export type GetListingsResult = Awaited<ReturnType<typeof getListings>>;
+export type ListingFromGetListings = NonNullable<
+  GetListingsResult["listings"][number]
+>;
