@@ -1,8 +1,30 @@
 // lib/store/useModalStore.ts
 import { create } from "zustand";
 
+type ContactSellerPayload = {
+  listingId: string;
+};
+
+type SaveSearchPayload = {
+  query: unknown;
+};
+
+type UpdateSearchTitlePayload = {
+  searchId: string;
+  currentTitle: string;
+};
+
+type ConfirmDeleteSearchPayload = {
+  searchId: string;
+};
+
+
 
 type ModalPayloadMap = {
+  "contact-seller": ContactSellerPayload;
+  "save-search": SaveSearchPayload;
+  "update-search-title": UpdateSearchTitlePayload;
+  "confirm-delete-search": ConfirmDeleteSearchPayload;
   login: undefined;
 };
 

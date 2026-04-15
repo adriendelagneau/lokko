@@ -5,7 +5,7 @@ import { XIcon } from "lucide-react";
 import { CustomSidebar } from "./CustomSidebar";
 import HomeContent from "./sidebarContent/home-content/HomeContent";
 import { useSidebarStore } from "@/store/useSidebarStore";
-
+import SearchContent from "./sidebarContent/search-content/SearchContent";
 
 export function AppSidebar() {
   const { open, view, closeSidebar } = useSidebarStore();
@@ -27,7 +27,7 @@ export function AppSidebar() {
 
         <div className="flex-1 min-h-0 overflow-y-auto p-4">
           {view === "home" && <HomeContent />}
-  
+          {view === "search" && <SearchContent />}
         </div>
       </div>
     </CustomSidebar>
