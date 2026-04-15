@@ -343,4 +343,151 @@ export async function getListings({
 export type GetListingsResult = Awaited<ReturnType<typeof getListings>>;
 export type ListingFromGetListings = NonNullable<
   GetListingsResult["listings"][number]
->;
+  >;
+
+
+
+
+
+export async function getListingById(id: string) {
+  try {
+    const uuidSchema = z.uuid("Invalid listing ID");
+    const validation = uuidSchema.safeParse(id);
+
+    if (!validation.success) throw new Error("Invalid listing ID");
+
+    return await prisma.listing.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        images: true,
+        price: true,
+        priceUnit: true,
+        createdAt: true,
+
+        category: {
+          select: {
+            name: true,
+            slug: true,
+          },
+        },
+
+        subCategory: {
+          select: {
+            name: true,
+            slug: true,
+          },
+        },
+
+        product: {
+          select: {
+            name: true,
+            slug: true,
+          },
+        },
+        _count: {
+          select: {
+            bookmarks: true,
+          },
+        },
+
+        location: {
+          select: {
+            city: true,
+            postalCode: true,
+            lat: true,
+            lng: true,
+          },
+        },
+
+        owner: {
+          select: {
+            id: true,
+            name: true,
+            image: true,
+          },
+        },
+      },
+    });
+  } catch (error) {
+    console.error("Failed to fetch listing:", error);
+    throw new Error("Failed to fetch listing");
+  }
+}
+
+export type GetListingByIdResult = Awaited<ReturnType<typeof getListingById>>;
+
+export type ListingSingle = NonNullable<GetListingByIdResult>;
+
+
+
+export async function toggleBookmark(listingId: string) {
+  try {
+    const user = await getUser();
+    if (!user) throw new Error("Unauthorized");
+
+    return await prisma.$transaction(async (tx) => {
+      try {
+        const existing = await tx.bookmark.findUnique({
+          where: {
+            userId_listingId: {
+              userId: user.id,
+              listingId,
+            },
+          },
+        });
+
+        if (existing) {
+          await tx.bookmark.delete({
+            where: {
+              userId_listingId: {
+                userId: user.id,
+                listingId,
+              },
+            },
+          });
+
+          return { bookmarked: false, listingId };
+        }
+
+        await tx.bookmark.create({
+          data: {
+            userId: user.id,
+            listingId,
+          },
+        });
+
+        return { bookmarked: true, listingId };
+      } catch (txError) {
+        console.error("Failed transaction in toggleBookmark:", txError);
+        throw new Error("Failed to toggle bookmark");
+      }
+    });
+  } catch (error) {
+    console.error("Failed to toggle bookmark:", error);
+    throw new Error("Failed to toggle bookmark");
+  }
+}
+
+export async function getIsBookmarked(listingId: string) {
+  try {
+    const user = await getUser();
+    if (!user) return false;
+
+    return Boolean(
+      await prisma.bookmark.findUnique({
+        where: {
+          userId_listingId: {
+            userId: user.id,
+            listingId,
+          },
+        },
+      })
+    );
+  } catch (error) {
+    console.error("Failed to check bookmark status:", error);
+    throw new Error("Failed to check bookmark status");
+  }
+}

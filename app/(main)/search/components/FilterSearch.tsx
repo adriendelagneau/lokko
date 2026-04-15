@@ -7,7 +7,6 @@ import { useSidebarStore } from "@/store/useSidebarStore";
 import { useSearchState } from "@/hooks/use-search-state";
 
 import SaveSearchButton from "./SaveSearchButton";
-import { Badge } from "@/components/ui/badge";
 
 const FilterSearch = () => {
   const { openSidebar } = useSidebarStore();
